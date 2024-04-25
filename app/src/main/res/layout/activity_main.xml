@@ -27,3 +27,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/button_nav"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
+

@@ -5,6 +5,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import java.util.Calendar
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -20,6 +22,7 @@ class HomePage : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+    private lateinit var textView2: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,8 +36,27 @@ class HomePage : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home_page, container, false)
+        val view = inflater.inflate(R.layout.fragment_home_page, container, false)
+        textView2 = view.findViewById(R.id.textView2)
+
+        // Call the method to update the greeting message based on the time of the day
+        updateGreeting()
+
+        return view
+    }
+    private fun updateGreeting() {
+        val cal = Calendar.getInstance()
+        val hourOfDay = cal.get(Calendar.HOUR_OF_DAY)
+
+        val username = "John" // Replace with the actual username
+
+        val greeting: String = when (hourOfDay) {
+            in 0..11 -> "Good morning, $username"
+            in 12..17 -> "Good afternoon, $username"
+            else -> "Good evening, $username"
+        }
+
+        textView2.text = greeting
     }
 
     companion object {
