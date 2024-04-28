@@ -29,7 +29,7 @@
             android:id="@+id/imageView2"
             android:layout_width="0dp"
             android:layout_height="86dp"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="35dp"
             android:layout_marginBottom="10dp"
             android:layout_weight="1"
             android:background="@drawable/profile" />
@@ -47,14 +47,15 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp">
 
 
         <TextView
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="1dp"
             android:text="Hello"
             android:textSize="24sp"
             android:textStyle="bold"
@@ -71,7 +72,7 @@
             app:layout_constraintEnd_toStartOf="@+id/textView4"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="70dp"/>
+            android:layout_marginTop="40dp"/>
 
         <TextView
             android:id="@+id/textView4"
@@ -81,7 +82,7 @@
             app:layout_constraintEnd_toStartOf="@+id/view2"
             app:layout_constraintStart_toEndOf="@+id/view1"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="60dp"
+            android:layout_marginTop="40dp"
             android:textSize="15sp"
             android:textColor="@color/white"/>
 
@@ -93,18 +94,26 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/textView4"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="70dp"/>
+            android:layout_marginTop="40dp"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <include
         layout="@layout/activity_recent_view"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="20dp"
+        android:layout_height="75dp"
         android:layout_marginStart="50dp"
-       />
+        android:layout_marginTop="1dp"
+        android:layout_marginEnd="20dp" />
+
+    <include
+        layout="@layout/activity_home_quick_action_buttons_view"
+        android:layout_width="410dp"
+        android:layout_height="400dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="20dp" />
+
+
 
 
 </LinearLayout>

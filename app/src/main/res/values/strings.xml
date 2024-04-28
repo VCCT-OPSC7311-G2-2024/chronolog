@@ -3,4 +3,24 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="recent_activty">Recent Activity</string>
+    <string name="goals">Goals</string>
+    <string name="progress">Progress</string>
+    <string name="profile">Profile</string>
+    <string name="Break">Break</string>
+    <string name="DailyGoal">Daily Goal</string>
+    <string name="Save">Save/Submit</string>
+    <string name="MinGoal">Min Goal (Hrs)</string>
+    <string name="MaxGoal">Max Goal (Hrs)</string>
+    <string name="Progress">Progress</string>
+    <string name="Min">Min</string>
+    <string name="Max">Max</string>
+    <string name="ActualTime">Actual</string>
+    <string name="Profile">Profile</string>
+    <string name="Name">Full Name:</string>
+    <string name="Email">Email:</string>
+    <string name="Bio">Bio:</string>
+    <string name="SaveChanges">Save Changes</string>
+    <string name="Music">Music</string>
+    <string name="Start_Stop">Start/Stop</string>
+
 </resources>

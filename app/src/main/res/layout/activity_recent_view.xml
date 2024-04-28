@@ -12,81 +12,84 @@
         android:id="@+id/dateTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="35dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="-45dp"
         android:layout_marginEnd="126dp"
-        android:layout_marginBottom="6dp"
-        android:text="Text at the top"
+        android:layout_marginBottom="10dp"
+        android:text="2024/02/02"
         android:textColor="@color/white"
-        app:layout_constraintBottom_toTopOf="@+id/projectNameView"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/hoursTextView"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/projectNameView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="53dp"
-        android:text="Text in the middle"
+        android:layout_marginStart="-35dp"
+        android:text="Research App"
         android:textColor="@color/white"
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/miniDescriptionView"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dateTextView" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
     <TextView
         android:id="@+id/miniDescriptionView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="158dp"
-        android:text="TextView"
+        android:layout_marginStart="70dp"
+        android:layout_marginTop="55dp"
+        android:layout_marginEnd="100dp"
+        android:text="Research toggle app"
         android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/projectNameView" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="27dp"
         android:layout_height="25dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="6dp"
+        android:layout_marginStart="-200dp"
+        android:layout_marginTop="70dp"
         android:layout_marginEnd="61dp"
         android:layout_marginBottom="16dp"
         android:background="@drawable/time_svgrepo_com"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/projectNameView"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view2" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/hoursTextView"
         android:layout_width="53dp"
-        android:layout_height="28dp"
-        android:layout_marginStart="16dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="18dp"
-        android:text="Text"
+        android:paddingRight="5dp"
+        android:text="10 Hours"
         android:textColor="@color/white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <View
         android:id="@+id/view2"
-        android:layout_width="100dp"
+        android:layout_width="0dp"
         android:layout_height="5dp"
-        android:layout_marginTop="-25dp"
-        android:layout_marginEnd="-25dp"
-        android:layout_marginBottom="1dp"
+        android:layout_marginStart="-200dp"
         android:background="@android:color/white"
         android:orientation="vertical"
         android:rotation="90"
-        app:layout_constraintBottom_toTopOf="@+id/projectNameView"
-        app:layout_constraintEnd_toStartOf="@+id/projectNameView"
-        app:layout_constraintTop_toBottomOf="@+id/projectNameView" />
-
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
