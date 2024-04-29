@@ -104,7 +104,8 @@
         android:layout_height="75dp"
         android:layout_marginStart="50dp"
         android:layout_marginTop="1dp"
-        android:layout_marginEnd="20dp" />
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="25dp"/>
 
     <include
         layout="@layout/activity_home_quick_action_buttons_view"

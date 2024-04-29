@@ -6,48 +6,62 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.ImageButton
+import androidx.cardview.widget.CardView
+
 import java.util.Calendar
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [HomePage.newInstance] factory method to
- * create an instance of this fragment.
- */
 class HomePage : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
     private lateinit var textView2: TextView
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private lateinit var dailyGoalsCardView: CardView
+    private lateinit var progressCardView: CardView
+    private lateinit var profileCardView: CardView
+    private lateinit var musicCardView: CardView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_home_page, container, false)
+
         textView2 = view.findViewById(R.id.textView2)
+        dailyGoalsCardView = view.findViewById(R.id.goalsCardView)
+        progressCardView = view.findViewById(R.id.progressCardView)
+        profileCardView = view.findViewById(R.id.profilecardview)
+        musicCardView = view.findViewById(R.id.musicCardView)
 
         // Call the method to update the greeting message based on the time of the day
         updateGreeting()
 
+        // Set visibility of all CardViews to GONE
+        dailyGoalsCardView.visibility = View.GONE
+        progressCardView.visibility = View.GONE
+        profileCardView.visibility = View.GONE
+        musicCardView.visibility = View.GONE
+
+        // Set click listeners for buttons to show respective CardViews
+        view.findViewById<ImageButton>(R.id.goalsBtn).setOnClickListener {
+            showDailyGoalsCard()
+        }
+
+        view.findViewById<ImageButton>(R.id.progressBtn).setOnClickListener {
+            showProgressCard()
+        }
+
+        view.findViewById<ImageButton>(R.id.profileBtn).setOnClickListener {
+            showProfileCard()
+        }
+
+        view.findViewById<ImageButton>(R.id.musicBtn).setOnClickListener {
+            showMusicCard()
+        }
+
         return view
     }
+
     private fun updateGreeting() {
         val cal = Calendar.getInstance()
         val hourOfDay = cal.get(Calendar.HOUR_OF_DAY)
-
         val username = "John" // Replace with the actual username
 
         val greeting: String = when (hourOfDay) {
@@ -59,23 +73,31 @@ class HomePage : Fragment() {
         textView2.text = greeting
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment HomePage.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            HomePage().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    private fun showDailyGoalsCard() {
+        dailyGoalsCardView.visibility = View.VISIBLE
+        progressCardView.visibility = View.GONE
+        profileCardView.visibility = View.GONE
+        musicCardView.visibility = View.GONE
+    }
+
+    private fun showProgressCard() {
+        dailyGoalsCardView.visibility = View.GONE
+        progressCardView.visibility = View.VISIBLE
+        profileCardView.visibility = View.GONE
+        musicCardView.visibility = View.GONE
+    }
+
+    private fun showProfileCard() {
+        dailyGoalsCardView.visibility = View.GONE
+        progressCardView.visibility = View.GONE
+        profileCardView.visibility = View.VISIBLE
+        musicCardView.visibility = View.GONE
+    }
+
+    private fun showMusicCard() {
+        dailyGoalsCardView.visibility = View.GONE
+        progressCardView.visibility = View.GONE
+        profileCardView.visibility = View.GONE
+        musicCardView.visibility = View.VISIBLE
     }
 }
