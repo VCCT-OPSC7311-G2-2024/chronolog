@@ -6,6 +6,7 @@ plugins {
 android {
     namespace = "za.co.varsitycollege.serversamurais.chronolog"
     compileSdk = 34
+    viewBinding.isEnabled = true
 
     defaultConfig {
         applicationId = "za.co.varsitycollege.serversamurais.chronolog"
