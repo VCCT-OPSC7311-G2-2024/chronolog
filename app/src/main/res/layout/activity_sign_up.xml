@@ -16,14 +16,15 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center_horizontal"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp">
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:gravity="center"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:layout_marginEnd="50dp">
 
                 <TextView
                     android:id="@+id/border"
@@ -41,17 +42,13 @@
                     android:fontFamily="@font/inter"
                     android:text="log"
                     android:textColor="#FFFFFF"
-                    android:textSize="34sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" />
+                    android:textSize="34sp" />
             </LinearLayout>
 
             <ImageView
                 android:id="@+id/imageView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:layout_weight="1"
                 android:baselineAlignBottom="false"
                 app:srcCompat="@drawable/sun" />
 
