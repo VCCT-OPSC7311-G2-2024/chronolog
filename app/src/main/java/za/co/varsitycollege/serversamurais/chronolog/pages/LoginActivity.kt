@@ -8,26 +8,25 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import za.co.varsitycollege.serversamurais.chronolog.Helpers.openIntent
 import za.co.varsitycollege.serversamurais.chronolog.R
-import za.co.varsitycollege.serversamurais.chronolog.databinding.ActivitySignUpBinding
+import za.co.varsitycollege.serversamurais.chronolog.databinding.ActivityLoginBinding
 
-class SignUpActivity : AppCompatActivity(), View.OnClickListener {
+class LoginActivity : AppCompatActivity(), View.OnClickListener {
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val binding = ActivitySignUpBinding.inflate(layoutInflater)
-
+        val binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.alreadyHaveAnAccBtn.setOnClickListener(this)
+        binding.signUpForAccBtn.setOnClickListener(this)
 
 
     }
 
     override fun onClick(v: View?) {
         when(v?.id) {
-            R.id.alreadyHaveAnAccBtn -> openIntent(this, LoginActivity::class.java)
+            R.id.signUpForAccBtn -> openIntent(this, SignUpActivity::class.java)
         }
     }
-
-
 }
