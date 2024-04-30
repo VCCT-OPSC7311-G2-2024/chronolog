@@ -2,16 +2,12 @@ package za.co.varsitycollege.serversamurais.chronolog.pages
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.google.firebase.auth.FirebaseUser
 import za.co.varsitycollege.serversamurais.chronolog.Helpers.FirebaseHelper
 import za.co.varsitycollege.serversamurais.chronolog.Helpers.openIntent
+import za.co.varsitycollege.serversamurais.chronolog.Helpers.replaceFragment
 import za.co.varsitycollege.serversamurais.chronolog.R
 import za.co.varsitycollege.serversamurais.chronolog.databinding.ActivityLoginBinding
 
@@ -46,6 +42,8 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener,
         if (user != null) {
             Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show()
             // Navigate to main activity or dashboard
+            replaceFragment(this, HomePage())
+
         } else {
             // Handle sign out scenario if needed
         }
