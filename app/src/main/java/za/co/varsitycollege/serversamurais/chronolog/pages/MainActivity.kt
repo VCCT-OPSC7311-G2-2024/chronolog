@@ -23,14 +23,14 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         setContentView(binding.root)
 
 
-        binding.signupBtn.setOnClickListener(this)
+        binding.signupNavBtn.setOnClickListener(this)
         binding.loginBtn.setOnClickListener(this)
 
     }
 
     override fun onClick(v: View?) {
         when(v?.id) {
-            R.id.signupBtn -> openIntent(this, SignUpActivity::class.java)
+            R.id.signupNavBtn -> openIntent(this, SignUpActivity::class.java)
             R.id.loginBtn -> openIntent(this, LoginActivity::class.java)
         }
     }

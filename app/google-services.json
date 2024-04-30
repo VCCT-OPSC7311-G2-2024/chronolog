@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "515897712068",
+    "project_id": "chronolog-db9b8",
+    "storage_bucket": "chronolog-db9b8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:515897712068:android:ee8b12310f93afc10a1891",
+        "android_client_info": {
+          "package_name": "za.co.varsitycollege.serversamurais.chronolog"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAfK-Wpt-r9fGvkhD9gbgNsV1_0ApBBLQ8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
