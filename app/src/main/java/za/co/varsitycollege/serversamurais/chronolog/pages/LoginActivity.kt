@@ -42,8 +42,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener,
         if (user != null) {
             Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show()
             // Navigate to main activity or dashboard
-            replaceFragment(this, HomePage())
-
+            openIntent(this, HomePageActivity::class.java)
         } else {
             // Handle sign out scenario if needed
         }
