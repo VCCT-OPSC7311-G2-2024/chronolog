@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="home"
+        android:id="@+id/homeNavID"
+        android:icon="@drawable/house_svgrepo_com"/>
+
+    <item android:title="timesheet"
+        android:id="@+id/timesheetNavID"
+        android:icon="@drawable/timesheet_svgrepo_com"/>
+
+    <item android:title="stats"
+        android:id="@+id/statsNavID"
+        android:icon="@drawable/graph_svgrepo_com"/>
+</menu>

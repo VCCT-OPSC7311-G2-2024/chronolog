@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="za.co.varsitycollege.serversamurais.chronolog" />
+                  <option name="mobileSdkAppId" value="1:515897712068:android:ee8b12310f93afc10a1891" />
+                  <option name="projectId" value="chronolog-db9b8" />
+                  <option name="projectNumber" value="515897712068" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

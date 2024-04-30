@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".pages.LoginActivity"
+    android:orientation="vertical"
+    android:background="@drawable/background">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:layout_marginEnd="50dp">
+
+            <TextView
+                android:id="@+id/chronoTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/inter_extrabold"
+                android:text="chrono"
+                android:textColor="#011327"
+                android:textSize="34sp" />
+
+            <TextView
+                android:id="@+id/logTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/inter"
+                android:text="log"
+                android:textColor="#FFFFFF"
+                android:textSize="34sp" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:baselineAlignBottom="false"
+            app:srcCompat="@drawable/sun" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="1">
+
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/logo" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal">
+
+
+        <TextView
+            android:id="@+id/signInTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/inter"
+            android:text="Sign in and"
+            android:textColor="#FFFFFF"
+            android:gravity="center_horizontal"
+            android:textSize="24dp"
+            android:paddingRight="7dp"/>
+
+        <TextView
+            android:id="@+id/getLoggingTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/inter_extrabold"
+            android:gravity="center_horizontal"
+            android:text="get logging"
+            android:textColor="#FFFFFF"
+            android:textSize="24dp"
+            android:textStyle="italic" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="1">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Email:"
+            android:textSize="16sp"
+            android:fontFamily="@font/inter_extrabold"
+            android:textColor="@color/white"
+            android:layout_margin="5dp"/>
+
+        <EditText
+            android:id="@+id/editEmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="15"
+            android:fontFamily="@font/inter"
+            android:inputType="textEmailAddress"
+            android:text="Email"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/custom_input"
+            android:paddingLeft="10dp"
+            android:textSize="14sp"/>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Password: "
+            android:textSize="16sp"
+            android:fontFamily="@font/inter_extrabold"
+            android:textColor="@color/white"
+            android:layout_margin="5dp"/>
+
+        <EditText
+            android:id="@+id/editPassword"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="15"
+            android:fontFamily="@font/inter"
+            android:inputType="textPassword"
+            android:text="Password"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/custom_input"
+            android:paddingLeft="10dp"
+            android:textSize="14sp"/>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_gravity="center_horizontal">
+
+
+        <Button
+            android:id="@+id/loginBtn"
+            android:layout_width="175dp"
+            android:layout_height="40dp"
+            android:background="@drawable/custom_button"
+            android:text="Log in"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:fontFamily="@font/inter_extrabold"/>
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="40dp"/>
+
+        <Button
+            android:id="@+id/signInWithGoogleBtn"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/google_logo"
+            android:gravity="center" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:layout_marginBottom="50dp">
+
+        <Button
+            android:id="@+id/signUpForAccBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/already_have_an_account_button"
+            android:text="Sign up for an account"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:fontFamily="@font/inter"
+            android:textSize="16sp"/>
+
+
+    </LinearLayout>
+
+</LinearLayout>
