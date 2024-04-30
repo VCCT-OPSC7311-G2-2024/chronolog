@@ -22,5 +22,6 @@
     <string name="SaveChanges">Save Changes</string>
     <string name="Music">Music</string>
     <string name="Start_Stop">Start/Stop</string>
+    <string name="Settings">Settings</string>
 
 </resources>
