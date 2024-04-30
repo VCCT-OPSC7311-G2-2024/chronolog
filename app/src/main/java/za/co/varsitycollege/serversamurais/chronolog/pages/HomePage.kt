@@ -1,14 +1,17 @@
-package za.co.varsitycollege.serversamurais.chronolog
+package za.co.varsitycollege.serversamurais.chronolog.pages
 
+import android.animation.ObjectAnimator
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import android.widget.ImageButton
+import android.widget.TextView
 import androidx.cardview.widget.CardView
-
+import androidx.fragment.app.Fragment
+import za.co.varsitycollege.serversamurais.chronolog.NotificationPage
+import za.co.varsitycollege.serversamurais.chronolog.R
+import za.co.varsitycollege.serversamurais.chronolog.SettingsPage
 import java.util.Calendar
 
 class HomePage : Fragment() {
@@ -22,6 +25,7 @@ class HomePage : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         val view = inflater.inflate(R.layout.fragment_home_page, container, false)
 
         textView2 = view.findViewById(R.id.textView2)
@@ -32,6 +36,7 @@ class HomePage : Fragment() {
 
         // Call the method to update the greeting message based on the time of the day
         updateGreeting()
+
 
         // Set visibility of all CardViews to GONE
         dailyGoalsCardView.visibility = View.GONE
@@ -56,6 +61,14 @@ class HomePage : Fragment() {
             showMusicCard()
         }
 
+        view.findViewById<ImageButton>(R.id.settingBtn).setOnClickListener {
+            navigateToSettingsPage()
+        }
+
+        view.findViewById<ImageButton>(R.id.notificationBtn).setOnClickListener {
+            navigateToNotifcationPage()
+        }
+
         return view
     }
 
@@ -78,6 +91,7 @@ class HomePage : Fragment() {
         progressCardView.visibility = View.GONE
         profileCardView.visibility = View.GONE
         musicCardView.visibility = View.GONE
+        animateCardView(dailyGoalsCardView)
     }
 
     private fun showProgressCard() {
@@ -85,6 +99,7 @@ class HomePage : Fragment() {
         progressCardView.visibility = View.VISIBLE
         profileCardView.visibility = View.GONE
         musicCardView.visibility = View.GONE
+        animateCardView(progressCardView)
     }
 
     private fun showProfileCard() {
@@ -92,6 +107,7 @@ class HomePage : Fragment() {
         progressCardView.visibility = View.GONE
         profileCardView.visibility = View.VISIBLE
         musicCardView.visibility = View.GONE
+        animateCardView(profileCardView)
     }
 
     private fun showMusicCard() {
@@ -99,5 +115,27 @@ class HomePage : Fragment() {
         progressCardView.visibility = View.GONE
         profileCardView.visibility = View.GONE
         musicCardView.visibility = View.VISIBLE
+        animateCardView(musicCardView)
     }
+
+    private fun animateCardView(cardView: CardView) {
+        val alphaAnimator = ObjectAnimator.ofFloat(cardView, "alpha", 0f, 1f)
+        alphaAnimator.duration = 500
+        alphaAnimator.start()
+    }
+
+    private fun navigateToSettingsPage() {
+        val transaction = parentFragmentManager.beginTransaction()
+        transaction.replace(R.id.frameLayout, SettingsPage())
+        transaction.addToBackStack(null)
+        transaction.commit()
+    }
+
+    private fun navigateToNotifcationPage() {
+        val transaction = parentFragmentManager.beginTransaction()
+        transaction.replace(R.id.frameLayout, NotificationPage())
+        transaction.addToBackStack(null)
+        transaction.commit()
+    }
+
 }
