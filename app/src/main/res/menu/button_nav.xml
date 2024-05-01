@@ -12,4 +12,12 @@
     <item android:title="stats"
         android:id="@+id/statsNavID"
         android:icon="@drawable/graph_svgrepo_com"/>
+
+    <item android:title="notifications"
+        android:id="@+id/notificationNavID"
+        android:icon="@drawable/notification_13_svgrepo_com"/>
+
+    <item android:title="settings"
+        android:id="@+id/settingNavID"
+        android:icon="@drawable/settings_svgrepo_com"/>
 </menu>
