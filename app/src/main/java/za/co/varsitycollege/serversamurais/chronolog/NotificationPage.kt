@@ -1,10 +1,14 @@
 package za.co.varsitycollege.serversamurais.chronolog
 
+import RecyclerAdapter
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -29,13 +33,28 @@ class NotificationPage : Fragment() {
         }
     }
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_notification_page, container, false)
+        val view = inflater.inflate(R.layout.fragment_notification_page, container, false)
+
+        // Initialize RecyclerView
+        val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+        // Sample data
+        val data = listOf("Notification 1", "Notification 2", "Notification 3")
+
+        // Create adapter and set it to RecyclerView
+        val adapter = RecyclerAdapter(requireContext(), data)
+        recyclerView.adapter = adapter
+
+        return view
     }
+
 
     companion object {
         /**

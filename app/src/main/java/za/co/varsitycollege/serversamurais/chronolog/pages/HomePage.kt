@@ -61,13 +61,6 @@ class HomePage : Fragment() {
             showMusicCard()
         }
 
-        view.findViewById<ImageButton>(R.id.settingBtn).setOnClickListener {
-            navigateToSettingsPage()
-        }
-
-        view.findViewById<ImageButton>(R.id.notificationBtn).setOnClickListener {
-            navigateToNotifcationPage()
-        }
 
         return view
     }

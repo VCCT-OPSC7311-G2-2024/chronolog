@@ -6,7 +6,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
+import za.co.varsitycollege.serversamurais.chronolog.NotificationPage
 import za.co.varsitycollege.serversamurais.chronolog.R
+import za.co.varsitycollege.serversamurais.chronolog.SettingsPage
 import za.co.varsitycollege.serversamurais.chronolog.Stats
 import za.co.varsitycollege.serversamurais.chronolog.TimeSheet
 import za.co.varsitycollege.serversamurais.chronolog.databinding.ActivityHomePageBinding
@@ -27,6 +29,8 @@ class HomePageActivity : AppCompatActivity() {
                 R.id.homeNavID -> replaceFragment(HomePage())
                 R.id.timesheetNavID -> replaceFragment(TimeSheet())
                 R.id.statsNavID -> replaceFragment(Stats())
+                R.id.notificationNavID -> replaceFragment(NotificationPage())
+                R.id.settingNavID -> replaceFragment(SettingsPage())
             }
             true // Indicate that the item selection event has been handled
         }
