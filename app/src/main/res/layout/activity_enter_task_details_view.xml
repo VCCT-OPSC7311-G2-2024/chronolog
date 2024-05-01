@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context=".views.EnterTaskDetailsView"
+    android:orientation="vertical"
+    android:background="@drawable/rounded_background">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:elevation="4dp"
+        android:padding="16dp">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <ImageButton
+            android:id="@+id/closeEnterTaskDetailsBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/close_svgrepo_com"
+            android:background="@null"
+            android:layout_weight="0.5"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/inter_extrabold"
+            android:text="0:00:00"
+            android:textColor="@color/white"
+            android:layout_weight="1"
+            android:textAlignment="center"
+            android:textSize="20sp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/inter_extrabold"
+            android:text="Add Task"
+            android:textColor="@color/white"
+            android:layout_weight="0.5"
+            android:textAlignment="center"
+            android:textSize="14sp"/>
+
+    </LinearLayout>
+
+    <EditText
+        android:padding="5dp"
+        android:textSize="16sp"
+        android:layout_margin="10dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:textColor="#D3D3D3"
+        android:ems="17"
+        android:hint="Current Task..."
+        android:textColorHint="#D3D3D3"
+        android:background="@drawable/custom_current_task_edit_text" />
+
+    <EditText
+        android:padding="5dp"
+        android:textSize="16sp"
+        android:layout_margin="10dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:textColor="#D3D3D3"
+        android:ems="17"
+        android:hint="Description..."
+        android:textColorHint="#D3D3D3"
+        android:background="@drawable/custom_current_task_edit_text"
+        android:drawableRight="@drawable/baseline_add_a_photo_24"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal">
+
+            <Button
+                android:id="@+id/categoryButton"
+                android:layout_width="80dp"
+                android:layout_height="40dp"
+                android:text="Category"
+                android:fontFamily="@font/inter_extrabold"
+                android:textAllCaps="false"
+                android:textSize="12sp"
+                android:background="@drawable/round_button"
+                android:layout_marginRight="10dp"/>
+
+            <Button
+                android:id="@+id/startTimeButton"
+                android:layout_width="80dp"
+                android:layout_height="40dp"
+                android:text="Start Time"
+                android:fontFamily="@font/inter_extrabold"
+                android:textAllCaps="false"
+                android:textSize="12sp"
+                android:background="@drawable/round_button"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="10dp">
+
+            <Button
+                android:id="@+id/teamButton"
+                android:layout_width="80dp"
+                android:layout_height="40dp"
+                android:text="Team"
+                android:fontFamily="@font/inter_extrabold"
+                android:textAllCaps="false"
+                android:textSize="12sp"
+                android:background="@drawable/round_button"
+                android:layout_marginRight="10dp"/>
+
+            <Button
+                android:id="@+id/endTimeButton"
+                android:layout_width="80dp"
+                android:layout_height="40dp"
+                android:text="End Time"
+                android:fontFamily="@font/inter_extrabold"
+                android:textAllCaps="false"
+                android:textSize="12sp"
+                android:background="@drawable/round_button"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

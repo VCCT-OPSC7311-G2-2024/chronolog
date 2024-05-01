@@ -100,7 +100,7 @@
 
     <include
         layout="@layout/activity_recent_view"
-        android:layout_width="wrap_content"
+        android:layout_width="300dp"
         android:layout_height="75dp"
         android:layout_marginStart="50dp"
         android:layout_marginTop="1dp"

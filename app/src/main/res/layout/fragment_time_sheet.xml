@@ -1,16 +1,151 @@
-<?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".TimeSheet">
+    tools:context=".TimeSheet"
+    android:background="@drawable/blue_background">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="start">
+
+                <TextView
+                    android:id="@+id/border"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/inter_extrabold"
+                    android:text="Timesheet"
+                    android:textColor="@color/white"
+                    android:textSize="34sp" />
+
+                <TextView
+                    android:layout_marginTop="20dp"
+                    android:id="@+id/textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/inter"
+                    android:text="YOUR ACTIVITY"
+                    android:textColor="#FFFFFF"
+                    android:textSize="24sp" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="50dp">
+
+            <ImageButton
+                android:id="@+id/imageButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="40dp"
+                android:src="@drawable/filter_button"
+                android:background="@null" />
+
+            <Button
+                android:id="@+id/date_button"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_weight="1"
+                android:text="dd/mm/yyyy"
+                android:background="@drawable/date_button"
+                android:textColor="@color/white"
+                android:textAllCaps="false"
+                android:layout_marginHorizontal="5dp"
+                />
+
+            <Button
+                android:id="@+id/category_button"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_weight="1"
+                android:text="category"
+                android:background="@drawable/date_button"
+                android:textColor="@color/white"
+                android:textAllCaps="false"
+                android:layout_marginHorizontal="5dp"/>
+
+            <Button
+                android:id="@+id/team_button"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_weight="1"
+                android:text="team"
+                android:background="@drawable/date_button"
+                android:textColor="@color/white"
+                android:textAllCaps="false"
+                android:layout_marginHorizontal="5dp"/>
+
+        </LinearLayout>
+
+        <include
+            android:id="@+id/addTaskButton"
+            android:layout_margin="20dp"
+            android:layout_gravity="center_horizontal"
+            layout="@layout/activity_add_task_view"
+            android:layout_width="300dp"
+            android:layout_height="75dp"
+            android:layout_marginBottom="25dp"
+            />
+
+
+
+    </LinearLayout>
+    <include
+        android:id="@+id/enterTaskDetails"
+        layout="@layout/activity_enter_task_details_view"
+        android:visibility="gone"
+        android:layout_alignParentBottom="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <include
+        android:id="@+id/chooseCategoryList"
+        layout="@layout/create_new_category_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="this is the timesheet page"
-        android:textSize="20dp"/>
+        android:visibility="gone"
+        android:layout_above="@id/enterTaskDetails"/>
 
-</FrameLayout>
+    <include
+        android:id="@+id/chooseTeamList"
+        layout="@layout/team_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_above="@id/enterTaskDetails"/>
+
+    <include
+        android:id="@+id/chooseStartTime"
+        layout="@layout/start_time_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_above="@id/enterTaskDetails"/>
+
+    <include
+        android:id="@+id/chooseEndTime"
+        layout="@layout/end_time_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_above="@id/enterTaskDetails"/>
+
+
+</RelativeLayout>
