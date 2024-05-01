@@ -21,6 +21,11 @@ class CategoryAdapter(private val categories: ArrayList<Category>) : RecyclerVie
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.textViewCategoryName.text = categories[position].categoryName
+
+        holder.textViewCategoryName.setOnClickListener {
+            // Handle the button click here
+
+        }
     }
 
     override fun getItemCount(): Int {

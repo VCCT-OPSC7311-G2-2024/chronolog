@@ -10,12 +10,13 @@
         android:src="@drawable/circle"
         android:layout_gravity="center_vertical"/>
 
-    <TextView
+    <Button
         android:id="@+id/textViewCategoryName"
-        android:layout_marginLeft="50dp"
+        android:layout_marginStart="50dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="18sp"
         android:textColor="#4E6D86"
-        android:fontFamily="@font/inter_extrabold" />
+        android:fontFamily="@font/inter_extrabold"
+        android:background="@drawable/custom_btn_no_bg"/>
 </LinearLayout>
