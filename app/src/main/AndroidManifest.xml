@@ -13,10 +13,20 @@
         android:theme="@style/Theme.Chronolog"
         tools:targetApi="31">
         <activity
-            android:name=".views.home_quickActionButtons_view"
+            android:name=".views.EnterTaskDetailsView"
             android:exported="false" />
         <activity
-            android:name=".views.recentActivityView"
+            android:name=".views.AddTaskView"
+            android:exported="false" />
+        <activity
+            android:name=".pages.HomePageActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize"/>
+        <activity
+            android:name=".pages.LoginActivity"
+            android:exported="false" />
+        <activity
+            android:name=".pages.SignUpActivity"
             android:exported="false" />
         <activity
             android:name=".pages.MainActivity"
