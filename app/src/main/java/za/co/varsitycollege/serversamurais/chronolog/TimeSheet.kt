@@ -7,13 +7,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.NumberPicker
 import android.widget.RadioGroup
 import android.widget.RelativeLayout
+import android.widget.TextView
+import android.widget.Toast
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import za.co.varsitycollege.serversamurais.chronolog.Helpers.FirebaseHelper
+import za.co.varsitycollege.serversamurais.chronolog.model.Task
+import za.co.varsitycollege.serversamurais.chronolog.views.DurationPickerDialogFragment
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -25,26 +33,23 @@ private const val ARG_PARAM2 = "param2"
  * Use the [TimeSheet.newInstance] factory method to
  * create an instance of this fragment.
  */
-class TimeSheet : Fragment() {
+class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
+    DurationPickerDialogFragment.DurationPickerListener {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
 
+    private lateinit var firebaseHelper: FirebaseHelper
+
+
     private lateinit var enterTaskDetails: RelativeLayout
     private lateinit var addNewTaskButton: LinearLayout
     private lateinit var navBar: BottomNavigationView
-    private  lateinit var categoryList: LinearLayout
-    private lateinit var startTime: LinearLayout
+    private lateinit var categoryList: LinearLayout
     private lateinit var chooseTeam: LinearLayout
-    private  lateinit var endTime: LinearLayout
 
-    private lateinit var numberPickerHour: NumberPicker
-    private lateinit var numberPickerMinute: NumberPicker
-    private lateinit var radioGroupAmPm: RadioGroup
 
-    private lateinit var endTimeNumberPickerHour: NumberPicker
-    private lateinit var endTimeNumberPickerMinute: NumberPicker
-    private lateinit var endTimeRadioGroupAmPm: RadioGroup
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,7 +69,7 @@ class TimeSheet : Fragment() {
         val activity = activity as Activity
         // Task Details Section
         val closeTaskDetailsBtn : ImageButton = view.findViewById(R.id.closeEnterTaskDetailsBtn)
-        addNewTaskButton = view.findViewById(R.id.addTaskButton)
+        addNewTaskButton = view.findViewById(R.id.addNewTaskButton)
         enterTaskDetails = view.findViewById(R.id.enterTaskDetails)
 
 
@@ -76,40 +81,15 @@ class TimeSheet : Fragment() {
             toggleCategory()
         }
 
+        // Duration Widget
+        val showPickerButton: ImageButton = view.findViewById(R.id.editDurationButton)
 
-        // start time widget
-        startTime = view.findViewById(R.id.chooseStartTime)
-        val startTimeBtn: Button = view.findViewById(R.id.startTimeButton)
-
-        startTimeBtn.setOnClickListener{
-            toggleStartTime()
+        showPickerButton.setOnClickListener {
+            val picker = DurationPickerDialogFragment()
+            picker.listener = this
+            picker.show(parentFragmentManager, "durationPicker")
         }
 
-        // Clock logic
-        numberPickerHour = view.findViewById(R.id.numberPickerHour)
-        numberPickerMinute = view.findViewById(R.id.numberPickerMinute)
-        radioGroupAmPm = view.findViewById(R.id.radioGroupAmPm)
-
-        numberPickerHour.minValue = 1
-        numberPickerHour.maxValue = 12
-        numberPickerMinute.minValue = 0
-        numberPickerMinute.maxValue = 59
-        numberPickerMinute.setFormatter { String.format("%02d", it) }
-
-        radioGroupAmPm.check(R.id.radioButtonAM) // Default to AM
-
-        // end time clock logic
-        endTimeNumberPickerHour = view.findViewById(R.id.endTimeNumberPickerHour)
-        endTimeNumberPickerMinute = view.findViewById(R.id.endTimeNumberPickerMinute)
-        endTimeRadioGroupAmPm = view.findViewById(R.id.endTimeRadioGroupAmPm)
-
-        endTimeNumberPickerHour.minValue = 1
-        endTimeNumberPickerHour.maxValue = 12
-        endTimeNumberPickerMinute.minValue = 0
-        endTimeNumberPickerMinute.maxValue = 59
-        endTimeNumberPickerMinute.setFormatter { String.format("%02d", it) }
-
-        endTimeRadioGroupAmPm.check(R.id.endTimeRadioButtonAM) // Default to AM
 
         // Choose Team Widget
         chooseTeam = view.findViewById(R.id.chooseTeamList)
@@ -120,13 +100,6 @@ class TimeSheet : Fragment() {
         }
 
 
-        // end time widget
-        endTime = view.findViewById(R.id.chooseEndTime)
-        val endTimeBtn: Button = view.findViewById(R.id.endTimeButton)
-
-        endTimeBtn.setOnClickListener{
-            toggleEndTimeWidget()
-        }
 
         // Make navbar disappear
         navBar = activity.findViewById(R.id.bottomNavigationView)
@@ -141,8 +114,38 @@ class TimeSheet : Fragment() {
             toggleVisibility()
         }
 
+
+        // add task functionality
+        firebaseHelper = FirebaseHelper(this)
+        val addTaskButton: Button = view.findViewById(R.id.addTaskButton)
+
+        val userId = firebaseHelper.getUserId()
+
+        addTaskButton.setOnClickListener{
+
+
+            val newTask = Task(null, "App Research",
+                "Research Toggl Track App", null, "Chronolog",
+                "OPSC POE", 60)
+            firebaseHelper.addTask(newTask, userId )
+        }
+
+
         // Inflate the layout for this fragment
         return view
+    }
+
+    override fun onDurationSet(hours: Int, minutes: Int) {
+        // Handle the picked duration
+        val currentDurationTV: TextView = view?.findViewById(R.id.currentDurationTV) ?:
+        throw IllegalStateException("View cannot be null")
+        val duration = (hours * 60) + minutes
+        currentDurationTV.text = "$hours:$minutes:00"
+        Toast.makeText(context, "Duration: $hours Hours, $minutes Minutes", Toast.LENGTH_LONG).show()
+    }
+
+    override fun onCancel() {
+        // Handle cancellation
     }
 
     private fun toggleVisibility() {
@@ -168,30 +171,6 @@ class TimeSheet : Fragment() {
 
         } else {
             categoryList.visibility = View.GONE
-
-        }
-    }
-
-    private fun toggleStartTime() {
-        if (startTime.visibility == View.GONE) {
-
-            startTime.visibility = View.VISIBLE
-
-
-        } else {
-            startTime.visibility = View.GONE
-
-        }
-    }
-
-    private fun toggleEndTimeWidget() {
-        if (endTime.visibility == View.GONE) {
-
-            endTime.visibility = View.VISIBLE
-
-
-        } else {
-            endTime.visibility = View.GONE
 
         }
     }
@@ -227,4 +206,13 @@ class TimeSheet : Fragment() {
                 }
             }
     }
+
+    override fun onSuccess(user: FirebaseUser?) {
+        Toast.makeText(context, "Task added successfully!", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onFailure(errorMessage: String) {
+        Toast.makeText(context, "Failed to add task: $errorMessage", Toast.LENGTH_LONG).show()
+    }
+
 }

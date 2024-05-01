@@ -95,7 +95,7 @@
         </LinearLayout>
 
         <include
-            android:id="@+id/addTaskButton"
+            android:id="@+id/addNewTaskButton"
             android:layout_margin="20dp"
             android:layout_gravity="center_horizontal"
             layout="@layout/activity_add_task_view"
@@ -132,20 +132,13 @@
         android:layout_above="@id/enterTaskDetails"/>
 
     <include
-        android:id="@+id/chooseStartTime"
-        layout="@layout/start_time_view"
+        android:id="@+id/editDuration"
+        layout="@layout/duration_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
         android:layout_above="@id/enterTaskDetails"/>
 
-    <include
-        android:id="@+id/chooseEndTime"
-        layout="@layout/end_time_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:layout_above="@id/enterTaskDetails"/>
 
 
 </RelativeLayout>
