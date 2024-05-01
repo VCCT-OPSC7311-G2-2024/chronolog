@@ -1,5 +1,7 @@
 package za.co.varsitycollege.serversamurais.chronolog.pages
 
+import RecyclerAdapter
+import SharedViewModel
 import android.animation.ObjectAnimator
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,9 +11,11 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import za.co.varsitycollege.serversamurais.chronolog.NotificationPage
 import za.co.varsitycollege.serversamurais.chronolog.R
 import za.co.varsitycollege.serversamurais.chronolog.SettingsPage
+import za.co.varsitycollege.serversamurais.chronolog.model.NotificationItem
 import java.util.Calendar
 
 class HomePage : Fragment() {
@@ -20,6 +24,10 @@ class HomePage : Fragment() {
     private lateinit var progressCardView: CardView
     private lateinit var profileCardView: CardView
     private lateinit var musicCardView: CardView
+
+    // Define and initialize adapter
+    private val data = mutableListOf<NotificationItem>()
+    private lateinit var adapter: RecyclerAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,6 +41,9 @@ class HomePage : Fragment() {
         progressCardView = view.findViewById(R.id.progressCardView)
         profileCardView = view.findViewById(R.id.profilecardview)
         musicCardView = view.findViewById(R.id.musicCardView)
+
+        // Initialize adapter
+        adapter = RecyclerAdapter(requireContext(), data)
 
         // Call the method to update the greeting message based on the time of the day
         updateGreeting()
@@ -59,6 +70,14 @@ class HomePage : Fragment() {
 
         view.findViewById<ImageButton>(R.id.musicBtn).setOnClickListener {
             showMusicCard()
+        }
+
+        val model: SharedViewModel by activityViewModels()
+
+        view.findViewById<ImageButton>(R.id.settingBtn).setOnClickListener{
+            val newItem = NotificationItem("New Notification", "This is a new notification")
+            model.data.value?.add(newItem)
+            model.adapter.value?.notifyDataSetChanged()
         }
 
 

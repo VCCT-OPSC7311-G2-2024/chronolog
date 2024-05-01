@@ -2,6 +2,7 @@ package za.co.varsitycollege.serversamurais.chronolog
 
 import android.os.Bundle
 import android.text.Editable
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -29,11 +30,6 @@ class SettingsPage : Fragment() {
     private var param2: String? = null
     private lateinit var firebaseHelper: FirebaseHelper
 
-
-    /**
-     * Called when the fragment is first created.
-     * Initializes the FirebaseHelper instance.
-     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -59,10 +55,6 @@ class SettingsPage : Fragment() {
         })
     }
 
-    /**
-     * Called to have the fragment instantiate its user interface view.
-     * Sets up the UI elements and their event handlers.
-     */
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -70,9 +62,14 @@ class SettingsPage : Fragment() {
         return inflater.inflate(R.layout.fragment_settings_page, container, false).apply {
             val editTexts = listOf(
                 findViewById(R.id.editTextFullName),
-                findViewById(R.id.editEmail),
                 findViewById<EditText>(R.id.editPassword)
             )
+
+            val emailTxt = findViewById<EditText>(R.id.editEmail)
+
+            emailTxt.isEnabled = false
+
+
 
 
             val editorButtons = listOf(
@@ -89,14 +86,24 @@ class SettingsPage : Fragment() {
                 }
             }
 
+           try {
             // Get the current user
             val user = firebaseHelper.getCurrentUser()
+
+            // Log the user object along with the displayName and email
+            user?.let {
+                Log.d("SettingsPage", "User: $user, Name: ${it.displayName}, Email: ${it.email}")
+            }
 
             // Set the user's full name as the text of the EditText field
             user?.let {
                 editTexts[0].text = Editable.Factory.getInstance().newEditable(it.displayName)
-                editTexts[1].text = Editable.Factory.getInstance().newEditable(it.email)
+                emailTxt.text = Editable.Factory.getInstance().newEditable(it.email)
             }
+        } catch (exception: Exception) {
+            // Log the error
+            Log.e("SettingsPage", "Error: ${exception.message}")
+        }
 
             findViewById<Button>(R.id.updateBtn).setOnClickListener {
                 handleUpdateButtonClick(editTexts[0], editTexts[1])
@@ -142,7 +149,6 @@ class SettingsPage : Fragment() {
     private fun setFieldsEnabled(enabled: Boolean, vararg fields: EditText) {
         fields.forEach { it.isEnabled = enabled }
     }
-
     companion object {
         /**
          * Use this factory method to create a new instance of

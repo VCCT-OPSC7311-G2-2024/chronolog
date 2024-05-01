@@ -1,14 +1,19 @@
 package za.co.varsitycollege.serversamurais.chronolog
 
 import RecyclerAdapter
+import SharedViewModel
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import za.co.varsitycollege.serversamurais.chronolog.model.NotificationItem
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -38,22 +43,24 @@ class NotificationPage : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_notification_page, container, false)
 
-        // Initialize RecyclerView
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        // Sample data
-        val data = listOf("Notification 1", "Notification 2", "Notification 3")
+        val model: SharedViewModel by activityViewModels()
 
-        // Create adapter and set it to RecyclerView
-        val adapter = RecyclerAdapter(requireContext(), data)
-        recyclerView.adapter = adapter
+      Log.d("NotificationPage", "Current data: ${model.data.value}")
+            model.data.observe(viewLifecycleOwner) { itemList ->
+                Log.d("NotificationPage", "Data observed: $itemList")
+                val adapter = RecyclerAdapter(requireContext(), itemList)
+                model.adapter.value = adapter
+                recyclerView.adapter = adapter
+            }
 
         return view
     }
+
 
 
     companion object {
