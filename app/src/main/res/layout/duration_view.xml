@@ -1,25 +1,58 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:padding="24dp">
-
-    <NumberPicker
-        android:id="@+id/numberPickerHours"
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"/>
+        android:fontFamily="@font/inter_extrabold"
+        android:text="DURATION"
+        android:textColor="@color/black"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <NumberPicker
+            android:id="@+id/numberPickerHours"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=":"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:layout_gravity="center"/>
+
+        <NumberPicker
+            android:id="@+id/numberPickerMinutes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text=":"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:layout_gravity="center"/>
+        android:text="Hours"
+        android:fontFamily="@font/inter" android:layout_marginRight="60dp"/>
 
-    <NumberPicker
-        android:id="@+id/numberPickerMinutes"
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"/>
+        android:text="Minutes"
+        android:fontFamily="@font/inter"
+        android:textAlignment="center"/>
+</LinearLayout>
+
+
 </LinearLayout>

@@ -139,6 +139,14 @@
         android:visibility="gone"
         android:layout_above="@id/enterTaskDetails"/>
 
+    <include
+        android:id="@+id/createNewCategory"
+        layout="@layout/create_category_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_above="@id/chooseCategoryList"/>
+
 
 
 </RelativeLayout>

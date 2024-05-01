@@ -91,6 +91,7 @@
         android:background="@drawable/custom_current_task_edit_text" />
 
     <EditText
+        android:id="@+id/descriptionEditText"
         android:padding="5dp"
         android:textSize="16sp"
         android:layout_margin="10dp"
