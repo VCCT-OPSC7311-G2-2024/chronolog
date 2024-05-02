@@ -1,6 +1,7 @@
 package za.co.varsitycollege.serversamurais.chronolog.Helpers
 
 import android.util.Log
+import android.widget.ArrayAdapter
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -11,7 +12,6 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
-import za.co.varsitycollege.serversamurais.chronolog.adapters.CategoryAdapter
 import za.co.varsitycollege.serversamurais.chronolog.model.Category
 
 
@@ -107,7 +107,9 @@ class FirebaseHelper(private val listener: FirebaseOperationListener) {
             }
     }
 
-    fun fetchCategories(userId: String, categories: ArrayList<Category>, adapter: CategoryAdapter) {
+    fun fetchCategories(
+        userId: String, categories: MutableList<String>, adapter: ArrayAdapter<String>
+    ) {
         // Firebase reference
 
         databaseCategoriesReference.child(userId).addValueEventListener(object : ValueEventListener {
@@ -115,7 +117,7 @@ class FirebaseHelper(private val listener: FirebaseOperationListener) {
                 categories.clear()
                 for (snapshot in dataSnapshot.children) {
                     val category = snapshot.getValue(Category::class.java)
-                    category?.let { categories.add(it) }
+                    category?.let { categories.add(it.categoryName.toString()) }
                 }
                 adapter.notifyDataSetChanged()
             }
