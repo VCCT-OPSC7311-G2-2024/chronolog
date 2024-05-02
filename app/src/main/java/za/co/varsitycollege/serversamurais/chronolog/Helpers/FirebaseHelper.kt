@@ -11,7 +11,6 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
-import za.co.varsitycollege.serversamurais.chronolog.adapters.TaskAdapter
 import za.co.varsitycollege.serversamurais.chronolog.model.Category
 
 
@@ -77,24 +76,27 @@ class FirebaseHelper(private val listener: FirebaseOperationListener) {
                 }
             }
     }
-    fun fetchTasks(onResult: (List<Task>) -> Unit, onError: (Exception) -> Unit) {
-        databaseTasksReference // Fetching the last 50 tasks based on timestamp
-            .addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    val tasksList = ArrayList<Task>()
-                    snapshot.children.forEach { dataSnapshot ->
-                        val task = dataSnapshot.getValue(Task::class.java)
-                        task?.let { tasksList.add(it) }
-                    }
-                    tasksList.reverse() // Reverse to display the most recent tasks at the top
-                    onResult(tasksList)
-                }
 
-                override fun onCancelled(error: DatabaseError) {
-                    onError(Exception(error.message))
+    fun fetchTasks(userId: String, tasks: MutableList<Task>, adapter: ArrayAdapter<Task>) {
+
+        databaseTasksReference.child(userId).addValueEventListener(object: ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                tasks.clear()
+
+                for(snapshot in dataSnapshot.children){
+                    val task = snapshot.getValue(Task::class.java)
+                    task?.let {tasks.add(it)}
                 }
-            })
+                adapter.notifyDataSetChanged()
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("MainActivity", "Failed to read categories.", error.toException())
+            }
+        })
     }
+
 
 
     fun addCategoryToFirebase(newCategory: Category, userId: String) {

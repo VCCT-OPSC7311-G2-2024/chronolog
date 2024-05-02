@@ -11,10 +11,11 @@ import za.co.varsitycollege.serversamurais.chronolog.model.Task
 class TaskAdapter(private val tasks: List<Task>) : RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
 
     class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var textViewTaskName: TextView = itemView.findViewById(R.id.durationTextView)
-        var textViewDate: TextView = itemView.findViewById(R.id.dateTextView)
-        var textViewDescription: TextView = itemView.findViewById(R.id.descriptionTextView)
-        var textViewDuration: TextView = itemView.findViewById(R.id.timerTextView)
+        val textViewTaskName: TextView = itemView.findViewById(R.id.recentTaskNameTextView)
+        val textViewTaskDescription: TextView = itemView.findViewById(R.id.recentDescriptionTextView)
+        val textViewTaskDate: TextView = itemView.findViewById(R.id.recentDateTextView)
+        val textViewTaskDuration: TextView = itemView.findViewById(R.id.recentDurationTextView)
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
@@ -25,12 +26,11 @@ class TaskAdapter(private val tasks: List<Task>) : RecyclerView.Adapter<TaskAdap
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
         val task = tasks[position]
         holder.textViewTaskName.text = task.name
-        holder.textViewDate.text = task.date.toString()
-        holder.textViewDescription.text = task.description
-        holder.textViewDuration.text = task.duration.toString()
+        holder.textViewTaskDescription.text = task.description
+        holder.textViewTaskDate.text = task.date.toString()
+        holder.textViewTaskDuration.text = task.duration.toString()
+        // Bind other task properties to views
     }
 
-    override fun getItemCount() = tasks.size
-
-
+    override fun getItemCount(): Int = tasks.size
 }

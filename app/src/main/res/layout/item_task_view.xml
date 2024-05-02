@@ -15,7 +15,7 @@
         android:orientation="vertical"
         android:layout_weight="0.5">
         <TextView
-            android:id="@+id/durationTextView"
+            android:id="@+id/recentDurationTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="124\nminutes"
@@ -42,7 +42,7 @@
         android:paddingLeft="5dp">
 
         <TextView
-            android:id="@+id/dateTextView"
+            android:id="@+id/recentDateTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="dd/mm/yyy"
@@ -52,7 +52,7 @@
             android:layout_margin="1dp"/>
 
         <TextView
-            android:id="@+id/taskNameTextView"
+            android:id="@+id/recentTaskNameTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="App Research"
@@ -64,7 +64,7 @@
 
 
         <TextView
-            android:id="@+id/descriptionTextView"
+            android:id="@+id/recentDescriptionTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Research Toggl Track App"

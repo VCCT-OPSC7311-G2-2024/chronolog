@@ -23,7 +23,13 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.database
 import za.co.varsitycollege.serversamurais.chronolog.Helpers.FirebaseHelper
 import za.co.varsitycollege.serversamurais.chronolog.adapters.TaskAdapter
 import za.co.varsitycollege.serversamurais.chronolog.model.Category
@@ -61,7 +67,7 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
     private lateinit var descriptionEditText: EditText
     private lateinit var durationTextView: TextView
     private var taskCategory : String = "Default Category"
-    private lateinit var taskRecyclerView: RecyclerView
+
 
     private lateinit var autoCompleteTextView: AutoCompleteTextView
     private lateinit var categoriesAdapter: ArrayAdapter<String>
@@ -73,6 +79,11 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
     private var timerRunning = false
     private var timer: CountDownTimer? = null
     private var timeInMilliseconds = 0L
+
+    private lateinit var taskRecyclerView: RecyclerView
+    private lateinit var taskAdapter: TaskAdapter
+    private val tasks = mutableListOf<Task>()
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -149,16 +160,22 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
 
         taskRecyclerView = view.findViewById(R.id.recentTasksRecyclerView)
         taskRecyclerView.layoutManager = LinearLayoutManager(context)
+        taskAdapter = TaskAdapter(tasks)
+        taskRecyclerView.adapter = taskAdapter
 
-        firebaseHelper.fetchTasks(
-            onResult = { tasks ->
-                taskRecyclerView.adapter = TaskAdapter(tasks)
-            },
-            onError = { exception ->
-                Log.e("FetchTasksError", "Error fetching tasks", exception)
+        val database = Firebase.database("https://chronolog-db9b8-default-rtdb.europe-west1.firebasedatabase.app/")
+        val databaseReference = database.getReference("tasks") // Adjust path as needed
+        databaseReference.child(userId).addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                tasks.clear()
+                dataSnapshot.children.mapNotNullTo(tasks) { it.getValue(Task::class.java) }
+                taskAdapter.notifyDataSetChanged()
             }
-        )
 
+            override fun onCancelled(databaseError: DatabaseError) {
+                Log.e("TasksFragment", "Failed to load tasks.", databaseError.toException())
+            }
+        })
 
 
 
@@ -182,7 +199,7 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
             val newTask = Task(
                 null, taskName,
                 description, null, "Chronolog",
-                taskCategory, duration, today.toString()
+                taskCategory, duration, ""
             )
             firebaseHelper.addTask(newTask, userId)
 
