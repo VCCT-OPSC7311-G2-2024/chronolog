@@ -1,21 +1,21 @@
 package za.co.varsitycollege.serversamurais.chronolog.pages
 
-import RecyclerAdapter
-import SharedViewModel
 import android.animation.ObjectAnimator
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
+import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import com.google.firebase.auth.FirebaseUser
+import za.co.varsitycollege.serversamurais.chronolog.Helpers.FirebaseHelper
 import za.co.varsitycollege.serversamurais.chronolog.NotificationPage
 import za.co.varsitycollege.serversamurais.chronolog.R
 import za.co.varsitycollege.serversamurais.chronolog.SettingsPage
-import za.co.varsitycollege.serversamurais.chronolog.model.NotificationItem
 import java.util.Calendar
 
 class HomePage : Fragment() {
@@ -25,9 +25,7 @@ class HomePage : Fragment() {
     private lateinit var profileCardView: CardView
     private lateinit var musicCardView: CardView
 
-    // Define and initialize adapter
-    private val data = mutableListOf<NotificationItem>()
-    private lateinit var adapter: RecyclerAdapter
+    private lateinit var firebaseHelper: FirebaseHelper
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,8 +40,15 @@ class HomePage : Fragment() {
         profileCardView = view.findViewById(R.id.profilecardview)
         musicCardView = view.findViewById(R.id.musicCardView)
 
-        // Initialize adapter
-        adapter = RecyclerAdapter(requireContext(), data)
+        firebaseHelper = FirebaseHelper(object : FirebaseHelper.FirebaseOperationListener {
+            override fun onSuccess(user: FirebaseUser?) {
+                Toast.makeText(context, "Operation successful!", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onFailure(errorMessage: String) {
+                Toast.makeText(context, "Error: $errorMessage", Toast.LENGTH_SHORT).show()
+            }
+        })
 
         // Call the method to update the greeting message based on the time of the day
         updateGreeting()
@@ -72,14 +77,13 @@ class HomePage : Fragment() {
             showMusicCard()
         }
 
-        val model: SharedViewModel by activityViewModels()
-
-        view.findViewById<ImageButton>(R.id.settingBtn).setOnClickListener{
-            val newItem = NotificationItem("New Notification", "This is a new notification")
-            model.data.value?.add(newItem)
-            model.adapter.value?.notifyDataSetChanged()
+        view.findViewById<ImageButton>(R.id.settingBtn).setOnClickListener {
+            navigateToSettingsPage()
         }
 
+        view.findViewById<ImageButton>(R.id.notificationBtn).setOnClickListener {
+            navigateToNotifcationPage()
+        }
 
         return view
     }
@@ -87,7 +91,8 @@ class HomePage : Fragment() {
     private fun updateGreeting() {
         val cal = Calendar.getInstance()
         val hourOfDay = cal.get(Calendar.HOUR_OF_DAY)
-        val username = "John" // Replace with the actual username
+        val username = firebaseHelper.getUserName().toString()
+
 
         val greeting: String = when (hourOfDay) {
             in 0..11 -> "Good morning, $username"

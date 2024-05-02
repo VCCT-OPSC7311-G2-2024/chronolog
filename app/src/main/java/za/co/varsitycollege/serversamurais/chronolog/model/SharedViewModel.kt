@@ -1,10 +1,13 @@
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import za.co.varsitycollege.serversamurais.chronolog.Helpers.FirebaseHelper
 import za.co.varsitycollege.serversamurais.chronolog.model.NotificationItem
 
 class SharedViewModel : ViewModel() {
     val data: MutableLiveData<MutableList<NotificationItem>> = MutableLiveData(mutableListOf())
     val adapter = MutableLiveData<RecyclerAdapter>()
+    private lateinit var firebaseHelper: FirebaseHelper
+    val user = firebaseHelper.getCurrentUser()
 
     init {
         loadData()
