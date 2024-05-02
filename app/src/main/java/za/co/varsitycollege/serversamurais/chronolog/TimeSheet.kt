@@ -1,5 +1,6 @@
 package za.co.varsitycollege.serversamurais.chronolog
 
+import RecyclerAdapter
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
@@ -24,6 +25,7 @@ import com.google.firebase.auth.FirebaseUser
 import za.co.varsitycollege.serversamurais.chronolog.Helpers.FirebaseHelper
 import za.co.varsitycollege.serversamurais.chronolog.adapters.CategoryAdapter
 import za.co.varsitycollege.serversamurais.chronolog.model.Category
+import za.co.varsitycollege.serversamurais.chronolog.model.NotificationItem
 import za.co.varsitycollege.serversamurais.chronolog.model.Task
 import za.co.varsitycollege.serversamurais.chronolog.views.DurationPickerDialogFragment
 
@@ -62,6 +64,10 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
 
     private lateinit var createCategoryView: LinearLayout
 
+    private val data = mutableListOf<NotificationItem>()
+    private lateinit var adapterNotification: RecyclerAdapter
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,6 +87,9 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
         val closeTaskDetailsBtn: ImageButton = view.findViewById(R.id.closeEnterTaskDetailsBtn)
         addNewTaskButton = view.findViewById(R.id.addNewTaskButton)
         enterTaskDetails = view.findViewById(R.id.enterTaskDetails)
+
+        // Initialize adapter
+        adapterNotification = RecyclerAdapter(requireContext(), data)
 
         // Category Section
         val categoryButton: Button = view.findViewById(R.id.categoryButton)
@@ -169,7 +178,6 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
                 Toast.makeText(context, "Please enter a category name.", Toast.LENGTH_SHORT).show()
             }
             toggleAddCategory()
-
         }
 
         view.findViewById<Button>(R.id.buttonCancelCategory).setOnClickListener{
