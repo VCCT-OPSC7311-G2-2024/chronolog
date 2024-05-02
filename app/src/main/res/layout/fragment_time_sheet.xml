@@ -104,9 +104,16 @@
             android:layout_marginBottom="25dp"
             />
 
-
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recentTasksRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
 
     </LinearLayout>
+
+
+
     <include
         android:id="@+id/enterTaskDetails"
         layout="@layout/activity_enter_task_details_view"

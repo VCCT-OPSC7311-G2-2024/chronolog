@@ -1,10 +1,10 @@
 package za.co.varsitycollege.serversamurais.chronolog
 
 import android.app.Activity
-import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -25,9 +25,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseUser
 import za.co.varsitycollege.serversamurais.chronolog.Helpers.FirebaseHelper
+import za.co.varsitycollege.serversamurais.chronolog.adapters.TaskAdapter
 import za.co.varsitycollege.serversamurais.chronolog.model.Category
 import za.co.varsitycollege.serversamurais.chronolog.model.Task
 import za.co.varsitycollege.serversamurais.chronolog.views.DurationPickerDialogFragment
+import java.util.Calendar
+import java.util.Date
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -56,8 +59,9 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
 
     private lateinit var taskNameEditText: EditText
     private lateinit var descriptionEditText: EditText
-    private var duration: Int = 0
-    private lateinit var taskCategory : String
+    private lateinit var durationTextView: TextView
+    private var taskCategory : String = "Default Category"
+    private lateinit var taskRecyclerView: RecyclerView
 
     private lateinit var autoCompleteTextView: AutoCompleteTextView
     private lateinit var categoriesAdapter: ArrayAdapter<String>
@@ -85,6 +89,7 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
 
         val view = inflater.inflate(R.layout.fragment_time_sheet, container, false)
         val activity = activity as Activity
+
         // Task Details Section
         val closeTaskDetailsBtn: ImageButton = view.findViewById(R.id.closeEnterTaskDetailsBtn)
         addNewTaskButton = view.findViewById(R.id.addNewTaskButton)
@@ -142,26 +147,51 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
 
         val userId = firebaseHelper.getUserId()
 
+        taskRecyclerView = view.findViewById(R.id.recentTasksRecyclerView)
+        taskRecyclerView.layoutManager = LinearLayoutManager(context)
+
+        firebaseHelper.fetchTasks(
+            onResult = { tasks ->
+                taskRecyclerView.adapter = TaskAdapter(tasks)
+            },
+            onError = { exception ->
+                Log.e("FetchTasksError", "Error fetching tasks", exception)
+            }
+        )
+
+
+
+
         addTaskButton.setOnClickListener {
 
             taskNameEditText = view.findViewById(R.id.taskNameEditText)
             descriptionEditText = view.findViewById(R.id.descriptionEditText)
+            durationTextView = view.findViewById(R.id.timerTextView)
 
             val taskName = taskNameEditText.text.toString()
             val description = descriptionEditText.text.toString()
+            val durationText = durationTextView.text.toString()
+            val splitDuration = durationText.split(":")
+            val hours = splitDuration[0].toInt()
+            val minutes = splitDuration[1].toInt()
+            val duration: Int = (hours * 60) + minutes
+
+            val calendar: Calendar = Calendar.getInstance()
+            val today: Date = calendar.time
+
             val newTask = Task(
                 null, taskName,
                 description, null, "Chronolog",
-                taskCategory, duration
+                taskCategory, duration, today.toString()
             )
             firebaseHelper.addTask(newTask, userId)
 
             toggleVisibility()
         }
 
+
         // Setup Categories
 
-        // Create Category
         var addNewCategoryButton: Button = view.findViewById(R.id.addNewCategory)
         createCategoryView = view.findViewById(R.id.createNewCategory)
 
@@ -243,8 +273,9 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
         currentDurationTV.text = "$hours:$minutes:00"
         Toast.makeText(context, "Duration: $hours Hours, $minutes Minutes", Toast.LENGTH_LONG)
             .show()
-        duration = (hours * 60) + minutes
+        val duration = (hours * 60) + minutes
     }
+
 
     override fun onCancel() {
         // Handle cancellation
@@ -332,9 +363,6 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
             inputMethodManager.hideSoftInputFromWindow(it.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
         }
     }
-
-
-
 
 
     companion object {

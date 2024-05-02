@@ -9,9 +9,9 @@ import com.google.firebase.auth.UserProfileChangeRequest
 import za.co.varsitycollege.serversamurais.chronolog.model.Task
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
+import za.co.varsitycollege.serversamurais.chronolog.adapters.TaskAdapter
 import za.co.varsitycollege.serversamurais.chronolog.model.Category
 
 
@@ -63,8 +63,6 @@ class FirebaseHelper(private val listener: FirebaseOperationListener) {
     }
 
 
-
-
     fun addTask(newTask: Task, userId: String) {
 
         val taskId = databaseTasksReference.child(userId).push().key ?: throw Exception("Failed to generate unique key for task")
@@ -79,18 +77,25 @@ class FirebaseHelper(private val listener: FirebaseOperationListener) {
                 }
             }
     }
-    fun fetchTasks(userId: String, onTasksReceived: (List<Task>) -> Unit, onError: (Exception) -> Unit) {
-        databaseTasksReference.child(userId).addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val tasks = snapshot.children.mapNotNull { it.getValue(Task::class.java) }
-                onTasksReceived(tasks)
-            }
+    fun fetchTasks(onResult: (List<Task>) -> Unit, onError: (Exception) -> Unit) {
+        databaseTasksReference // Fetching the last 50 tasks based on timestamp
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val tasksList = ArrayList<Task>()
+                    snapshot.children.forEach { dataSnapshot ->
+                        val task = dataSnapshot.getValue(Task::class.java)
+                        task?.let { tasksList.add(it) }
+                    }
+                    tasksList.reverse() // Reverse to display the most recent tasks at the top
+                    onResult(tasksList)
+                }
 
-            override fun onCancelled(error: DatabaseError) {
-                onError(Exception(error.message))
-            }
-        })
+                override fun onCancelled(error: DatabaseError) {
+                    onError(Exception(error.message))
+                }
+            })
     }
+
 
     fun addCategoryToFirebase(newCategory: Category, userId: String) {
 

@@ -6,7 +6,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:background="@drawable/rounded_background"
     android:layout_gravity="center_horizontal"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:baselineAligned="false">
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -14,6 +15,7 @@
         android:orientation="vertical"
         android:layout_weight="0.5">
         <TextView
+            android:id="@+id/durationTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="124\nminutes"
@@ -40,6 +42,7 @@
         android:paddingLeft="5dp">
 
         <TextView
+            android:id="@+id/dateTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="dd/mm/yyy"
@@ -49,6 +52,7 @@
             android:layout_margin="1dp"/>
 
         <TextView
+            android:id="@+id/taskNameTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="App Research"
@@ -60,6 +64,7 @@
 
 
         <TextView
+            android:id="@+id/descriptionTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Research Toggl Track App"
@@ -82,7 +87,6 @@
             android:background="@null"
             android:layout_gravity="center_horizontal"/>
     </LinearLayout>
-
 
 
 
