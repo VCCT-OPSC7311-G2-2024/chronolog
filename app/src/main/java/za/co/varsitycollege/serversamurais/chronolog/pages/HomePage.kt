@@ -106,9 +106,8 @@ class HomePage : Fragment() {
         }
 
         view.findViewById<ImageButton>(R.id.progressBtn).setOnClickListener {
-            showProgressCard()
-
             showUserProgress()
+            showProgressCard()
         }
 
         view.findViewById<ImageButton>(R.id.profileBtn).setOnClickListener {
@@ -120,11 +119,7 @@ class HomePage : Fragment() {
         }
 
         view.findViewById<Button>(R.id.saveBtn).setOnClickListener {
-            val minGoal = minGoalEdit.text.toString().toInt()
-            val maxGoal = maxGoalEdit.text.toString().toInt()
-            val userid = firebaseHelper.getUserId()
-
-            firebaseHelper.updateTasksWithNonZeroGoals(userid, minGoal, maxGoal)
+            updateGoals()
         }
         return view
     }
@@ -141,6 +136,92 @@ class HomePage : Fragment() {
         }
 
         textView2.text = greeting
+    }
+
+
+
+    private fun animateCardView(cardView: CardView) {
+        val alphaAnimator = ObjectAnimator.ofFloat(cardView, "alpha", 0f, 1f)
+        alphaAnimator.duration = 500
+        alphaAnimator.start()
+    }
+
+    private fun showUserProgress() {
+        val userId = firebaseHelper.getUserId()
+
+        organizeDurationData(userId)
+        organizeMinGoalData(userId)
+        organizeMaxGoalData(userId)
+    }
+
+    private fun calculateProgressWidth(goal: Int): Int {
+        val maxProgressWidth = 250 // Maximum width of the progress bar in dp
+        val percentage = (goal.toFloat() / 100) * 100
+        return (maxProgressWidth * (percentage / 100)).toInt()
+    }
+
+    /**
+     * Convert dp to pixels.
+     */
+    private fun dpToPx(dp: Int): Int {
+        val scale = resources.displayMetrics.density
+        return (dp * scale + 0.5f).toInt()
+    }
+    private fun organizeDurationData(userId: String) {
+        firebaseHelper.getTotalDuration(userId) { totalDuration ->
+            val totalHours = totalDuration.toFloat()
+
+            // Calculate the percentage of total hours compared to the maximum
+            val percentage = (totalHours / 100) * 100
+            var progressWidth = (250 * (percentage / 100)).toInt()
+
+            // Constrain the progress width to be at most 250dp
+            progressWidth = progressWidth.coerceAtMost(dpToPx(250))
+
+            // Set the width of progressBar2 dynamically
+            val params = line2View.layoutParams
+            params.width = progressWidth
+            line2View.layoutParams = params
+
+            progressBar2Txt.text = totalHours.toInt().toString()
+        }
+    }
+    private fun organizeMinGoalData(userId: String) {
+        firebaseHelper.getMinGoal(userId) { minGoal ->
+            // Calculate progress for progressBar1
+            val minProgressWidth = calculateProgressWidth(minGoal)
+
+            // Set the width of progressBar1 dynamically
+            val params = line1View.layoutParams
+            params.width = minProgressWidth.coerceAtMost(dpToPx(250))
+            line1View.layoutParams = params
+
+            progressBar1Txt.text = minGoal.toString()
+        }
+    }
+
+    private fun organizeMaxGoalData(userId: String) {
+        firebaseHelper.getMaxGoal(userId) { maxGoal ->
+            val maxProgressWidth = calculateProgressWidth(maxGoal)
+
+            // Set the width of progressBar3 dynamically
+            val params = line3View.layoutParams
+            params.width = maxProgressWidth.coerceAtMost(dpToPx(250))
+            line3View.layoutParams = params
+
+            progressBar3Txt.text = maxGoal.toString()
+        }
+    }
+
+    private fun updateGoals()
+    {
+        val minGoal = minGoalEdit.text.toString().toInt()
+        val maxGoal = maxGoalEdit.text.toString().toInt()
+        val userid = firebaseHelper.getUserId()
+
+        firebaseHelper.updateTasksWithNonZeroGoals(userid, minGoal, maxGoal)
+
+        Toast.makeText(context, "Goals updated successfully!", Toast.LENGTH_SHORT).show()
     }
 
     private fun showDailyGoalsCard() {
@@ -174,71 +255,4 @@ class HomePage : Fragment() {
         musicCardView.visibility = View.VISIBLE
         animateCardView(musicCardView)
     }
-
-    private fun animateCardView(cardView: CardView) {
-        val alphaAnimator = ObjectAnimator.ofFloat(cardView, "alpha", 0f, 1f)
-        alphaAnimator.duration = 500
-        alphaAnimator.start()
-    }
-
-    private fun showUserProgress() {
-        val userId = firebaseHelper.getUserId()
-
-        firebaseHelper.getTotalDuration(userId) { totalDuration ->
-            val totalHours = totalDuration.toFloat()
-
-            // Calculate the percentage of total hours compared to the maximum
-            val percentage = (totalHours / 100) * 100
-            var progressWidth = (250 * (percentage / 100)).toInt()
-
-            // Constrain the progress width to be at most 250dp
-            progressWidth = progressWidth.coerceAtMost(dpToPx(250))
-
-            // Set the width of progressBar2 dynamically
-            val params = line2View.layoutParams
-            params.width = progressWidth
-            line2View.layoutParams = params
-
-            progressBar2Txt.text = totalHours.toInt().toString()
-        }
-
-        firebaseHelper.getMinGoal(userId) { minGoal ->
-            // Calculate progress for progressBar1
-            val minProgressWidth = calculateProgressWidth(minGoal)
-
-            // Set the width of progressBar1 dynamically
-            val params = line1View.layoutParams
-            params.width = minProgressWidth.coerceAtMost(dpToPx(250))
-            line1View.layoutParams = params
-
-            progressBar1Txt.text = minGoal.toString()
-        }
-
-        firebaseHelper.getMaxGoal(userId) { maxGoal ->
-            val maxProgressWidth = calculateProgressWidth(maxGoal)
-
-            // Set the width of progressBar3 dynamically
-            val params = line3View.layoutParams
-            params.width = maxProgressWidth.coerceAtMost(dpToPx(250))
-            line3View.layoutParams = params
-
-            progressBar3Txt.text = maxGoal.toString()
-        }
-    }
-
-    private fun calculateProgressWidth(goal: Int): Int {
-        val maxProgressWidth = 250 // Maximum width of the progress bar in dp
-        val percentage = (goal.toFloat() / 100) * 100
-        return (maxProgressWidth * (percentage / 100)).toInt()
-    }
-
-    /**
-     * Convert dp to pixels.
-     */
-    private fun dpToPx(dp: Int): Int {
-        val scale = resources.displayMetrics.density
-        return (dp * scale + 0.5f).toInt()
-    }
-
-
 }
