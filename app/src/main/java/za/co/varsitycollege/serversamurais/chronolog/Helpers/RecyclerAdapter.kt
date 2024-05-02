@@ -39,7 +39,7 @@ class RecyclerAdapter(private val context: Context, private var data: List<Notif
 
         fun bind(item: NotificationItem) {
             itemView.findViewById<TextView>(R.id.projectNameView).text = item.title
-            itemView.findViewById<TextView>(R.id.dateTextView).text = item.date
+            itemView.findViewById<TextView>(R.id.hoursTextView).text = "${item.duration} minutes"
         }
 
         override fun onClick(view: View?) {

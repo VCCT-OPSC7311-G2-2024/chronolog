@@ -177,7 +177,6 @@ class FirebaseHelper(private val listener: FirebaseOperationListener) {
         }
     }
 
-
     fun getCurrentUser(): FirebaseUser? {
         return mAuth.currentUser
     }
@@ -185,6 +184,82 @@ class FirebaseHelper(private val listener: FirebaseOperationListener) {
     fun getUserName(): String? {
         return mAuth.currentUser?.displayName
     }
+
+    fun updateTasksWithNonZeroGoals(userId: String, newMinGoal: Int, newMaxGoal: Int) {
+        databaseTasksReference.child(userId).addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (taskSnapshot in snapshot.children) {
+                    val task = taskSnapshot.getValue(Task::class.java)
+                    if (task != null && task.minGoal > 0 && task.maxGoal > 0) {
+                        task.minGoal = newMinGoal
+                        task.maxGoal = newMaxGoal
+                        taskSnapshot.ref.setValue(task)
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("FirebaseHelper", "Error updating tasks: ${error.message}")
+            }
+        })
+    }
+
+    fun getTotalDuration(userId: String, onTotalDurationReceived: (Int) -> Unit) {
+        databaseTasksReference.child(userId).addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val totalDuration = snapshot.children
+                    .map { it.getValue(Task::class.java) }
+                    .filterNotNull()
+                    .sumBy { it.duration }
+                onTotalDurationReceived(totalDuration)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("FirebaseHelper", "Error fetching tasks: ${error.message}")
+            }
+        })
+    }
+
+
+    fun getMinGoal(userId: String, onMinGoalReceived: (Int) -> Unit) {
+    databaseTasksReference.child(userId).addListenerForSingleValueEvent(object : ValueEventListener {
+        override fun onDataChange(snapshot: DataSnapshot) {
+            var minGoal = Int.MAX_VALUE
+            for (taskSnapshot in snapshot.children) {
+                val task = taskSnapshot.getValue(Task::class.java)
+                if (task != null && task.minGoal < minGoal) {
+                    minGoal = task.minGoal
+                }
+            }
+            onMinGoalReceived(minGoal)
+        }
+
+        override fun onCancelled(error: DatabaseError) {
+            Log.e("FirebaseHelper", "Error fetching tasks: ${error.message}")
+        }
+    })
+}
+
+fun getMaxGoal(userId: String, onMaxGoalReceived: (Int) -> Unit) {
+    databaseTasksReference.child(userId).addListenerForSingleValueEvent(object : ValueEventListener {
+        override fun onDataChange(snapshot: DataSnapshot) {
+            var maxGoal = Int.MIN_VALUE
+            for (taskSnapshot in snapshot.children) {
+                val task = taskSnapshot.getValue(Task::class.java)
+                if (task != null && task.maxGoal > maxGoal) {
+                    maxGoal = task.maxGoal
+                }
+            }
+            onMaxGoalReceived(maxGoal)
+        }
+
+        override fun onCancelled(error: DatabaseError) {
+            Log.e("FirebaseHelper", "Error fetching tasks: ${error.message}")
+        }
+    })
+}
+
+
 
 
 

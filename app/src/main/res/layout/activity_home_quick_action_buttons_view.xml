@@ -177,6 +177,8 @@
                         android:layout_marginStart="100dp"
                         android:layout_marginTop="116dp"
                         android:layout_marginEnd="-40dp"
+                        android:paddingStart="10dp"
+                        android:inputType="number"
                         android:background="@drawable/rounded_edittext"
                         app:layout_constraintEnd_toStartOf="@id/maxgoalEditText"
                         app:layout_constraintHorizontal_bias="0.0"
@@ -190,6 +192,8 @@
                         android:layout_marginStart="100dp"
                         android:layout_marginTop="116dp"
                         android:layout_marginEnd="100dp"
+                        android:paddingStart="10dp"
+                        android:inputType="number"
                         android:background="@drawable/rounded_edittext"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
@@ -228,9 +232,9 @@
 
                     <Button
                         android:id="@+id/saveBtn"
-                        android:layout_width="wrap_content"
+                        android:layout_width="150dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="124dp"
+                        android:layout_marginStart="115dp"
                         android:layout_marginTop="172dp"
                         android:background="@drawable/rounded_homebtn"
                         android:backgroundTint="#FFFFFF"
@@ -675,6 +679,8 @@
 
 
             </androidx.cardview.widget.CardView>
+
+
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

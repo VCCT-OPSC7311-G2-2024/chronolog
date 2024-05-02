@@ -1,10 +1,12 @@
 package za.co.varsitycollege.serversamurais.chronolog
 
 import RecyclerAdapter
+import SharedViewModel
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -18,6 +20,7 @@ import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -149,9 +152,11 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
             val newTask = Task(
                 null, taskName,
                 description, null, "Chronolog",
-                "OPSC POE", duration
+                "OPSC POE", duration, 0, 0
             )
             firebaseHelper.addTask(newTask, userId)
+
+            setupSettingsButton()
 
             toggleVisibility()
         }
@@ -210,6 +215,24 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
 
     override fun onCancel() {
         // Handle cancellation
+    }
+
+    private fun setupSettingsButton() {
+        val model: SharedViewModel by activityViewModels()
+
+        val userId = firebaseHelper.getUserId()
+        Log.e("HomePage", "User ID: $userId")
+        firebaseHelper.fetchTasks(userId) { tasks ->
+            // Clear existing data
+            model.data.value?.clear()
+            // Add new data
+            tasks.forEach { task ->
+                val newItem = NotificationItem(task.name, task.duration.toString())
+                // Use newItem here
+                model.data.value?.add(newItem)
+            }
+            model.adapter.value?.notifyDataSetChanged()
+        }
     }
 
     private fun toggleVisibility() {

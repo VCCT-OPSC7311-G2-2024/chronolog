@@ -8,6 +8,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
@@ -24,11 +26,24 @@ import za.co.varsitycollege.serversamurais.chronolog.model.Task
 import java.util.Calendar
 
 class HomePage : Fragment() {
+
     private lateinit var textView2: TextView
+
     private lateinit var dailyGoalsCardView: CardView
     private lateinit var progressCardView: CardView
     private lateinit var profileCardView: CardView
     private lateinit var musicCardView: CardView
+
+    private lateinit var minGoalEdit: EditText
+    private lateinit var maxGoalEdit: EditText
+
+    private lateinit var progressBar1Txt: TextView
+    private lateinit var progressBar2Txt: TextView
+    private lateinit var progressBar3Txt: TextView
+
+    private lateinit var line1View: View
+    private lateinit var line2View: View
+    private lateinit var line3View: View
 
     private lateinit var firebaseHelper: FirebaseHelper
 
@@ -48,6 +63,18 @@ class HomePage : Fragment() {
         progressCardView = view.findViewById(R.id.progressCardView)
         profileCardView = view.findViewById(R.id.profilecardview)
         musicCardView = view.findViewById(R.id.musicCardView)
+        minGoalEdit = view.findViewById(R.id.minGoalEditText)
+        maxGoalEdit = view.findViewById(R.id.maxgoalEditText)
+
+        progressBar1Txt = view.findViewById(R.id.progress_bar1_text)
+        progressBar2Txt = view.findViewById(R.id.progress_bar2_text)
+        progressBar3Txt = view.findViewById(R.id.progress_bar3_text)
+
+        line1View = view.findViewById(R.id.line1)
+        line2View = view.findViewById(R.id.line2)
+        line3View = view.findViewById(R.id.line3)
+
+
 
         // Initialize adapter
         adapter = RecyclerAdapter(requireContext(), data)
@@ -65,12 +92,13 @@ class HomePage : Fragment() {
         // Call the method to update the greeting message based on the time of the day
         updateGreeting()
 
-
         // Set visibility of all CardViews to GONE
         dailyGoalsCardView.visibility = View.GONE
         progressCardView.visibility = View.GONE
         profileCardView.visibility = View.GONE
         musicCardView.visibility = View.GONE
+
+
 
         // Set click listeners for buttons to show respective CardViews
         view.findViewById<ImageButton>(R.id.goalsBtn).setOnClickListener {
@@ -79,6 +107,8 @@ class HomePage : Fragment() {
 
         view.findViewById<ImageButton>(R.id.progressBtn).setOnClickListener {
             showProgressCard()
+
+            showUserProgress()
         }
 
         view.findViewById<ImageButton>(R.id.profileBtn).setOnClickListener {
@@ -89,24 +119,12 @@ class HomePage : Fragment() {
             showMusicCard()
         }
 
+        view.findViewById<Button>(R.id.saveBtn).setOnClickListener {
+            val minGoal = minGoalEdit.text.toString().toInt()
+            val maxGoal = maxGoalEdit.text.toString().toInt()
+            val userid = firebaseHelper.getUserId()
 
-        val model: SharedViewModel by activityViewModels()
-
-        view.findViewById<ImageButton>(R.id.settingBtn).setOnClickListener{
-            val userId = firebaseHelper.getUserId()
-            Log.e("HomePage", "User ID: $userId")
-            firebaseHelper.fetchTasks(userId) { tasks ->
-                // Clear existing data
-                model.data.value?.clear()
-                // Add new data
-                tasks.forEach { task ->
-                    val newItem = NotificationItem(task.name, task.duration.toString())
-                    // Use newItem here
-                    model.data.value?.add(newItem)
-                }
-                model.adapter.value?.notifyDataSetChanged()
-            }
-
+            firebaseHelper.updateTasksWithNonZeroGoals(userid, minGoal, maxGoal)
         }
         return view
     }
@@ -163,6 +181,64 @@ class HomePage : Fragment() {
         alphaAnimator.start()
     }
 
+    private fun showUserProgress() {
+        val userId = firebaseHelper.getUserId()
+
+        firebaseHelper.getTotalDuration(userId) { totalDuration ->
+            val totalHours = totalDuration.toFloat()
+
+            // Calculate the percentage of total hours compared to the maximum
+            val percentage = (totalHours / 100) * 100
+            var progressWidth = (250 * (percentage / 100)).toInt()
+
+            // Constrain the progress width to be at most 250dp
+            progressWidth = progressWidth.coerceAtMost(dpToPx(250))
+
+            // Set the width of progressBar2 dynamically
+            val params = line2View.layoutParams
+            params.width = progressWidth
+            line2View.layoutParams = params
+
+            progressBar2Txt.text = totalHours.toInt().toString()
+        }
+
+        firebaseHelper.getMinGoal(userId) { minGoal ->
+            // Calculate progress for progressBar1
+            val minProgressWidth = calculateProgressWidth(minGoal)
+
+            // Set the width of progressBar1 dynamically
+            val params = line1View.layoutParams
+            params.width = minProgressWidth.coerceAtMost(dpToPx(250))
+            line1View.layoutParams = params
+
+            progressBar1Txt.text = minGoal.toString()
+        }
+
+        firebaseHelper.getMaxGoal(userId) { maxGoal ->
+            val maxProgressWidth = calculateProgressWidth(maxGoal)
+
+            // Set the width of progressBar3 dynamically
+            val params = line3View.layoutParams
+            params.width = maxProgressWidth.coerceAtMost(dpToPx(250))
+            line3View.layoutParams = params
+
+            progressBar3Txt.text = maxGoal.toString()
+        }
+    }
+
+    private fun calculateProgressWidth(goal: Int): Int {
+        val maxProgressWidth = 250 // Maximum width of the progress bar in dp
+        val percentage = (goal.toFloat() / 100) * 100
+        return (maxProgressWidth * (percentage / 100)).toInt()
+    }
+
+    /**
+     * Convert dp to pixels.
+     */
+    private fun dpToPx(dp: Int): Int {
+        val scale = resources.displayMetrics.density
+        return (dp * scale + 0.5f).toInt()
+    }
 
 
 }
