@@ -16,6 +16,7 @@ import za.co.varsitycollege.serversamurais.chronolog.Stats
 import za.co.varsitycollege.serversamurais.chronolog.TimeSheet
 import za.co.varsitycollege.serversamurais.chronolog.databinding.ActivityHomePageBinding
 
+
 class HomePageActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

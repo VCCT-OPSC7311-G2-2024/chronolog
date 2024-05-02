@@ -2,4 +2,13 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="primaryColor">#FF6200EE</color>
+    <color name="primaryLightColor">#FFBB86FC</color>
+    <color name="primaryDarkColor">#FF3700B3</color>
+    <color name="secondaryColor">#FF03DAC5</color>
+
+    <!-- Custom button colors -->
+    <color name="buttonColor">#E91E63</color>
+    <color name="buttonTextColor">#FFFFFF</color>
 </resources>

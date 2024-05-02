@@ -1,5 +1,6 @@
 package za.co.varsitycollege.serversamurais.chronolog.pages
 
+import DateRangePickerFragment
 import RecyclerAdapter
 import SharedViewModel
 import android.animation.ObjectAnimator
@@ -9,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
+import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -74,11 +76,6 @@ class HomePage : Fragment() {
 
         val model: SharedViewModel by activityViewModels()
 
-        view.findViewById<ImageButton>(R.id.settingBtn).setOnClickListener{
-            val newItem = NotificationItem("New Notification", "This is a new notification")
-            model.data.value?.add(newItem)
-            model.adapter.value?.notifyDataSetChanged()
-        }
 
 
         return view
@@ -149,5 +146,8 @@ class HomePage : Fragment() {
         transaction.addToBackStack(null)
         transaction.commit()
     }
+
+
+
 
 }

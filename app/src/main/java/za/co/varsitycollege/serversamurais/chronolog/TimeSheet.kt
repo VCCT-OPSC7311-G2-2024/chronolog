@@ -1,6 +1,8 @@
 package za.co.varsitycollege.serversamurais.chronolog
 
+import DateRangePickerFragment
 import android.app.Activity
+import android.app.DatePickerDialog
 import android.content.Context
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -10,10 +12,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.CheckBox
+import android.widget.DatePicker
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.LinearLayout
@@ -37,6 +41,13 @@ import za.co.varsitycollege.serversamurais.chronolog.model.Task
 import za.co.varsitycollege.serversamurais.chronolog.views.DurationPickerDialogFragment
 import java.util.Calendar
 import java.util.Date
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.datepicker.CalendarConstraints
+import com.google.android.material.datepicker.DateValidatorPointForward
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -84,6 +95,8 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
     private lateinit var taskAdapter: TaskAdapter
     private val tasks = mutableListOf<Task>()
 
+    private lateinit var dateRangeTextView: TextView
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -100,6 +113,12 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
 
         val view = inflater.inflate(R.layout.fragment_time_sheet, container, false)
         val activity = activity as Activity
+
+        dateRangeTextView = view.findViewById(R.id.dateRangeTextView)
+
+        dateRangeTextView.setOnClickListener{
+            showDateRangePicker()
+        }
 
         // Task Details Section
         val closeTaskDetailsBtn: ImageButton = view.findViewById(R.id.closeEnterTaskDetailsBtn)
@@ -163,6 +182,8 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
         taskAdapter = TaskAdapter(tasks)
         taskRecyclerView.adapter = taskAdapter
 
+
+
         val database = Firebase.database("https://chronolog-db9b8-default-rtdb.europe-west1.firebasedatabase.app/")
         val databaseReference = database.getReference("tasks") // Adjust path as needed
         databaseReference.child(userId).addValueEventListener(object : ValueEventListener {
@@ -181,6 +202,9 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
 
         addTaskButton.setOnClickListener {
 
+            if (timerRunning) {
+                stopTimer()
+            }
             taskNameEditText = view.findViewById(R.id.taskNameEditText)
             descriptionEditText = view.findViewById(R.id.descriptionEditText)
             durationTextView = view.findViewById(R.id.timerTextView)
@@ -192,14 +216,14 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
             val hours = splitDuration[0].toInt()
             val minutes = splitDuration[1].toInt()
             val duration: Int = (hours * 60) + minutes
+            Log.e("Task Duration", duration.toString())
 
-            val calendar: Calendar = Calendar.getInstance()
-            val today: Date = calendar.time
+            val date = getCurrentDate()
 
             val newTask = Task(
                 null, taskName,
                 description, null, "Chronolog",
-                taskCategory, duration, ""
+                taskCategory, duration, date
             )
             firebaseHelper.addTask(newTask, userId)
 
@@ -284,6 +308,9 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
     }
 
     override fun onDurationSet(hours: Int, minutes: Int) {
+        if (timerRunning) {
+            stopTimer()
+        }
         // Handle the picked duration
         val currentDurationTV: TextView = view?.findViewById(R.id.timerTextView)
             ?: throw IllegalStateException("View cannot be null")
@@ -298,6 +325,25 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
         // Handle cancellation
     }
 
+    private fun showDateRangePicker() {
+        val dateRangePicker = MaterialDatePicker.Builder.dateRangePicker()
+            .setTitleText("Select dates")
+            .build()
+
+        dateRangePicker.addOnPositiveButtonClickListener { selection ->
+            val startDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date(selection.first))
+            val endDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date(selection.second))
+            dateRangeTextView.text = "$startDate - $endDate"
+            taskAdapter.filterByDateRange(startDate, endDate)
+        }
+
+        dateRangePicker.show(childFragmentManager, dateRangePicker.toString())
+    }
+
+
+
+
+
     private fun startTimer() {
         timer = object : CountDownTimer(Long.MAX_VALUE, 1000) {
             override fun onTick(millisUntilFinished: Long) {
@@ -308,6 +354,11 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
             override fun onFinish() {}
         }.start()
         timerRunning = true
+    }
+
+    private fun stopTimer() {
+        timer?.cancel()
+        timerRunning = false
     }
 
     private fun updateTimer() {
@@ -324,12 +375,10 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
         if (enterTaskDetails.visibility == View.GONE) {
 
             enterTaskDetails.visibility = View.VISIBLE
-            addNewTaskButton.visibility = View.GONE
             navBar.visibility = View.GONE
 
         } else {
             enterTaskDetails.visibility = View.GONE
-            addNewTaskButton.visibility = View.VISIBLE
             navBar.visibility = View.VISIBLE
             hideKeyboard()
         }
@@ -360,6 +409,11 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
     }
 
 
+    private fun getCurrentDate(): String {
+        val currentDate = LocalDate.now()
+        val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+        return currentDate.format(formatter)
+    }
 
     private fun toggleTeamWidget() {
         if (chooseTeam.visibility == View.GONE) {
