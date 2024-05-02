@@ -92,22 +92,18 @@ class FirebaseHelper(private val listener: FirebaseOperationListener) {
         })
     }
 
-    fun fetchTaskNamesAndDurations(userId: String, onTasksReceived: (List<Pair<String, String>>) -> Unit, onError: (Exception) -> Unit) {
-        databaseTasksReference.child(userId).addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val tasks = snapshot.children.mapNotNull {
-                    val name = it.child("name").getValue(String::class.java)
-                    val duration = it.child("duration").getValue(String::class.java)
-                    if (name != null && duration != null) Pair(name, duration) else null
-                }
-                onTasksReceived(tasks)
-            }
+    fun fetchTasks(userId: String, onTasksReceived: (List<Task>) -> Unit) {
+    databaseTasksReference.child(userId).addListenerForSingleValueEvent(object : ValueEventListener {
+        override fun onDataChange(snapshot: DataSnapshot) {
+            val tasks = snapshot.children.mapNotNull { it.getValue(Task::class.java) }
+            onTasksReceived(tasks)
+        }
 
-            override fun onCancelled(error: DatabaseError) {
-                onError(Exception(error.message))
-            }
-        })
-    }
+        override fun onCancelled(error: DatabaseError) {
+            Log.e("FirebaseHelper", "Error fetching tasks: ${error.message}")
+        }
+    })
+}
 
     fun addCategoryToFirebase(newCategory: Category, userId: String) {
 

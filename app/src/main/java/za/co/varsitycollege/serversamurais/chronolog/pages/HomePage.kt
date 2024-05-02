@@ -1,5 +1,7 @@
 package za.co.varsitycollege.serversamurais.chronolog.pages
 
+import RecyclerAdapter
+import SharedViewModel
 import android.animation.ObjectAnimator
 import android.os.Bundle
 import android.util.Log
@@ -11,11 +13,14 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import com.google.firebase.auth.FirebaseUser
 import za.co.varsitycollege.serversamurais.chronolog.Helpers.FirebaseHelper
 import za.co.varsitycollege.serversamurais.chronolog.NotificationPage
 import za.co.varsitycollege.serversamurais.chronolog.R
 import za.co.varsitycollege.serversamurais.chronolog.SettingsPage
+import za.co.varsitycollege.serversamurais.chronolog.model.NotificationItem
+import za.co.varsitycollege.serversamurais.chronolog.model.Task
 import java.util.Calendar
 
 class HomePage : Fragment() {
@@ -26,6 +31,10 @@ class HomePage : Fragment() {
     private lateinit var musicCardView: CardView
 
     private lateinit var firebaseHelper: FirebaseHelper
+
+    // Define and initialize adapter
+    private val data = mutableListOf<NotificationItem>()
+    private lateinit var adapter: RecyclerAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,6 +48,9 @@ class HomePage : Fragment() {
         progressCardView = view.findViewById(R.id.progressCardView)
         profileCardView = view.findViewById(R.id.profilecardview)
         musicCardView = view.findViewById(R.id.musicCardView)
+
+        // Initialize adapter
+        adapter = RecyclerAdapter(requireContext(), data)
 
         firebaseHelper = FirebaseHelper(object : FirebaseHelper.FirebaseOperationListener {
             override fun onSuccess(user: FirebaseUser?) {
@@ -77,14 +89,25 @@ class HomePage : Fragment() {
             showMusicCard()
         }
 
-        view.findViewById<ImageButton>(R.id.settingBtn).setOnClickListener {
-            navigateToSettingsPage()
-        }
 
-        view.findViewById<ImageButton>(R.id.notificationBtn).setOnClickListener {
-            navigateToNotifcationPage()
-        }
+        val model: SharedViewModel by activityViewModels()
 
+        view.findViewById<ImageButton>(R.id.settingBtn).setOnClickListener{
+            val userId = firebaseHelper.getUserId()
+            Log.e("HomePage", "User ID: $userId")
+            firebaseHelper.fetchTasks(userId) { tasks ->
+                // Clear existing data
+                model.data.value?.clear()
+                // Add new data
+                tasks.forEach { task ->
+                    val newItem = NotificationItem(task.name, task.duration.toString())
+                    // Use newItem here
+                    model.data.value?.add(newItem)
+                }
+                model.adapter.value?.notifyDataSetChanged()
+            }
+
+        }
         return view
     }
 
@@ -92,7 +115,6 @@ class HomePage : Fragment() {
         val cal = Calendar.getInstance()
         val hourOfDay = cal.get(Calendar.HOUR_OF_DAY)
         val username = firebaseHelper.getUserName().toString()
-
 
         val greeting: String = when (hourOfDay) {
             in 0..11 -> "Good morning, $username"
@@ -141,18 +163,6 @@ class HomePage : Fragment() {
         alphaAnimator.start()
     }
 
-    private fun navigateToSettingsPage() {
-        val transaction = parentFragmentManager.beginTransaction()
-        transaction.replace(R.id.frameLayout, SettingsPage())
-        transaction.addToBackStack(null)
-        transaction.commit()
-    }
 
-    private fun navigateToNotifcationPage() {
-        val transaction = parentFragmentManager.beginTransaction()
-        transaction.replace(R.id.frameLayout, NotificationPage())
-        transaction.addToBackStack(null)
-        transaction.commit()
-    }
 
 }
