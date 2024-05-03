@@ -66,6 +66,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import com.google.firebase.storage.FirebaseStorage
 import za.co.varsitycollege.serversamurais.chronolog.model.Team
+import za.co.varsitycollege.serversamurais.chronolog.views.recentActivityView
 import java.util.UUID
 
 // TODO: Rename parameter arguments, choose names that match
@@ -137,6 +138,8 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
     private lateinit var progressBar: ProgressBar
 
 
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -175,6 +178,9 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
     }
 
     override fun onCreateView(
+
+
+
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?): View? {
 
@@ -257,6 +263,10 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
         val addTaskButton: TextView = view.findViewById(R.id.addTaskButton)
 
         val userId = firebaseHelper.getUserId()
+
+
+
+
 
         taskRecyclerView = view.findViewById(R.id.recentTasksRecyclerView)
         taskRecyclerView.layoutManager = LinearLayoutManager(context)
@@ -471,9 +481,11 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
     }
 
 
+
     override fun onCancel() {
         // Handle cancellation
     }
+
 
 
     private fun pickImageFromGallery() {

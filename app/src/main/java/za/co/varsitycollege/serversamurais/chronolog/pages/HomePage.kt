@@ -17,9 +17,11 @@ import com.google.firebase.auth.FirebaseUser
 import za.co.varsitycollege.serversamurais.chronolog.Helpers.FirebaseHelper
 import za.co.varsitycollege.serversamurais.chronolog.R
 import za.co.varsitycollege.serversamurais.chronolog.model.NotificationItem
+import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Locale
 
-class HomePage : Fragment() {
+class HomePage : Fragment(), FirebaseHelper.FirebaseOperationListener {
 
     private lateinit var textView2: TextView
 
@@ -45,6 +47,11 @@ class HomePage : Fragment() {
     private val data = mutableListOf<NotificationItem>()
     private lateinit var adapter: RecyclerAdapter
 
+    private lateinit var recentActivityTaskName: TextView
+    private lateinit var recentActivityTaskDate: TextView
+    private lateinit var recentActivityTaskDuration: TextView
+    private lateinit var recentActivityTaskDescription: TextView
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -67,6 +74,25 @@ class HomePage : Fragment() {
         line1View = view.findViewById(R.id.line1)
         line2View = view.findViewById(R.id.line2)
         line3View = view.findViewById(R.id.line3)
+
+        recentActivityTaskName = view.findViewById(R.id.recentActivityTaskName)
+        recentActivityTaskDate = view.findViewById(R.id.recentActivityTaskDate)
+        recentActivityTaskDuration = view.findViewById(R.id.recentActivityTaskDuration)
+        recentActivityTaskDescription = view.findViewById(R.id.recentActivityTaskDescription)
+
+
+        firebaseHelper = FirebaseHelper(this)
+        val userId = firebaseHelper.getUserId()
+        firebaseHelper.fetchMostRecentTask(userId) { task ->
+            if (task != null) {
+                // Update UI with the task details
+                recentActivityTaskName.text = task.name
+                recentActivityTaskDate.text = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(task.date)
+                recentActivityTaskDuration.text = formatTime(task.duration ?: 0)
+                recentActivityTaskDescription.text = task.description
+
+            }
+        }
 
 
 
@@ -210,6 +236,13 @@ class HomePage : Fragment() {
         }
     }
 
+    private fun formatTime(secondsTotal: Int): String {
+        val hours = secondsTotal / 3600
+        val minutes = (secondsTotal % 3600) / 60
+        val seconds = secondsTotal % 60
+        return String.format("%02d:%02d:%02d", hours, minutes, seconds)
+    }
+
     private fun updateGoals()
     {
         val minGoal = minGoalEdit.text.toString().toInt()
@@ -251,6 +284,14 @@ class HomePage : Fragment() {
         profileCardView.visibility = View.GONE
         musicCardView.visibility = View.VISIBLE
         animateCardView(musicCardView)
+    }
+
+    override fun onSuccess(user: FirebaseUser?) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onFailure(errorMessage: String) {
+        TODO("Not yet implemented")
     }
 
 }

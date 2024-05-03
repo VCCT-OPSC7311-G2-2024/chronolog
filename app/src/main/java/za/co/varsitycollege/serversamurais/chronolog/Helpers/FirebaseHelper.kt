@@ -113,16 +113,34 @@ class FirebaseHelper(private val listener: FirebaseOperationListener) {
 
     fun fetchTasks(userId: String, onTasksReceived: (List<Task>) -> Unit) {
     databaseTasksReference.child(userId).addListenerForSingleValueEvent(object : ValueEventListener {
-        override fun onDataChange(snapshot: DataSnapshot) {
-            val tasks = snapshot.children.mapNotNull { it.getValue(Task::class.java) }
-            onTasksReceived(tasks)
-        }
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val tasks = snapshot.children.mapNotNull { it.getValue(Task::class.java) }
+                onTasksReceived(tasks)
+            }
 
-        override fun onCancelled(error: DatabaseError) {
-            Log.e("FirebaseHelper", "Error fetching tasks: ${error.message}")
-        }
-    })
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("FirebaseHelper", "Error fetching tasks: ${error.message}")
+            }
+        })
 }
+
+    fun fetchMostRecentTask(userId: String, onTaskReceived: (Task?) -> Unit) {
+        databaseTasksReference.child(userId).addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val tasks = snapshot.children.mapNotNull { it.getValue(Task::class.java) }
+                // Sorting tasks by date, assuming the `date` field is being used to store the creation or last update date
+                val mostRecentTask = tasks.maxByOrNull { it.date?.time ?: Long.MIN_VALUE }
+                onTaskReceived(mostRecentTask)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("FirebaseHelper", "Error fetching tasks: ${error.message}")
+                onTaskReceived(null) // Handle cancellation or errors by providing null
+            }
+        })
+    }
+
+
 
     fun addCategoryToFirebase(newCategory: Category, userId: String) {
 
