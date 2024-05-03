@@ -188,7 +188,7 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
 
         taskRecyclerView = view.findViewById(R.id.recentTasksRecyclerView)
         taskRecyclerView.layoutManager = LinearLayoutManager(context)
-        taskAdapter = TaskAdapter(tasks)
+        taskAdapter = TaskAdapter(tasks, firebaseHelper)
         taskRecyclerView.adapter = taskAdapter
 
 
@@ -218,6 +218,7 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
             descriptionEditText = view.findViewById(R.id.descriptionEditText)
             durationTextView = view.findViewById(R.id.timerTextView)
 
+            val taskId = firebaseHelper.getTaskId(userId)
             val taskName = taskNameEditText.text.toString()
             val description = descriptionEditText.text.toString()
             val durationText = durationTextView.text.toString()
@@ -231,7 +232,7 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
 
 
             val newTask = Task(
-                null, taskName,
+                taskId, taskName,
                 description, null, "Chronolog",
                 taskCategory, duration, date
             )
@@ -337,7 +338,7 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
 
     private fun showDateRangePicker() {
         taskRecyclerView.layoutManager = LinearLayoutManager(context)
-        taskAdapter = TaskAdapter(tasks)
+        taskAdapter = TaskAdapter(tasks, firebaseHelper)
         taskRecyclerView.adapter = taskAdapter
 
         val userId = firebaseHelper.getUserId()

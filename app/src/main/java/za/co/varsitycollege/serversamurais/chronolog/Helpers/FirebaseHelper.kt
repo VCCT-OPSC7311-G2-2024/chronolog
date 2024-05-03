@@ -65,9 +65,7 @@ class FirebaseHelper(private val listener: FirebaseOperationListener) {
 
     fun addTask(newTask: Task, userId: String) {
 
-        val taskId = databaseTasksReference.child(userId).push().key ?: throw Exception("Failed to generate unique key for task")
-
-        databaseTasksReference.child(userId).child(taskId).setValue(newTask)
+        databaseTasksReference.child(userId).child(newTask.taskId).setValue(newTask)
             .addOnCompleteListener { task ->
                 if(task.isSuccessful) {
                     val user = mAuth.currentUser
@@ -91,6 +89,20 @@ class FirebaseHelper(private val listener: FirebaseOperationListener) {
                 Log.e("FirebaseHelper", "Failed to load tasks.", databaseError.toException())
             }
         })
+    }
+
+    fun getTaskId(userId: String): String {
+        return databaseTasksReference.child(userId).child("tasks").push().key ?: throw Exception("Failed to generate unique key for task")
+    }
+
+    fun updateTaskDuration(taskId: String, userId: String, updates: Map<String, Int?>) {
+        databaseTasksReference.child(userId).child(taskId).updateChildren(updates)
+            .addOnSuccessListener {
+                Log.d("FirebaseHelper", "Task duration updated successfully.")
+            }
+            .addOnFailureListener { e ->
+                Log.e("FirebaseHelper", "Failed to update task duration.", e)
+            }
     }
 
 
