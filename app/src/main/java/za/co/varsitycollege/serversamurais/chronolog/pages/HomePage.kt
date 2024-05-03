@@ -3,6 +3,7 @@ package za.co.varsitycollege.serversamurais.chronolog.pages
 import RecyclerAdapter
 import SharedViewModel
 import android.animation.ObjectAnimator
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -17,6 +18,7 @@ import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.google.firebase.auth.FirebaseUser
+import za.co.varsitycollege.serversamurais.chronolog.CameraControllerActivity
 import za.co.varsitycollege.serversamurais.chronolog.Helpers.FirebaseHelper
 import za.co.varsitycollege.serversamurais.chronolog.NotificationPage
 import za.co.varsitycollege.serversamurais.chronolog.R
@@ -120,6 +122,11 @@ class HomePage : Fragment() {
 
         view.findViewById<Button>(R.id.saveBtn).setOnClickListener {
             updateGoals()
+        }
+
+       view.findViewById<ImageButton>(R.id.settingBtn).setOnClickListener {
+            val intent = Intent(context, CameraControllerActivity::class.java)
+            startActivity(intent)
         }
         return view
     }
