@@ -340,7 +340,7 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
         taskAdapter = TaskAdapter(tasks)
         taskRecyclerView.adapter = taskAdapter
 
-        var userId = firebaseHelper.getUserId()
+        val userId = firebaseHelper.getUserId()
         firebaseHelper.fetchTasks(userId, tasks, taskAdapter)
         val dateRangePicker = MaterialDatePicker.Builder.dateRangePicker()
             .setTitleText("Select dates")

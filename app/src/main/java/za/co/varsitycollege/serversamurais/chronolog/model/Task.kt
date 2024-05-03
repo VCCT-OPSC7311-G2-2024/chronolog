@@ -10,6 +10,8 @@ data class Task(
     val photoUrl: String? = null, // Optional photo URL
     val team: String? = null,
     val category: String? = null,
-    val duration: Int? = null,
-    val date: Date? = null// Duration in minutes
+    var duration: Int? = null,
+    val date: Date? = null,
+    var isRunning: Boolean = false
+
 )
