@@ -12,10 +12,10 @@
         android:layout_margin="10dp">
 
         <Button
-            android:id="@+id/addNewCategory"
+            android:id="@+id/addNewTeam"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Create New Category"
+            android:text="Create New Team"
             android:textSize="18sp"
             android:textColor="#083C66"
             android:fontFamily="@font/inter_extrabold"
@@ -37,10 +37,10 @@
         android:padding="16dp">
 
         <AutoCompleteTextView
-            android:id="@+id/autoCompleteTextViewCategory"
+            android:id="@+id/autoCompleteTextViewTeam"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Select a category"
+            android:hint="Select a Team"
             android:fontFamily="@font/inter"
             android:inputType="text"
             android:drawableEnd="@drawable/baseline_arrow_drop_down_24"/>
@@ -59,15 +59,15 @@
         android:orientation="horizontal"
         android:gravity="center_horizontal">
         <Button
-            android:id="@+id/buttonCancelCategory"
+            android:id="@+id/buttonCancelTeam"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Cancel"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="16dp"/>
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="20dp"/>
 
         <Button
-            android:id="@+id/buttonSaveCategory"
+            android:id="@+id/buttonSaveTeam"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Save"

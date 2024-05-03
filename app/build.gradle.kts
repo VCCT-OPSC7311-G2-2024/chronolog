@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId = "za.co.varsitycollege.serversamurais.chronolog"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -57,8 +57,13 @@ dependencies {
     implementation(libs.androidx.camera.lifecycle)
     implementation(libs.androidx.camera.core)
     implementation(libs.androidx.animation.graphics.android)
+    implementation(libs.firebase.storage.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    implementation("androidx.fragment:fragment-ktx:1.3.6") // Added dependency
+    implementation("androidx.fragment:fragment-ktx:1.3.6")
+    implementation ("androidx.activity:activity-ktx:1.2.0")
+    implementation ("androidx.fragment:fragment-ktx:1.3.0")
+    implementation ("com.github.bumptech.glide:glide:4.12.0")
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
 }

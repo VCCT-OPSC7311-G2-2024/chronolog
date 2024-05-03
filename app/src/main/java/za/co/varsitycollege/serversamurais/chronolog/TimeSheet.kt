@@ -6,6 +6,7 @@ import DateRangePickerFragment
 import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.os.CountDownTimer
@@ -26,6 +27,7 @@ import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -53,6 +55,18 @@ import com.google.android.material.datepicker.DateValidatorPointForward
 import kotlinx.coroutines.selects.select
 import java.text.SimpleDateFormat
 import java.util.Locale
+import android.Manifest
+import android.app.AlertDialog
+import android.content.Intent
+import android.net.Uri
+import android.provider.Settings
+import android.widget.ProgressBar
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat
+import com.google.firebase.storage.FirebaseStorage
+import za.co.varsitycollege.serversamurais.chronolog.model.Team
+import java.util.UUID
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -91,8 +105,14 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
     private lateinit var autoCompleteTextView: AutoCompleteTextView
     private lateinit var categoriesAdapter: ArrayAdapter<String>
 
+    private lateinit var teamAutoCompleteTextView: AutoCompleteTextView
+    private lateinit var teamsAdapter: ArrayAdapter<String>
+    private lateinit var teamList: LinearLayout
+    private var taskTeam: String = "Default Team"
 
     private lateinit var createCategoryView: LinearLayout
+
+    private lateinit var createTeamView: LinearLayout
 
     private val data = mutableListOf<NotificationItem>()
     private lateinit var adapterNotification: RecyclerAdapter
@@ -109,6 +129,12 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
 
     private lateinit var dateRangeTextView: TextView
 
+    // camera logic
+    private lateinit var addPhotoButton: Button
+    private lateinit var permissionLauncher: ActivityResultLauncher<String>
+    private lateinit var imagePickerLauncher: ActivityResultLauncher<String>
+    private var taskPhoto: String = ""
+    private lateinit var progressBar: ProgressBar
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -116,6 +142,35 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
+        }
+
+
+        permissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (isGranted) {
+                // Permission granted, proceed with opening the gallery
+                pickImageFromGallery()
+            } else {
+                // Permission denied
+                if (shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                    showRationaleDialog()  // Show rationale and ask again
+                } else {
+                    // Permission denied permanently
+                    showSettingsDialog()  // Suggest user go to settings
+                }
+            }
+        }
+
+        imagePickerLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+            uri?.let {
+                // Handle the picked image URI here, such as uploading to Firebase or displaying it
+                try{
+                    processPickedImage(uri)
+                }
+                catch (e: Exception){
+
+                }
+
+            }
         }
     }
 
@@ -125,6 +180,18 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
 
         val view = inflater.inflate(R.layout.fragment_time_sheet, container, false)
         val activity = activity as Activity
+
+        progressBar = view.findViewById(R.id.progressBar)
+        // camera logic
+
+
+        addPhotoButton = view.findViewById(R.id.addPhotoButton)
+
+        addPhotoButton.setOnClickListener {
+            pickImageFromGallery()
+        }
+
+
 
         dateRangeTextView = view.findViewById(R.id.dateRangeTextView)
 
@@ -163,24 +230,18 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
         }
 
 
-        // Choose Team Widget
-        chooseTeam = view.findViewById(R.id.chooseTeamList)
-        val teamBtn: Button = view.findViewById(R.id.teamButton)
-
-        teamBtn.setOnClickListener {
-            toggleTeamWidget()
-        }
-
-
         // Make navbar disappear
         navBar = activity.findViewById(R.id.bottomNavigationView)
 
         timerTextView = view.findViewById(R.id.timerTextView)
 
         addNewTaskButton.setOnClickListener {
-
+            taskPhoto = ""
             if (!timerRunning) {
                 startTimer()
+            } else{
+                timeInMilliseconds = 0L  // Reset the timer
+                updateTimer()
             }
             toggleVisibility()
         }
@@ -193,7 +254,7 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
 
         // add task functionality
         firebaseHelper = FirebaseHelper(this)
-        val addTaskButton: Button = view.findViewById(R.id.addTaskButton)
+        val addTaskButton: TextView = view.findViewById(R.id.addTaskButton)
 
         val userId = firebaseHelper.getUserId()
 
@@ -207,7 +268,6 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
 
 
         addTaskButton.setOnClickListener {
-
             if (timerRunning) {
                 stopTimer()
             }
@@ -222,21 +282,21 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
             val splitDuration = durationText.split(":")
             val hours = splitDuration[0].toInt()
             val minutes = splitDuration[1].toInt()
-            val duration: Int = (hours * 60) + minutes
+            val seconds = splitDuration[2].toInt()
+            val duration: Int = (hours * 3600) + (minutes * 60) + seconds
 
             val date = taskDate
 
-
+            Log.d("TaskPhoto", taskPhoto)
 
             val newTask = Task(
                 taskId, taskName,
-                description, null, "Chronolog",
+                description, taskPhoto, taskTeam,
                 taskCategory, duration, date, false, 0, 0
             )
             firebaseHelper.addTask(newTask, userId)
-
             setupSettingsButton()
-
+            taskAdapter.addTask(newTask)
             toggleVisibility()
         }
 
@@ -244,6 +304,7 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
         // Setup Categories
 
         var addNewCategoryButton: Button = view.findViewById(R.id.addNewCategory)
+        teamList = view.findViewById(R.id.chooseTeamList)
         createCategoryView = view.findViewById(R.id.createNewCategory)
 
         addNewCategoryButton.setOnClickListener {
@@ -268,6 +329,7 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
         view.findViewById<Button>(R.id.buttonCancelNewCategory).setOnClickListener{
             toggleAddCategory()
         }
+
 
 
 
@@ -313,6 +375,85 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
             toggleCategory()
         }
 
+
+
+        // Setup Teams
+
+        // Category Section
+        val teamButton: Button = view.findViewById(R.id.teamButton)
+        teamList = view.findViewById(R.id.chooseTeamList)
+
+        teamButton.setOnClickListener {
+            toggleTeam()
+        }
+
+
+        var addNewTeamButton: Button = view.findViewById(R.id.addNewTeam)
+        createTeamView = view.findViewById(R.id.createNewTeam)
+
+        addNewTeamButton.setOnClickListener {
+            toggleAddTeam()
+        }
+
+        view.findViewById<Button>(R.id.buttonSaveNewTeam).setOnClickListener {
+            val name = view.findViewById<EditText>(R.id.editTextTeamName).text.toString().trim()
+            val isActive = view.findViewById<CheckBox>(R.id.checkBoxTeamIsActive).isChecked
+
+            val newTeam = Team(null, name, isActive)
+
+            if (name.isNotEmpty()) {
+                firebaseHelper.addTeamToFirebase(newTeam, userId)
+            } else {
+                Toast.makeText(context, "Please enter a team name.", Toast.LENGTH_SHORT).show()
+            }
+
+            toggleAddTeam()
+
+        }
+
+        view.findViewById<Button>(R.id.buttonCancelNewTeam).setOnClickListener{
+                toggleAddTeam()
+            }
+
+        // Retrieve Categories
+        teamAutoCompleteTextView = view.findViewById(R.id.autoCompleteTextViewTeam)
+
+        val teams = mutableListOf<String>()
+        teamsAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, teams)
+        teamAutoCompleteTextView.setAdapter(teamsAdapter)
+
+
+        firebaseHelper.fetchTeams(userId, teams, teamsAdapter)
+
+        // set autocomplete
+        teamAutoCompleteTextView.setOnClickListener {
+            teamAutoCompleteTextView.showDropDown()
+        }
+
+        teamAutoCompleteTextView.setOnFocusChangeListener { view, hasFocus ->
+            if (hasFocus) teamAutoCompleteTextView.showDropDown()
+        }
+
+        teamAutoCompleteTextView.setOnItemClickListener { adapterView, view, position, id ->
+            val selectedTeam = adapterView.getItemAtPosition(position) as String
+        }
+
+
+        view.findViewById<Button>(R.id.buttonSaveTeam).setOnClickListener {
+            val selectedTeam = teamAutoCompleteTextView.text.toString()
+            if (selectedTeam.isNotEmpty()) {
+                taskTeam = selectedTeam
+            } else {
+                Toast.makeText(context, "Please select a team.", Toast.LENGTH_SHORT).show()
+            }
+            toggleTeam()
+
+        }
+
+        view.findViewById<Button>(R.id.buttonCancelCategory).setOnClickListener{
+            toggleTeam()
+        }
+
         // Inflate the layout for this fragment
         return view
     }
@@ -327,13 +468,64 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
         currentDurationTV.text = "$hours:$minutes:00"
         Toast.makeText(context, "Duration: $hours Hours, $minutes Minutes", Toast.LENGTH_LONG)
             .show()
-        val duration = (hours * 60) + minutes
     }
 
 
     override fun onCancel() {
         // Handle cancellation
     }
+
+
+    private fun pickImageFromGallery() {
+        imagePickerLauncher.launch("image/*")
+    }
+
+    private fun showRationaleDialog() {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Permission Needed")
+            .setMessage("This permission is needed to pick images from your gallery.")
+            .setPositiveButton("OK") { dialog, which ->
+                permissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun showSettingsDialog() {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Permission Denied")
+            .setMessage("Permission was denied permanently. You can change this in app settings.")
+            .setPositiveButton("Go to Settings") { dialog, which ->
+                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                val uri = Uri.fromParts("package", requireActivity().packageName, null)
+                intent.data = uri
+                startActivity(intent)
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun processPickedImage(fileUri: Uri) {
+
+        progressBar.visibility = View.VISIBLE
+        val fileName = UUID.randomUUID().toString() + ".jpg"
+        val refStorage = FirebaseStorage.getInstance().reference.child("task_images/$fileName")
+
+        refStorage.putFile(fileUri)
+            .addOnSuccessListener {
+                refStorage.downloadUrl.addOnSuccessListener { downloadUrl ->
+                    Log.d("Firebase", "Image uploaded: $downloadUrl")
+                    taskPhoto = downloadUrl.toString()
+                    progressBar.visibility = View.GONE
+                    // Here you might want to call a method to save this downloadUrl to your task
+                    // saveImageUrlToTask(downloadUrl.toString(), taskId)
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.e("Firebase", "Failed to upload image to Firebase", e)
+            }
+    }
+
 
     private fun showDateRangePicker() {
         taskRecyclerView.layoutManager = LinearLayoutManager(context)
@@ -422,12 +614,10 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
         if (enterTaskDetails.visibility == View.GONE) {
 
             enterTaskDetails.visibility = View.VISIBLE
-            addNewTaskButton.visibility = View.GONE
             navBar.visibility = View.GONE
 
         } else {
             enterTaskDetails.visibility = View.GONE
-            addNewTaskButton.visibility = View.VISIBLE
             navBar.visibility = View.VISIBLE
             hideKeyboard()
         }
@@ -457,19 +647,31 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
         }
     }
 
+    private fun toggleTeam() {
+        if (teamList.visibility == View.GONE) {
 
-
-    private fun toggleTeamWidget() {
-        if (chooseTeam.visibility == View.GONE) {
-
-            chooseTeam.visibility = View.VISIBLE
+            teamList.visibility = View.VISIBLE
 
 
         } else {
-            chooseTeam.visibility = View.GONE
+            teamList.visibility = View.GONE
 
         }
     }
+
+    private fun toggleAddTeam(){
+        if (createTeamView.visibility == View.GONE) {
+
+            createTeamView.visibility = View.VISIBLE
+            teamList.visibility = View.GONE
+
+        } else {
+            createTeamView.visibility = View.GONE
+            teamList.visibility = View.VISIBLE
+        }
+    }
+
+
 
     private fun Fragment.hideKeyboard() {
         val inputMethodManager = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager

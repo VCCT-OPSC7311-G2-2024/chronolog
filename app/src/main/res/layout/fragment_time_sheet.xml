@@ -122,11 +122,12 @@
 
     <include
         android:id="@+id/chooseTeamList"
-        layout="@layout/team_view"
+        layout="@layout/create_new_team_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
         android:layout_above="@id/enterTaskDetails"/>
+
 
     <include
         android:id="@+id/editDuration"
@@ -144,6 +145,19 @@
         android:visibility="gone"
         android:layout_above="@id/chooseCategoryList"/>
 
+    <include
+        android:id="@+id/createNewTeam"
+        layout="@layout/create_team_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_above="@id/chooseCategoryList"/>
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone"/>
 
 </RelativeLayout>

@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -19,6 +20,7 @@ import za.co.varsitycollege.serversamurais.chronolog.model.Task
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
+import com.bumptech.glide.Glide
 
 class TaskAdapter(private var tasks: List<Task>, private var firebaseHelper: FirebaseHelper) : RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
     private val timers = HashMap<String?, CountDownTimer>()
@@ -37,6 +39,7 @@ class TaskAdapter(private var tasks: List<Task>, private var firebaseHelper: Fir
         val textViewExpandedTaskDate: TextView = itemView.findViewById(R.id.recentDateExpandedTextView)
         val textViewExpandedTaskDuration: TextView = itemView.findViewById(R.id.recentDurationExpandedTextView)
         val toggleTimerExpanded: ImageButton = itemView.findViewById(R.id.toggleTimerExpanded)
+        val imageViewTaskPhoto: ImageView = itemView.findViewById(R.id.taskPhoto)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
@@ -48,11 +51,14 @@ class TaskAdapter(private var tasks: List<Task>, private var firebaseHelper: Fir
     }
 
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
-        val task = tasks[position]
+        tasks = tasks.sortedByDescending { task -> task.date }
+        val task = tasks[position]  // Assume tasks are already sorted and list is updated outside this method.
+
         holder.textViewTaskName.text = task.name ?: "No Name"
         holder.textViewTaskDescription.text = task.description ?: "No Description"
-        holder.textViewTaskDate.text = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(task.date)
+        holder.textViewTaskDate.text = task.date?.let { SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(it) } ?: "No Date"
         holder.textViewTaskDuration.text = formatTime(task.duration ?: 0)
+
 
         // expanded view
         holder.textViewExpandedTaskName.text = task.name ?: "No Name"
@@ -60,100 +66,101 @@ class TaskAdapter(private var tasks: List<Task>, private var firebaseHelper: Fir
         holder.textViewExpandedTaskDate.text = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(task.date)
         holder.textViewExpandedTaskDuration.text = formatTime(task.duration ?: 0)
 
-        holder.toggleTimer.setOnClickListener {
-            if (task.isRunning) {
-                stopTimer(task)
-                task.duration = (task.duration ?: 0) + (holder.textViewTaskDuration.text.toString().toIntOrNull() ?: 0)
-                val updateDuration = hashMapOf<String, Int?>(
-                    "duration" to task.duration
-                )
-                firebaseHelper.updateTaskDuration(task.taskId!!, firebaseHelper.getUserId(), updateDuration)
-                updateView(holder, task)
-            } else {
-                startTimer(holder, task)
-                updateView(holder, task)
-            }
-        }
+        // Set up the image loading with Glide
+        Glide.with(holder.itemView.context)
+            .load(task.photoUrl)
+            .placeholder(R.drawable.sun)  // Consider adding a placeholder
+            .into(holder.imageViewTaskPhoto)
 
-        holder.toggleTimerExpanded.setOnClickListener {
-            if (task.isRunning) {
-                stopTimer(task)
-                task.duration = (task.duration ?: 0) + (holder.textViewTaskDuration.text.toString().toIntOrNull() ?: 0)
-                val updateDuration = hashMapOf<String, Int?>(
-                    "duration" to task.duration
-                )
-                firebaseHelper.updateTaskDuration(task.taskId!!, firebaseHelper.getUserId(), updateDuration)
-                updateView(holder, task)
-            } else {
-                startTimer(holder, task)
-                updateView(holder, task)
-            }
-        }
+        // Set up toggle button actions
+        setupToggleButton(holder, task)
 
-
-
+        // Handle item view click to toggle expanded/collapsed state
         holder.itemView.setOnClickListener {
-            val visible = holder.detailsLayout.visibility == View.VISIBLE
-            if (visible) {
-                // Fade out animation for detailsLayout
-                android.animation.ObjectAnimator.ofFloat(holder.detailsLayout, View.ALPHA, 1f, 0f).apply {
-                    duration = 300 // Adjust the duration as needed
-                    start()
-                }
-
-                // Fade in animation for summaryLayout
-                android.animation.ObjectAnimator.ofFloat(holder.summaryLayout, View.ALPHA, 0f, 1f).apply {
-                    duration = 300 // Adjust the duration as needed
-                    start()
-                }
-            } else {
-                // Fade out animation for summaryLayout
-                android.animation.ObjectAnimator.ofFloat(holder.summaryLayout, View.ALPHA, 1f, 0f).apply {
-                    duration = 300 // Adjust the duration as needed
-                    start()
-                }
-
-                // Fade in animation for detailsLayout
-                android.animation.ObjectAnimator.ofFloat(holder.detailsLayout, View.ALPHA, 0f, 1f).apply {
-                    duration = 300 // Adjust the duration as needed
-                    start()
-                }
-            }
-
-            // Toggle visibility
-            holder.detailsLayout.visibility = if (visible) View.GONE else View.VISIBLE
-            holder.summaryLayout.visibility = if (visible) View.VISIBLE else View.GONE
+            toggleDetailsVisibility(holder)
         }
     }
+
+    private fun setupToggleButton(holder: TaskViewHolder, task: Task) {
+        val toggleAction = { isExpanded: Boolean ->
+            if (task.isRunning) {
+                stopTimer(holder, task)
+            } else {
+                startTimer(holder, task)
+            }
+            updateView(holder, task, isExpanded)
+        }
+
+        holder.toggleTimer.setOnClickListener { toggleAction(false) }
+        holder.toggleTimerExpanded.setOnClickListener { toggleAction(true) }
+    }
+
+    private fun toggleDetailsVisibility(holder: TaskViewHolder) {
+        val isVisible = holder.detailsLayout.visibility == View.VISIBLE
+        holder.detailsLayout.visibility = if (isVisible) View.GONE else View.VISIBLE
+        holder.summaryLayout.visibility = if (isVisible) View.VISIBLE else View.GONE
+    }
+
+    private fun updateView(holder: TaskViewHolder, task: Task, isExpanded: Boolean) {
+        holder.textViewTaskDuration.text = formatTime(task.duration ?: 0)
+        if (isExpanded) {
+            holder.textViewExpandedTaskDuration.text = formatTime(task.duration ?: 0)
+        }
+        val iconRes = if (task.isRunning) R.drawable.stop else R.drawable.play_button_shape
+        holder.toggleTimer.setImageResource(iconRes)
+        holder.toggleTimerExpanded.setImageResource(iconRes)
+    }
+
+    private fun formatTime(secondsTotal: Int): String {
+        val hours = secondsTotal / 3600
+        val minutes = (secondsTotal % 3600) / 60
+        val seconds = secondsTotal % 60
+        return String.format("%02d:%02d:%02d", hours, minutes, seconds)
+    }
+
 
     override fun getItemCount(): Int = tasks.size
 
+    fun addTask(newTask: Task) {
+        tasks = tasks + newTask
+        notifyDataSetChanged()
+    }
+
     private fun startTimer(holder: TaskViewHolder, task: Task) {
-
-            val timer = object : CountDownTimer(Long.MAX_VALUE, 1000) {
-                override fun onTick(millisUntilFinished: Long) {
-                    val newDuration = (task.duration ?: 0) + 1
-                    task.duration = newDuration
-
-                    holder.textViewTaskDuration.text = formatTime(newDuration)
-                    holder.textViewExpandedTaskDuration.text = formatTime(newDuration)
-                }
-
-                override fun onFinish() {}
+        val timer = object : CountDownTimer(Long.MAX_VALUE, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                val newDuration = (task.duration ?: 0) + 1
+                task.duration = newDuration
+                holder.textViewTaskDuration.text = formatTime(newDuration)
+                holder.textViewExpandedTaskDuration.text = formatTime(newDuration)
             }
-            timer.start()
-            timers[task.taskId] = timer
-            task.isRunning = true
-
+            override fun onFinish() {}
+        }
+        timer.start()
+        timers[task.taskId] = timer
+        task.isRunning = true
     }
 
 
-    private fun stopTimer(task: Task) {
-        timers[task.taskId]?.cancel()
-        timers.remove(task.taskId)
-        task.isRunning = false
+
+    private fun stopTimer(holder: TaskViewHolder, task: Task) {
+        timers[task.taskId]?.let {
+            it.cancel()
+            timers.remove(task.taskId)
+            task.isRunning = false
+            val finalDuration = (task.duration ?: 0) + 1  // Capture the final tick if needed
+            task.duration = finalDuration
+            holder.textViewTaskDuration.text = formatTime(finalDuration)
+            holder.textViewExpandedTaskDuration.text = formatTime(finalDuration)
+            // Update Firebase with the final duration
+            updateTaskDurationInFirebase(task)
+        }
     }
 
+    private fun updateTaskDurationInFirebase(task: Task) {
+        val updateDuration = hashMapOf<String, Int?>("duration" to task.duration)
+        firebaseHelper.updateTaskDuration(task.taskId!!, firebaseHelper.getUserId(), updateDuration)
+    }
     private fun updateView(holder: TaskViewHolder, task: Task) {
         holder.textViewTaskDuration.text = formatTime(task.duration ?: 0)
         holder.textViewExpandedTaskDuration.text = formatTime(task.duration ?: 0)
@@ -162,11 +169,6 @@ class TaskAdapter(private var tasks: List<Task>, private var firebaseHelper: Fir
         holder.toggleTimerExpanded.setImageResource(if (task.isRunning) R.drawable.stop else R.drawable.play_button_shape)
     }
 
-    private fun formatTime(minutes: Int): String {
-        val hours = minutes / 60
-        val remainingMinutes = minutes % 60
-        return String.format("%02d:%02d", hours, remainingMinutes)
-    }
 
     fun filterByDateRange(startDate: String, endDate: String) {
         val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())

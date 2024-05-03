@@ -59,10 +59,11 @@
         </LinearLayout>
 
 
-        <Button
+        <TextView
             android:id="@+id/addTaskButton"
             android:layout_width="50dp"
             android:layout_height="20dp"
+            android:textAlignment="center"
             android:fontFamily="@font/inter_extrabold"
             android:text="Add Task"
             android:textColor="@color/white"
@@ -70,8 +71,7 @@
             android:textSize="12sp"
             android:background="@drawable/custom_btn_no_bg"
             android:layout_marginBottom="10dp"
-            android:textAllCaps="false"
-            android:layout_margin="0dp" />
+            android:textAllCaps="false" />
 
     </LinearLayout>
 
@@ -79,7 +79,6 @@
         android:id="@+id/taskNameEditText"
         android:padding="5dp"
         android:textSize="16sp"
-        android:layout_margin="10dp"
         android:layout_gravity="center_horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -88,23 +87,24 @@
         android:ems="17"
         android:hint="Current Task..."
         android:textColorHint="#D3D3D3"
-        android:background="@drawable/custom_current_task_edit_text" />
-
-    <EditText
-        android:id="@+id/descriptionEditText"
-        android:padding="5dp"
-        android:textSize="16sp"
-        android:layout_margin="10dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="text"
-        android:textColor="#D3D3D3"
-        android:ems="17"
-        android:hint="Description..."
-        android:textColorHint="#D3D3D3"
         android:background="@drawable/custom_current_task_edit_text"
-        android:drawableRight="@drawable/baseline_add_a_photo_24"/>
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"/>
+
+        <EditText
+            android:id="@+id/descriptionEditText"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="40dp"
+            android:background="@drawable/custom_current_task_edit_text"
+            android:ems="17"
+            android:hint="Description..."
+            android:inputType="text"
+            android:padding="5dp"
+            android:textColor="#D3D3D3"
+            android:textColorHint="#D3D3D3"
+            android:textSize="16sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -145,8 +145,33 @@
                 android:textAllCaps="false"
                 android:textSize="12sp"
                 android:background="@drawable/round_button"
-                android:layout_marginRight="10dp"
                 android:textColor="@color/buttonColor"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="10dp">
+
+
+
+            <Button
+                android:id="@+id/addPhotoButton"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="Add Photo"
+                android:fontFamily="@font/inter_extrabold"
+                android:textAllCaps="false"
+                android:textSize="12sp"
+                android:background="@drawable/round_button"
+                android:layout_marginRight="10dp"
+                android:textColor="@color/buttonColor"
+                android:drawableLeft="@drawable/add_photo_darkblue"/>
+
+
 
 
         </LinearLayout>

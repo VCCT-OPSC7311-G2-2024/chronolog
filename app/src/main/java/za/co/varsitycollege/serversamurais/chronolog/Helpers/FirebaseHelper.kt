@@ -14,7 +14,7 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
 import za.co.varsitycollege.serversamurais.chronolog.adapters.TaskAdapter
 import za.co.varsitycollege.serversamurais.chronolog.model.Category
-
+import za.co.varsitycollege.serversamurais.chronolog.model.Team
 
 
 class FirebaseHelper(private val listener: FirebaseOperationListener) {
@@ -22,6 +22,7 @@ class FirebaseHelper(private val listener: FirebaseOperationListener) {
     private val database = Firebase.database("https://chronolog-db9b8-default-rtdb.europe-west1.firebasedatabase.app/")
     private val databaseTasksReference = database.getReference("tasks")
     private val databaseCategoriesReference = database.getReference("categories")
+    private val databaseTeamsReference = database.getReference("teams")
     private var mAuth: FirebaseAuth = FirebaseAuth.getInstance()
 
     interface FirebaseOperationListener {
@@ -155,6 +156,43 @@ class FirebaseHelper(private val listener: FirebaseOperationListener) {
 
             override fun onCancelled(databaseError: DatabaseError) {
                 Log.e("MainActivity", "Failed to read categories.", databaseError.toException())
+            }
+
+        })
+    }
+
+    fun addTeamToFirebase(newTeam: Team, userId: String) {
+
+        val teamId = databaseTeamsReference.push().key ?: throw Exception("Failed to generate unique key for team") // Generate a unique key for the category
+
+        databaseTeamsReference.child(userId).child(teamId).setValue(newTeam)
+            .addOnCompleteListener {task ->
+                if(task.isSuccessful) {
+                    val user = mAuth.currentUser
+                    listener.onSuccess(user)
+                } else {
+                    listener.onFailure(task.exception?.message ?: "Unknown Error")
+                }
+            }
+    }
+
+    fun fetchTeams(
+        userId: String, teams: MutableList<String>, adapter: ArrayAdapter<String>
+    ) {
+        // Firebase reference
+
+        databaseTeamsReference.child(userId).addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                teams.clear()
+                for (snapshot in dataSnapshot.children) {
+                    val team = snapshot.getValue(Team::class.java)
+                    team?.let { teams.add(it.teamName.toString()) }
+                }
+                adapter.notifyDataSetChanged()
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                Log.e("MainActivity", "Failed to read teams.", databaseError.toException())
             }
 
         })

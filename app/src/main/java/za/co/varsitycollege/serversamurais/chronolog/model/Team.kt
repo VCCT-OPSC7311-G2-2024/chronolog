@@ -1,7 +1,7 @@
 package za.co.varsitycollege.serversamurais.chronolog.model
 
 data class Team(
-    val teamId: String,
-    val name: String,
-    val members: List<String> // List of user IDs
+    val teamId: String? = null,
+    val teamName: String? = null,
+    val isActive: Boolean? = true
 )

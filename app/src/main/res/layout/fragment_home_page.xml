@@ -17,17 +17,6 @@
         android:layout_marginTop="20dp"
         android:layout_marginBottom="20dp">
 
-
-        <ImageButton
-            android:id="@+id/settingBtn"
-            android:layout_width="56dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="60dp"
-            android:layout_marginEnd="90dp"
-            android:background="@android:color/transparent"
-            android:src="@drawable/baseline_add_a_photo_24"/>
-
         <ImageView
             android:id="@+id/imageView2"
             android:layout_width="wrap_content"
