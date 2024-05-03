@@ -114,25 +114,39 @@
 
             <Button
                 android:id="@+id/categoryButton"
-                android:layout_width="80dp"
+                android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:text="Category"
                 android:fontFamily="@font/inter_extrabold"
                 android:textAllCaps="false"
                 android:textSize="12sp"
                 android:background="@drawable/round_button"
-                android:layout_marginRight="10dp"/>
+                android:layout_marginRight="10dp"
+                android:textColor="@color/buttonColor"/>
 
             <Button
                 android:id="@+id/teamButton"
-                android:layout_width="80dp"
+                android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:text="Team"
                 android:fontFamily="@font/inter_extrabold"
                 android:textAllCaps="false"
                 android:textSize="12sp"
                 android:background="@drawable/round_button"
-                android:layout_marginRight="10dp"/>
+                android:layout_marginRight="10dp"
+                android:textColor="@color/buttonColor"/>
+
+            <Button
+                android:id="@+id/taskDatePicker"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="Date"
+                android:fontFamily="@font/inter_extrabold"
+                android:textAllCaps="false"
+                android:textSize="12sp"
+                android:background="@drawable/round_button"
+                android:layout_marginRight="10dp"
+                android:textColor="@color/buttonColor"/>
 
 
         </LinearLayout>

@@ -156,10 +156,17 @@
             android:gravity="center"
             android:orientation="horizontal">
 
-            <Space
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
+            <Button
+                android:id="@+id/signupNavBtn"
+                android:layout_width="125dp"
+                android:layout_height="40dp"
+                android:background="@drawable/custom_button"
+                android:text="Sign Up"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:layout_marginRight="40dp"/>
+
 
             <Button
                 android:id="@+id/loginBtn"
@@ -170,28 +177,12 @@
                 android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:textSize="14sp"
-                tools:layout_editor_absoluteX="227dp"
-                tools:layout_editor_absoluteY="534dp" />
+                />
 
-            <Space
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
 
-            <Button
-                android:id="@+id/signupNavBtn"
-                android:layout_width="125dp"
-                android:layout_height="40dp"
-                android:background="@drawable/custom_button"
-                android:text="Sign Up"
-                android:textAllCaps="false"
-                android:textColor="@color/white"
-                android:textSize="14sp" />
 
-            <Space
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
+
+
         </LinearLayout>
 
         <LinearLayout

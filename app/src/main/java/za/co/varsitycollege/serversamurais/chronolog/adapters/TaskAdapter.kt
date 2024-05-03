@@ -10,10 +10,11 @@ import za.co.varsitycollege.serversamurais.chronolog.R
 import za.co.varsitycollege.serversamurais.chronolog.model.Task
 import java.text.ParseException
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.Locale
 
-class TaskAdapter(private val tasks: List<Task>) : RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
-    var filteredTasks: List<Task> = tasks.toList()
+class TaskAdapter(private var allTasks: List<Task>) : RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
 
     class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val textViewTaskName: TextView = itemView.findViewById(R.id.recentTaskNameTextView)
@@ -28,8 +29,10 @@ class TaskAdapter(private val tasks: List<Task>) : RecyclerView.Adapter<TaskAdap
         return TaskViewHolder(itemView)
     }
 
+
+
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
-        val task = tasks[position]
+        var task = allTasks[position]
         holder.textViewTaskName.text = task.name
         holder.textViewTaskDescription.text = task.description
         holder.textViewTaskDate.text = task.date.toString()
@@ -37,16 +40,26 @@ class TaskAdapter(private val tasks: List<Task>) : RecyclerView.Adapter<TaskAdap
         // Bind other task properties to views
     }
 
-    override fun getItemCount(): Int = tasks.size
+    override fun getItemCount(): Int = allTasks.size
 
     fun filterByDateRange(startDate: String, endDate: String) {
         val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
         try {
             val start = if (startDate.isNotEmpty()) sdf.parse(startDate) else null
             val end = if (endDate.isNotEmpty()) sdf.parse(endDate) else null
-            // ... filter tasks using the parsed start and end dates ...
-        } catch (e: ParseException) {
+
+            if (start != null && end != null) {
+                allTasks = allTasks.filter { task ->
+                    val taskDate = task.date // Assuming task.date is a valid formatted string
+                    taskDate != null && !taskDate.before(start) && !taskDate.after(end)
+                }
+                notifyDataSetChanged() // Refresh the RecyclerView
+            }
+        } catch (e: Exception) {
             Log.e("TaskAdapter", "Failed to parse date: ${e.message}")
         }
     }
+
+
+
 }

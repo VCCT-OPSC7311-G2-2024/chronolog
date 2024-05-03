@@ -1,5 +1,6 @@
 package za.co.varsitycollege.serversamurais.chronolog.model
 
+import java.time.LocalDate
 import java.util.Date
 
 data class Task(
@@ -10,5 +11,5 @@ data class Task(
     val team: String? = null,
     val category: String? = null,
     val duration: Int? = null,
-    val date: String? = null// Duration in minutes
+    val date: Date? = null// Duration in minutes
 )

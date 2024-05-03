@@ -2,8 +2,19 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">@color/buttonColor</item>
         <item name="android:navigationBarColor">#011327</item>
+        <item name="android:statusBarColor">#41A8FB</item>
+
+        <!-- Custom button style -->
+        <item name="materialButtonStyle">@style/CustomButton</item>
+
+    </style>
+
+    <!-- Custom style for Material Button -->
+    <style name="CustomButton" parent="Widget.MaterialComponents.Button">
+        <item name="backgroundTint">@null</item> <!-- Remove background tint -->
+        <item name="android:background">@null</item> <!-- Apply custom background -->
     </style>
 
 </resources>

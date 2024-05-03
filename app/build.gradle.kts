@@ -9,6 +9,7 @@ android {
     compileSdk = 34
     viewBinding.isEnabled = true
 
+
     defaultConfig {
         applicationId = "za.co.varsitycollege.serversamurais.chronolog"
         minSdk = 24
@@ -31,6 +32,7 @@ android {
 
     buildFeatures {
         viewBinding = true
+
     }
 
     compileOptions {

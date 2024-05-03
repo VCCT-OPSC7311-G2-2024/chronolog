@@ -11,6 +11,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
+import za.co.varsitycollege.serversamurais.chronolog.adapters.TaskAdapter
 import za.co.varsitycollege.serversamurais.chronolog.model.Category
 
 
@@ -77,22 +78,17 @@ class FirebaseHelper(private val listener: FirebaseOperationListener) {
             }
     }
 
-    fun fetchTasks(userId: String, tasks: MutableList<Task>, adapter: ArrayAdapter<Task>) {
-
-        databaseTasksReference.child(userId).addValueEventListener(object: ValueEventListener {
+    fun fetchTasks(userId: String, tasks: MutableList<Task>, taskAdapter: TaskAdapter) {
+        // Adjust path as needed
+        databaseTasksReference.child(userId).addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 tasks.clear()
-
-                for(snapshot in dataSnapshot.children){
-                    val task = snapshot.getValue(Task::class.java)
-                    task?.let {tasks.add(it)}
-                }
-                adapter.notifyDataSetChanged()
-
+                dataSnapshot.children.mapNotNullTo(tasks) { it.getValue(Task::class.java) }
+                taskAdapter.notifyDataSetChanged()
             }
 
-            override fun onCancelled(error: DatabaseError) {
-                Log.e("MainActivity", "Failed to read categories.", error.toException())
+            override fun onCancelled(databaseError: DatabaseError) {
+                Log.e("FirebaseHelper", "Failed to load tasks.", databaseError.toException())
             }
         })
     }

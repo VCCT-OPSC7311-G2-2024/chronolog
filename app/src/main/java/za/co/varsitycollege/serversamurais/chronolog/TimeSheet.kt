@@ -46,6 +46,7 @@ import java.time.format.DateTimeFormatter
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointForward
+import kotlinx.coroutines.selects.select
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -74,10 +75,13 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
     private lateinit var categoryList: LinearLayout
     private lateinit var chooseTeam: LinearLayout
 
+
     private lateinit var taskNameEditText: EditText
     private lateinit var descriptionEditText: EditText
     private lateinit var durationTextView: TextView
     private var taskCategory : String = "Default Category"
+    private lateinit var taskDate: Date
+    private lateinit var taskDateButton: Button
 
 
     private lateinit var autoCompleteTextView: AutoCompleteTextView
@@ -124,6 +128,11 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
         val closeTaskDetailsBtn: ImageButton = view.findViewById(R.id.closeEnterTaskDetailsBtn)
         addNewTaskButton = view.findViewById(R.id.addNewTaskButton)
         enterTaskDetails = view.findViewById(R.id.enterTaskDetails)
+        taskDateButton = view.findViewById(R.id.taskDatePicker)
+
+        taskDateButton.setOnClickListener{
+            showDatePicker()
+        }
 
         // Category Section
         val categoryButton: Button = view.findViewById(R.id.categoryButton)
@@ -183,8 +192,8 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
         taskRecyclerView.adapter = taskAdapter
 
 
-
-        val database = Firebase.database("https://chronolog-db9b8-default-rtdb.europe-west1.firebasedatabase.app/")
+        firebaseHelper.fetchTasks(userId, tasks, taskAdapter)
+        /*val database = Firebase.database("https://chronolog-db9b8-default-rtdb.europe-west1.firebasedatabase.app/")
         val databaseReference = database.getReference("tasks") // Adjust path as needed
         databaseReference.child(userId).addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -196,7 +205,7 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
             override fun onCancelled(databaseError: DatabaseError) {
                 Log.e("TasksFragment", "Failed to load tasks.", databaseError.toException())
             }
-        })
+        })*/
 
 
 
@@ -216,9 +225,10 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
             val hours = splitDuration[0].toInt()
             val minutes = splitDuration[1].toInt()
             val duration: Int = (hours * 60) + minutes
-            Log.e("Task Duration", duration.toString())
 
-            val date = getCurrentDate()
+            val date = taskDate
+
+
 
             val newTask = Task(
                 null, taskName,
@@ -326,6 +336,12 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
     }
 
     private fun showDateRangePicker() {
+        taskRecyclerView.layoutManager = LinearLayoutManager(context)
+        taskAdapter = TaskAdapter(tasks)
+        taskRecyclerView.adapter = taskAdapter
+
+        var userId = firebaseHelper.getUserId()
+        firebaseHelper.fetchTasks(userId, tasks, taskAdapter)
         val dateRangePicker = MaterialDatePicker.Builder.dateRangePicker()
             .setTitleText("Select dates")
             .build()
@@ -338,6 +354,19 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
         }
 
         dateRangePicker.show(childFragmentManager, dateRangePicker.toString())
+    }
+
+    private fun showDatePicker() {
+        val datePicker = MaterialDatePicker.Builder.datePicker()
+            .setTitleText("Select date")
+            .build()
+
+        datePicker.addOnPositiveButtonClickListener { selection ->
+            taskDate = Date(selection)
+
+        }
+
+        datePicker.show(childFragmentManager, datePicker.toString())
     }
 
 
@@ -409,11 +438,6 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
     }
 
 
-    private fun getCurrentDate(): String {
-        val currentDate = LocalDate.now()
-        val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
-        return currentDate.format(formatter)
-    }
 
     private fun toggleTeamWidget() {
         if (chooseTeam.visibility == View.GONE) {
