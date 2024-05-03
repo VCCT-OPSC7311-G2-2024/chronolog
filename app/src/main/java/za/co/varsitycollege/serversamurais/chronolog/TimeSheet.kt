@@ -204,20 +204,6 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
 
 
         firebaseHelper.fetchTasks(userId, tasks, taskAdapter)
-        /*val database = Firebase.database("https://chronolog-db9b8-default-rtdb.europe-west1.firebasedatabase.app/")
-        val databaseReference = database.getReference("tasks") // Adjust path as needed
-        databaseReference.child(userId).addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                tasks.clear()
-                dataSnapshot.children.mapNotNullTo(tasks) { it.getValue(Task::class.java) }
-                taskAdapter.notifyDataSetChanged()
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-                Log.e("TasksFragment", "Failed to load tasks.", databaseError.toException())
-            }
-        })*/
-
 
 
         addTaskButton.setOnClickListener {
@@ -245,7 +231,7 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
             val newTask = Task(
                 taskId, taskName,
                 description, null, "Chronolog",
-                taskCategory, duration, date, 0, 0
+                taskCategory, duration, date, false, 0, 0
             )
             firebaseHelper.addTask(newTask, userId)
 

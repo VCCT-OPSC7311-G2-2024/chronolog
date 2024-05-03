@@ -53,6 +53,9 @@ dependencies {
     implementation(libs.firebase.database)
     implementation ("com.google.android.material:material:1.4.0") // Check for the latest version
     implementation("com.google.firebase:firebase-auth:21.0.1")
+    implementation(libs.androidx.camera.view)
+    implementation(libs.androidx.camera.lifecycle)
+    implementation(libs.androidx.camera.core)
     implementation(libs.androidx.animation.graphics.android)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

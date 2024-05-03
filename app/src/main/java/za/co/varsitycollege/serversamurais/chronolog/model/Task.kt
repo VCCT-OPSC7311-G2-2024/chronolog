@@ -5,12 +5,12 @@ import java.util.Date
 
 data class Task(
     val taskId: String = "", // Firebase can generate this ID
-    val name: String? = null,
+    val name: String = "",
     val description: String? = null,
     val photoUrl: String? = null, // Optional photo URL
     val team: String? = null,
     val category: String? = null,
-    var duration: Int? = null,
+    var duration: Int = 0,
     val date: Date? = null,
     var isRunning: Boolean = false,
     var minGoal: Int = 0,// Minimum goal in minutes
