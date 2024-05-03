@@ -1,6 +1,9 @@
 package za.co.varsitycollege.serversamurais.chronolog.adapters
 
+import android.animation.ObjectAnimator
 import android.os.CountDownTimer
+import android.transition.ChangeBounds
+import android.transition.TransitionManager
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +12,7 @@ import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.NonCancellable.start
 import za.co.varsitycollege.serversamurais.chronolog.Helpers.FirebaseHelper
 import za.co.varsitycollege.serversamurais.chronolog.R
 import za.co.varsitycollege.serversamurais.chronolog.model.Task
@@ -36,7 +40,10 @@ class TaskAdapter(private var tasks: List<Task>, private var firebaseHelper: Fir
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
+        // Inflate the layout for a single task item
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_task_view, parent, false)
+
+        // Create and return a new TaskViewHolder instance
         return TaskViewHolder(itemView)
     }
 
@@ -87,6 +94,33 @@ class TaskAdapter(private var tasks: List<Task>, private var firebaseHelper: Fir
 
         holder.itemView.setOnClickListener {
             val visible = holder.detailsLayout.visibility == View.VISIBLE
+            if (visible) {
+                // Fade out animation for detailsLayout
+                android.animation.ObjectAnimator.ofFloat(holder.detailsLayout, View.ALPHA, 1f, 0f).apply {
+                    duration = 300 // Adjust the duration as needed
+                    start()
+                }
+
+                // Fade in animation for summaryLayout
+                android.animation.ObjectAnimator.ofFloat(holder.summaryLayout, View.ALPHA, 0f, 1f).apply {
+                    duration = 300 // Adjust the duration as needed
+                    start()
+                }
+            } else {
+                // Fade out animation for summaryLayout
+                android.animation.ObjectAnimator.ofFloat(holder.summaryLayout, View.ALPHA, 1f, 0f).apply {
+                    duration = 300 // Adjust the duration as needed
+                    start()
+                }
+
+                // Fade in animation for detailsLayout
+                android.animation.ObjectAnimator.ofFloat(holder.detailsLayout, View.ALPHA, 0f, 1f).apply {
+                    duration = 300 // Adjust the duration as needed
+                    start()
+                }
+            }
+
+            // Toggle visibility
             holder.detailsLayout.visibility = if (visible) View.GONE else View.VISIBLE
             holder.summaryLayout.visibility = if (visible) View.VISIBLE else View.GONE
         }
