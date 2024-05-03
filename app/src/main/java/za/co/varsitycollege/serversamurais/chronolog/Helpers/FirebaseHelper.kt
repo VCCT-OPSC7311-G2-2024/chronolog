@@ -1,6 +1,7 @@
 package za.co.varsitycollege.serversamurais.chronolog.Helpers
 
 import android.util.Log
+import android.widget.ArrayAdapter
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -11,7 +12,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
-import za.co.varsitycollege.serversamurais.chronolog.adapters.CategoryAdapter
+import za.co.varsitycollege.serversamurais.chronolog.adapters.TaskAdapter
 import za.co.varsitycollege.serversamurais.chronolog.model.Category
 
 
@@ -67,9 +68,7 @@ class FirebaseHelper(private val listener: FirebaseOperationListener) {
 
     fun addTask(newTask: Task, userId: String) {
 
-        val taskId = databaseTasksReference.child(userId).push().key ?: throw Exception("Failed to generate unique key for task")
-
-        databaseTasksReference.child(userId).child(taskId).setValue(newTask)
+        databaseTasksReference.child(userId).child(newTask.taskId).setValue(newTask)
             .addOnCompleteListener { task ->
                 if(task.isSuccessful) {
                     val user = mAuth.currentUser
@@ -79,18 +78,37 @@ class FirebaseHelper(private val listener: FirebaseOperationListener) {
                 }
             }
     }
-    fun fetchTasks(userId: String, onTasksReceived: (List<Task>) -> Unit, onError: (Exception) -> Unit) {
-        databaseTasksReference.child(userId).addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val tasks = snapshot.children.mapNotNull { it.getValue(Task::class.java) }
-                onTasksReceived(tasks)
+
+    fun fetchTasks(userId: String, tasks: MutableList<Task>, taskAdapter: TaskAdapter) {
+        // Adjust path as needed
+        databaseTasksReference.child(userId).addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                tasks.clear()
+                dataSnapshot.children.mapNotNullTo(tasks) { it.getValue(Task::class.java) }
+                taskAdapter.notifyDataSetChanged()
             }
 
-            override fun onCancelled(error: DatabaseError) {
-                onError(Exception(error.message))
+            override fun onCancelled(databaseError: DatabaseError) {
+                Log.e("FirebaseHelper", "Failed to load tasks.", databaseError.toException())
             }
         })
     }
+
+    fun getTaskId(userId: String): String {
+        return databaseTasksReference.child(userId).child("tasks").push().key ?: throw Exception("Failed to generate unique key for task")
+    }
+
+    fun updateTaskDuration(taskId: String, userId: String, updates: Map<String, Int?>) {
+        databaseTasksReference.child(userId).child(taskId).updateChildren(updates)
+            .addOnSuccessListener {
+                Log.d("FirebaseHelper", "Task duration updated successfully.")
+            }
+            .addOnFailureListener { e ->
+                Log.e("FirebaseHelper", "Failed to update task duration.", e)
+            }
+    }
+
+
 
     fun fetchTasks(userId: String, onTasksReceived: (List<Task>) -> Unit) {
     databaseTasksReference.child(userId).addListenerForSingleValueEvent(object : ValueEventListener {
@@ -120,7 +138,9 @@ class FirebaseHelper(private val listener: FirebaseOperationListener) {
             }
     }
 
-    fun fetchCategories(userId: String, categories: ArrayList<Category>, adapter: CategoryAdapter) {
+    fun fetchCategories(
+        userId: String, categories: MutableList<String>, adapter: ArrayAdapter<String>
+    ) {
         // Firebase reference
 
         databaseCategoriesReference.child(userId).addValueEventListener(object : ValueEventListener {
@@ -128,7 +148,7 @@ class FirebaseHelper(private val listener: FirebaseOperationListener) {
                 categories.clear()
                 for (snapshot in dataSnapshot.children) {
                     val category = snapshot.getValue(Category::class.java)
-                    category?.let { categories.add(it) }
+                    category?.let { categories.add(it.categoryName.toString()) }
                 }
                 adapter.notifyDataSetChanged()
             }
@@ -176,6 +196,7 @@ class FirebaseHelper(private val listener: FirebaseOperationListener) {
                 }
         }
     }
+
 
     fun getCurrentUser(): FirebaseUser? {
         return mAuth.currentUser

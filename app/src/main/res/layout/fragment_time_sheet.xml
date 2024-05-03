@@ -3,19 +3,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".TimeSheet"
-    android:background="@drawable/blue_background">
+    tools:context=".TimeSheet">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical"
         android:padding="20dp">
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:gravity="center_horizontal"
             android:orientation="vertical"
             android:layout_marginTop="10dp"
@@ -58,39 +56,23 @@
                 android:src="@drawable/filter_button"
                 android:background="@null" />
 
-            <Button
-                android:id="@+id/date_button"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+            <TextView
+                android:id="@+id/dateRangeTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="dd/mm/yyyy"
                 android:background="@drawable/date_button"
+                android:clickable="true"
+                android:focusable="true"
+                android:fontFamily="@font/inter"
+                android:hint="Select date range"
+                android:inputType="none"
+                android:padding="2dp"
+                android:textAlignment="center"
                 android:textColor="@color/white"
-                android:textAllCaps="false"
-                android:layout_marginHorizontal="5dp"
-                />
+                android:textColorHint="@color/white"
+                android:textSize="12sp" />
 
-            <Button
-                android:id="@+id/category_button"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_weight="1"
-                android:text="category"
-                android:background="@drawable/date_button"
-                android:textColor="@color/white"
-                android:textAllCaps="false"
-                android:layout_marginHorizontal="5dp"/>
-
-            <Button
-                android:id="@+id/team_button"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_weight="1"
-                android:text="team"
-                android:background="@drawable/date_button"
-                android:textColor="@color/white"
-                android:textAllCaps="false"
-                android:layout_marginHorizontal="5dp"/>
 
         </LinearLayout>
 
@@ -103,10 +85,25 @@
             android:layout_height="75dp"
             android:layout_marginBottom="25dp"
             />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recentTasksRecyclerView"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal" />
+
+        </LinearLayout>
 
 
 
     </LinearLayout>
+
+
+
     <include
         android:id="@+id/enterTaskDetails"
         layout="@layout/activity_enter_task_details_view"

@@ -1,3 +1,4 @@
+/*
 package za.co.varsitycollege.serversamurais.chronolog.adapters
 
 import android.view.LayoutInflater
@@ -6,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import za.co.varsitycollege.serversamurais.chronolog.R
+import za.co.varsitycollege.serversamurais.chronolog.TimeSheet
 import za.co.varsitycollege.serversamurais.chronolog.model.Category
 
 class CategoryAdapter(private val categories: ArrayList<Category>) : RecyclerView.Adapter<CategoryAdapter.ViewHolder>() {
@@ -34,3 +36,4 @@ class CategoryAdapter(private val categories: ArrayList<Category>) : RecyclerVie
 }
 
 
+*/

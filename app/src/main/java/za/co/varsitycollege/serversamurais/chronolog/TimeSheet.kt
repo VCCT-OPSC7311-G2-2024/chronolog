@@ -2,18 +2,24 @@ package za.co.varsitycollege.serversamurais.chronolog
 
 import RecyclerAdapter
 import SharedViewModel
+import DateRangePickerFragment
 import android.app.Activity
-import android.app.AlertDialog
+import android.app.DatePickerDialog
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
+import android.os.CountDownTimer
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.CheckBox
+import android.widget.DatePicker
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.LinearLayout
@@ -24,13 +30,29 @@ import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.database
 import za.co.varsitycollege.serversamurais.chronolog.Helpers.FirebaseHelper
-import za.co.varsitycollege.serversamurais.chronolog.adapters.CategoryAdapter
+import za.co.varsitycollege.serversamurais.chronolog.adapters.TaskAdapter
 import za.co.varsitycollege.serversamurais.chronolog.model.Category
 import za.co.varsitycollege.serversamurais.chronolog.model.NotificationItem
 import za.co.varsitycollege.serversamurais.chronolog.model.Task
 import za.co.varsitycollege.serversamurais.chronolog.views.DurationPickerDialogFragment
+import java.util.Calendar
+import java.util.Date
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.datepicker.CalendarConstraints
+import com.google.android.material.datepicker.DateValidatorPointForward
+import kotlinx.coroutines.selects.select
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -57,18 +79,35 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
     private lateinit var categoryList: LinearLayout
     private lateinit var chooseTeam: LinearLayout
 
+
     private lateinit var taskNameEditText: EditText
     private lateinit var descriptionEditText: EditText
-    private var duration: Int = 0
+    private lateinit var durationTextView: TextView
+    private var taskCategory : String = "Default Category"
+    private lateinit var taskDate: Date
+    private lateinit var taskDateButton: Button
 
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var categories: ArrayList<Category>
-    private lateinit var adapter: CategoryAdapter
+
+    private lateinit var autoCompleteTextView: AutoCompleteTextView
+    private lateinit var categoriesAdapter: ArrayAdapter<String>
+
 
     private lateinit var createCategoryView: LinearLayout
 
     private val data = mutableListOf<NotificationItem>()
     private lateinit var adapterNotification: RecyclerAdapter
+
+
+    private lateinit var timerTextView: TextView
+    private var timerRunning = false
+    private var timer: CountDownTimer? = null
+    private var timeInMilliseconds = 0L
+
+    private lateinit var taskRecyclerView: RecyclerView
+    private lateinit var taskAdapter: TaskAdapter
+    private val tasks = mutableListOf<Task>()
+
+    private lateinit var dateRangeTextView: TextView
 
 
 
@@ -86,10 +125,22 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
 
         val view = inflater.inflate(R.layout.fragment_time_sheet, container, false)
         val activity = activity as Activity
+
+        dateRangeTextView = view.findViewById(R.id.dateRangeTextView)
+
+        dateRangeTextView.setOnClickListener{
+            showDateRangePicker()
+        }
+
         // Task Details Section
         val closeTaskDetailsBtn: ImageButton = view.findViewById(R.id.closeEnterTaskDetailsBtn)
         addNewTaskButton = view.findViewById(R.id.addNewTaskButton)
         enterTaskDetails = view.findViewById(R.id.enterTaskDetails)
+        taskDateButton = view.findViewById(R.id.taskDatePicker)
+
+        taskDateButton.setOnClickListener{
+            showDatePicker()
+        }
 
         // Initialize adapter
         adapterNotification = RecyclerAdapter(requireContext(), data)
@@ -124,8 +175,13 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
         // Make navbar disappear
         navBar = activity.findViewById(R.id.bottomNavigationView)
 
+        timerTextView = view.findViewById(R.id.timerTextView)
 
         addNewTaskButton.setOnClickListener {
+
+            if (!timerRunning) {
+                startTimer()
+            }
             toggleVisibility()
         }
 
@@ -141,18 +197,55 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
 
         val userId = firebaseHelper.getUserId()
 
+        taskRecyclerView = view.findViewById(R.id.recentTasksRecyclerView)
+        taskRecyclerView.layoutManager = LinearLayoutManager(context)
+        taskAdapter = TaskAdapter(tasks, firebaseHelper)
+        taskRecyclerView.adapter = taskAdapter
+
+
+        firebaseHelper.fetchTasks(userId, tasks, taskAdapter)
+        /*val database = Firebase.database("https://chronolog-db9b8-default-rtdb.europe-west1.firebasedatabase.app/")
+        val databaseReference = database.getReference("tasks") // Adjust path as needed
+        databaseReference.child(userId).addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                tasks.clear()
+                dataSnapshot.children.mapNotNullTo(tasks) { it.getValue(Task::class.java) }
+                taskAdapter.notifyDataSetChanged()
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                Log.e("TasksFragment", "Failed to load tasks.", databaseError.toException())
+            }
+        })*/
+
+
+
         addTaskButton.setOnClickListener {
 
+            if (timerRunning) {
+                stopTimer()
+            }
             taskNameEditText = view.findViewById(R.id.taskNameEditText)
             descriptionEditText = view.findViewById(R.id.descriptionEditText)
+            durationTextView = view.findViewById(R.id.timerTextView)
 
+            val taskId = firebaseHelper.getTaskId(userId)
             val taskName = taskNameEditText.text.toString()
             val description = descriptionEditText.text.toString()
+            val durationText = durationTextView.text.toString()
+            val splitDuration = durationText.split(":")
+            val hours = splitDuration[0].toInt()
+            val minutes = splitDuration[1].toInt()
+            val duration: Int = (hours * 60) + minutes
+
+            val date = taskDate
+
+
 
             val newTask = Task(
-                null, taskName,
+                taskId, taskName,
                 description, null, "Chronolog",
-                "OPSC POE", duration, 0, 0
+                taskCategory, duration, date, 0, 0
             )
             firebaseHelper.addTask(newTask, userId)
 
@@ -161,9 +254,9 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
             toggleVisibility()
         }
 
+
         // Setup Categories
 
-        // Create Category
         var addNewCategoryButton: Button = view.findViewById(R.id.addNewCategory)
         createCategoryView = view.findViewById(R.id.createNewCategory)
 
@@ -171,7 +264,7 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
             toggleAddCategory()
         }
 
-        view.findViewById<Button>(R.id.buttonSaveCategory).setOnClickListener {
+        view.findViewById<Button>(R.id.buttonSaveNewCategory).setOnClickListener {
             val name = view.findViewById<EditText>(R.id.editTextCategoryName).text.toString().trim()
             val isActive = view.findViewById<CheckBox>(R.id.checkBoxIsActive).isChecked
 
@@ -183,39 +276,143 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
                 Toast.makeText(context, "Please enter a category name.", Toast.LENGTH_SHORT).show()
             }
             toggleAddCategory()
+
         }
 
-        view.findViewById<Button>(R.id.buttonCancelCategory).setOnClickListener{
+        view.findViewById<Button>(R.id.buttonCancelNewCategory).setOnClickListener{
             toggleAddCategory()
         }
 
+
+
+
         // Retrieve Categories
-        recyclerView = view.findViewById(R.id.recyclerViewCategories)
-        recyclerView.layoutManager = LinearLayoutManager(context)
-        categories = ArrayList()
-        adapter = CategoryAdapter(categories)
-        recyclerView.adapter = adapter
+        autoCompleteTextView = view.findViewById(R.id.autoCompleteTextViewCategory)
+
+        val categories = mutableListOf<String>()
+        categoriesAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, categories)
+        autoCompleteTextView.setAdapter(categoriesAdapter)
 
 
-        firebaseHelper.fetchCategories(userId, categories, adapter)
+        firebaseHelper.fetchCategories(userId, categories, categoriesAdapter)
+
+        // set autocomplete
+        autoCompleteTextView.setOnClickListener {
+            autoCompleteTextView.showDropDown()
+        }
+
+        autoCompleteTextView.setOnFocusChangeListener { view, hasFocus ->
+            if (hasFocus) autoCompleteTextView.showDropDown()
+        }
+
+        autoCompleteTextView.setOnItemClickListener { adapterView, view, position, id ->
+            val selectedCategory = adapterView.getItemAtPosition(position) as String
+            // Handle the selected category
+        }
+
+        // Done with Categories
+
+        view.findViewById<Button>(R.id.buttonSaveCategory).setOnClickListener {
+            val selectedCategory = autoCompleteTextView.text.toString()
+            if (selectedCategory.isNotEmpty()) {
+                taskCategory = selectedCategory
+            } else {
+                Toast.makeText(context, "Please select a category.", Toast.LENGTH_SHORT).show()
+            }
+            toggleCategory()
+
+        }
+
+        view.findViewById<Button>(R.id.buttonCancelCategory).setOnClickListener{
+            toggleCategory()
+        }
 
         // Inflate the layout for this fragment
         return view
     }
 
     override fun onDurationSet(hours: Int, minutes: Int) {
+        if (timerRunning) {
+            stopTimer()
+        }
         // Handle the picked duration
-        val currentDurationTV: TextView = view?.findViewById(R.id.currentDurationTV)
+        val currentDurationTV: TextView = view?.findViewById(R.id.timerTextView)
             ?: throw IllegalStateException("View cannot be null")
         currentDurationTV.text = "$hours:$minutes:00"
         Toast.makeText(context, "Duration: $hours Hours, $minutes Minutes", Toast.LENGTH_LONG)
             .show()
-        duration = (hours * 60) + minutes
+        val duration = (hours * 60) + minutes
     }
+
 
     override fun onCancel() {
         // Handle cancellation
     }
+
+    private fun showDateRangePicker() {
+        taskRecyclerView.layoutManager = LinearLayoutManager(context)
+        taskAdapter = TaskAdapter(tasks, firebaseHelper)
+        taskRecyclerView.adapter = taskAdapter
+
+        val userId = firebaseHelper.getUserId()
+        firebaseHelper.fetchTasks(userId, tasks, taskAdapter)
+        val dateRangePicker = MaterialDatePicker.Builder.dateRangePicker()
+            .setTitleText("Select dates")
+            .build()
+
+        dateRangePicker.addOnPositiveButtonClickListener { selection ->
+            val startDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date(selection.first))
+            val endDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date(selection.second))
+            dateRangeTextView.text = "$startDate - $endDate"
+            taskAdapter.filterByDateRange(startDate, endDate)
+        }
+
+        dateRangePicker.show(childFragmentManager, dateRangePicker.toString())
+    }
+
+    private fun showDatePicker() {
+        val datePicker = MaterialDatePicker.Builder.datePicker()
+            .setTitleText("Select date")
+            .build()
+
+        datePicker.addOnPositiveButtonClickListener { selection ->
+            taskDate = Date(selection)
+
+        }
+
+        datePicker.show(childFragmentManager, datePicker.toString())
+    }
+
+
+
+
+
+    private fun startTimer() {
+        timer = object : CountDownTimer(Long.MAX_VALUE, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                timeInMilliseconds += 1000
+                updateTimer()
+            }
+
+            override fun onFinish() {}
+        }.start()
+        timerRunning = true
+    }
+
+    private fun stopTimer() {
+        timer?.cancel()
+        timerRunning = false
+    }
+
+    private fun updateTimer() {
+        val hours = timeInMilliseconds / 3600000
+        val minutes = (timeInMilliseconds % 3600000) / 60000
+        val seconds = (timeInMilliseconds % 60000) / 1000
+
+        val timeString = String.format("%d:%02d:%02d", hours, minutes, seconds)
+        timerTextView.text = timeString
+    }
+
 
     private fun setupSettingsButton() {
         val model: SharedViewModel by activityViewModels()
@@ -295,9 +492,6 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
             inputMethodManager.hideSoftInputFromWindow(it.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
         }
     }
-
-
-
 
 
     companion object {

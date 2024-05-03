@@ -1,5 +1,6 @@
 package za.co.varsitycollege.serversamurais.chronolog.pages
 
+import DateRangePickerFragment
 import RecyclerAdapter
 import SharedViewModel
 import android.animation.ObjectAnimator
@@ -94,6 +95,7 @@ class HomePage : Fragment() {
         // Call the method to update the greeting message based on the time of the day
         updateGreeting()
 
+
         // Set visibility of all CardViews to GONE
         dailyGoalsCardView.visibility = View.GONE
         progressCardView.visibility = View.GONE
@@ -128,6 +130,8 @@ class HomePage : Fragment() {
             val intent = Intent(context, CameraControllerActivity::class.java)
             startActivity(intent)
         }
+
+
         return view
     }
 
@@ -262,4 +266,5 @@ class HomePage : Fragment() {
         musicCardView.visibility = View.VISIBLE
         animateCardView(musicCardView)
     }
+
 }
