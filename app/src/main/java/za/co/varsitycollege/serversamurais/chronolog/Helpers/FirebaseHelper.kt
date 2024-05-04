@@ -12,6 +12,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
+import za.co.varsitycollege.serversamurais.chronolog.adapters.CategoryAdapter
 import za.co.varsitycollege.serversamurais.chronolog.adapters.TaskAdapter
 import za.co.varsitycollege.serversamurais.chronolog.model.Category
 import za.co.varsitycollege.serversamurais.chronolog.model.Team
@@ -87,6 +88,21 @@ class FirebaseHelper(private val listener: FirebaseOperationListener) {
                 tasks.clear()
                 dataSnapshot.children.mapNotNullTo(tasks) { it.getValue(Task::class.java) }
                 taskAdapter.notifyDataSetChanged()
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                Log.e("FirebaseHelper", "Failed to load tasks.", databaseError.toException())
+            }
+        })
+    }
+
+    fun fetchCategoryTasks(userId: String, tasks: MutableList<Task>, categoryAdapter: CategoryAdapter) {
+        // Adjust path as needed
+        databaseTasksReference.child(userId).addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                tasks.clear()
+                dataSnapshot.children.mapNotNullTo(tasks) { it.getValue(Task::class.java) }
+                categoryAdapter.notifyDataSetChanged()
             }
 
             override fun onCancelled(databaseError: DatabaseError) {

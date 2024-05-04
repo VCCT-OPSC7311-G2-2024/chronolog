@@ -13,7 +13,7 @@ data class Task(
     var duration: Int = 0,
     val date: Date? = null,
     var isRunning: Boolean = false,
-    var minGoal: Int = 0,// Minimum goal in minutes
-    var maxGoal: Int = 0 // Maximum goal in minutes
+    var minGoal: Int = 1,// Minimum goal in minutes
+    var maxGoal: Int = 1 // Maximum goal in minutes
 
 )

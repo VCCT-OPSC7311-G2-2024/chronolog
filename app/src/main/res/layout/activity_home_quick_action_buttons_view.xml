@@ -238,10 +238,12 @@
                         android:layout_marginTop="172dp"
                         android:background="@drawable/rounded_homebtn"
                         android:backgroundTint="#FFFFFF"
+                        android:textColor="@color/black"
                         android:text="@string/Save"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

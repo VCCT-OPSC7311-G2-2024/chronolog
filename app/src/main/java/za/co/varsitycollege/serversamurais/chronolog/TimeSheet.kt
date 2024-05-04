@@ -179,8 +179,6 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
 
     override fun onCreateView(
 
-
-
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?): View? {
 
@@ -302,7 +300,7 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
             val newTask = Task(
                 taskId, taskName,
                 description, taskPhoto, taskTeam,
-                taskCategory, duration, date, false, 0, 0
+                taskCategory, duration, date, false, 1, 1
             )
             firebaseHelper.addTask(newTask, userId)
             setupSettingsButton()

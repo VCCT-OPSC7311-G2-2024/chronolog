@@ -9,8 +9,8 @@
     <string name="Break">Break</string>
     <string name="DailyGoal">Daily Goal</string>
     <string name="Save">Save/Submit</string>
-    <string name="MinGoal">Min Goal (Hrs)</string>
-    <string name="MaxGoal">Max Goal (Hrs)</string>
+    <string name="MinGoal">Min Goal (mins)</string>
+    <string name="MaxGoal">Max Goal (mins)</string>
     <string name="Progress">Progress</string>
     <string name="Min">Min</string>
     <string name="Max">Max</string>

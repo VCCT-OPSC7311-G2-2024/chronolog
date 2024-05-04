@@ -95,7 +95,6 @@ class HomePage : Fragment(), FirebaseHelper.FirebaseOperationListener {
         }
 
 
-
         // Initialize adapter
         adapter = RecyclerAdapter(requireContext(), data)
 
@@ -206,7 +205,7 @@ class HomePage : Fragment(), FirebaseHelper.FirebaseOperationListener {
             params.width = progressWidth
             line2View.layoutParams = params
 
-            progressBar2Txt.text = totalHours.toInt().toString()
+            progressBar2Txt.text = (totalDuration / 60).toString() + " minutes"
         }
     }
     private fun organizeMinGoalData(userId: String) {
@@ -219,7 +218,7 @@ class HomePage : Fragment(), FirebaseHelper.FirebaseOperationListener {
             params.width = minProgressWidth.coerceAtMost(dpToPx(250))
             line1View.layoutParams = params
 
-            progressBar1Txt.text = minGoal.toString()
+            progressBar1Txt.text = minGoal.toString() + " minutes"
         }
     }
 
@@ -232,7 +231,7 @@ class HomePage : Fragment(), FirebaseHelper.FirebaseOperationListener {
             params.width = maxProgressWidth.coerceAtMost(dpToPx(250))
             line3View.layoutParams = params
 
-            progressBar3Txt.text = maxGoal.toString()
+            progressBar3Txt.text = maxGoal.toString() + " minutes"
         }
     }
 
