@@ -48,7 +48,7 @@ class NotificationPage : Fragment() {
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        val model: SharedViewModel by activityViewModels()
+       val model: SharedViewModel by activityViewModels()
 
       Log.d("NotificationPage", "Current data: ${model.data.value}")
             model.data.observe(viewLifecycleOwner) { itemList ->

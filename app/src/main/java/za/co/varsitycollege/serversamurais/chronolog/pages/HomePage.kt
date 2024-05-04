@@ -194,7 +194,7 @@ class HomePage : Fragment() {
             params.width = progressWidth
             line2View.layoutParams = params
 
-            progressBar2Txt.text = totalHours.toInt().toString()
+            progressBar2Txt.text = totalHours.toInt().toString() + " min"
         }
     }
     private fun organizeMinGoalData(userId: String) {
@@ -207,7 +207,7 @@ class HomePage : Fragment() {
             params.width = minProgressWidth.coerceAtMost(dpToPx(250))
             line1View.layoutParams = params
 
-            progressBar1Txt.text = minGoal.toString()
+            progressBar1Txt.text = minGoal.toString() + " min"
         }
     }
 
@@ -220,7 +220,7 @@ class HomePage : Fragment() {
             params.width = maxProgressWidth.coerceAtMost(dpToPx(250))
             line3View.layoutParams = params
 
-            progressBar3Txt.text = maxGoal.toString()
+            progressBar3Txt.text = maxGoal.toString() + " min"
         }
     }
 

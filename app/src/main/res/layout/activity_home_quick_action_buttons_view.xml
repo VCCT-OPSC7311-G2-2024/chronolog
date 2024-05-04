@@ -240,6 +240,7 @@
                         android:backgroundTint="#FFFFFF"
                         android:text="@string/Save"
                         android:textStyle="bold"
+                        android:textColor="@color/black"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 

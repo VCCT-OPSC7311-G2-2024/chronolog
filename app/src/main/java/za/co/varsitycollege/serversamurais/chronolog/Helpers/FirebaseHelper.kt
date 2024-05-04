@@ -280,9 +280,34 @@ fun getMaxGoal(userId: String, onMaxGoalReceived: (Int) -> Unit) {
     })
 }
 
+    fun getTotalHoursPerCategory(userId: String, onTotalHoursReceived: (Map<String, Int>) -> Unit) {
+        Log.d("FirebaseHelper", "Getting total hours per category for user: $userId")
+        databaseTasksReference.child(userId).addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                Log.d("FirebaseHelper", "Received data snapshot for user: $userId")
+                val totalHoursPerCategory = mutableMapOf<String, Int>()
 
+                snapshot.children.forEach { taskSnapshot ->
+                    val task = taskSnapshot.getValue(Task::class.java)
+                    Log.d("FirebaseHelper", "Task: $task")
+                    if (task != null && task.category != null) {
+                        val currentHours = totalHoursPerCategory.getOrDefault(task.category!!, 0)
+                        totalHoursPerCategory[task.category!!] = currentHours + task.duration
+                        Log.d("FirebaseHelper", "Updated total hours for category ${task.category}: ${totalHoursPerCategory[task.category!!]}")
+                    }
+                }
 
+                Log.d("FirebaseHelper", "Calculated total hours per category: $totalHoursPerCategory")
+                onTotalHoursReceived(totalHoursPerCategory)
+            }
 
-
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("FirebaseHelper", "Error fetching tasks for user $userId: ${error.message}")
+            }
+        })
+    }
 
 }
+
+
+

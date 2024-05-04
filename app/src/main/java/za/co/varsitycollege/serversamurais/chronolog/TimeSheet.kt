@@ -231,11 +231,11 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
             val newTask = Task(
                 taskId, taskName,
                 description, null, "Chronolog",
-                taskCategory, duration, date, false, 0, 0
+                taskCategory, duration, date, false, 1, 1
             )
             firebaseHelper.addTask(newTask, userId)
 
-            setupSettingsButton()
+            setupNotificationList()
 
             toggleVisibility()
         }
@@ -400,7 +400,7 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
     }
 
 
-    private fun setupSettingsButton() {
+    fun setupNotificationList() {
         val model: SharedViewModel by activityViewModels()
 
         val userId = firebaseHelper.getUserId()
@@ -411,6 +411,7 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
             // Add new data
             tasks.forEach { task ->
                 val newItem = NotificationItem(task.name, task.duration.toString())
+                Log.e("HomePage", "New Item: $newItem")
                 // Use newItem here
                 model.data.value?.add(newItem)
             }

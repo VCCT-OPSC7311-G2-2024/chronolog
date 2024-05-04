@@ -1,10 +1,17 @@
 package za.co.varsitycollege.serversamurais.chronolog
 
+import TotalHourAdapter
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+
+import za.co.varsitycollege.serversamurais.chronolog.model.sharedTotoalHoursViewModel
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -33,9 +40,24 @@ class Stats : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_stats, container, false)
+        val view = inflater.inflate(R.layout.fragment_stats, container, false)
+
+        val recyclerView = view.findViewById<RecyclerView>(R.id.totalHoursRecyclerView)
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+        val model: sharedTotoalHoursViewModel by activityViewModels()
+
+       Log.d("TimeSheet", "Current data: ${model.tasks.value}")
+        model.tasks.observe(viewLifecycleOwner) { itemList ->
+            Log.d("TimeSheet", "Data observed: $itemList")
+            val adapter = TotalHourAdapter(requireContext(), itemList) // Replace YourAdapterClass with the actual class name
+            //model.tasks.value =itemList
+            recyclerView.adapter = adapter
+        }
+
+        return view
     }
+
 
     companion object {
         /**

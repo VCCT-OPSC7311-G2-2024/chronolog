@@ -1,0 +1,77 @@
+<LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="300dp"
+    android:layout_height="80dp"
+    android:id="@+id/main"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@drawable/rounded_background"
+    android:layout_gravity="center_horizontal"
+    android:orientation="horizontal"
+    android:layout_marginTop="20dp"
+    android:layout_marginBottom="20dp">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="0.2">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:src="@drawable/time_svgrepo_com"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="5dp"/>
+    </LinearLayout>
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:background="@color/white"/>
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="1"
+        android:paddingLeft="5dp">
+
+        <TextView
+            android:layout_weight="1"
+            android:id="@+id/categoryTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Category"
+            android:textColor="@color/white"
+            android:fontFamily="@font/inter"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:layout_marginTop="1dp"
+           />
+
+        <TextView
+            android:layout_weight="1"
+            android:id="@+id/totalHoursTextView"
+            android:layout_width="200dp"
+            android:layout_height="20dp"
+            android:ems="12"
+            android:fontFamily="@font/inter"
+            android:text="11 Total Hours "
+            android:textColorHint="#A5A5A5"
+            android:textColor="#A5A5A5"
+            android:background="@drawable/custom_add_task_edit_text"
+            android:paddingLeft="10dp"
+            android:gravity="center_vertical"
+            android:textSize="10sp"
+            android:layout_marginBottom="15dp"/>
+
+
+
+    </LinearLayout>
+
+
+
+
+
+</LinearLayout>
