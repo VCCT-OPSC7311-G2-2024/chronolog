@@ -38,6 +38,8 @@ override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewH
     return CategoryViewHolder(itemView)
 }
 
+    //gtgtgt
+
     /**
  * This function is responsible for binding the data to the ViewHolder.
  * It calculates the total durations by category and sets the category name and duration to the respective TextViews in the ViewHolder.
