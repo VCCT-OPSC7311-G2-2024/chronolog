@@ -22,8 +22,18 @@ import java.text.SimpleDateFormat
 import java.util.*
 import com.bumptech.glide.Glide
 
+/**
+ * Adapter for the RecyclerView that displays tasks.
+ * @property tasks List of tasks to be displayed.
+ * @property firebaseHelper Helper for Firebase operations.
+ */
 class TaskAdapter(private var tasks: List<Task>, private var firebaseHelper: FirebaseHelper) : RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
     private val timers = HashMap<String?, CountDownTimer>()
+
+    /**
+     * ViewHolder for a single task item.
+     * @property itemView The root view of the task item.
+     */
     class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val textViewTaskName: TextView = itemView.findViewById(R.id.recentTaskNameTextView)
         val textViewTaskDescription: TextView = itemView.findViewById(R.id.recentDescriptionTextView)
@@ -31,7 +41,6 @@ class TaskAdapter(private var tasks: List<Task>, private var firebaseHelper: Fir
         val textViewTaskDuration: TextView = itemView.findViewById(R.id.recentDurationTextView)
         val toggleTimer: ImageButton = itemView.findViewById(R.id.toggleTimer)
         val summaryLayout: LinearLayout = itemView.findViewById(R.id.summaryLayout)
-
 
         val detailsLayout: LinearLayout = itemView.findViewById(R.id.detailLayout)
         val textViewExpandedTaskName: TextView = itemView.findViewById(R.id.recentTaskNameExpandedTextView)
@@ -42,45 +51,53 @@ class TaskAdapter(private var tasks: List<Task>, private var firebaseHelper: Fir
         val imageViewTaskPhoto: ImageView = itemView.findViewById(R.id.taskPhoto)
     }
 
+    /**
+     * Called when RecyclerView needs a new ViewHolder of the given type to represent an item.
+     * @param parent The ViewGroup into which the new View will be added after it is bound to an adapter position.
+     * @param viewType The view type of the new View.
+     * @return A new ViewHolder that holds a View of the given view type.
+     */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
-        // Inflate the layout for a single task item
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_task_view, parent, false)
-
-        // Create and return a new TaskViewHolder instance
         return TaskViewHolder(itemView)
     }
 
+    /**
+     * Called by RecyclerView to display the data at the specified position.
+     * @param holder The ViewHolder which should be updated to represent the contents of the item at the given position in the data set.
+     * @param position The position of the item within the adapter's data set.
+     */
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
         tasks = tasks.sortedByDescending { task -> task.date }
-        val task = tasks[position]  // Assume tasks are already sorted and list is updated outside this method.
+        val task = tasks[position]
 
         holder.textViewTaskName.text = task.name ?: "No Name"
         holder.textViewTaskDescription.text = task.description ?: "No Description"
         holder.textViewTaskDate.text = task.date?.let { SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(it) } ?: "No Date"
         holder.textViewTaskDuration.text = formatTime(task.duration ?: 0)
 
-
-        // expanded view
         holder.textViewExpandedTaskName.text = task.name ?: "No Name"
         holder.textViewExpandedTaskDescription.text = task.description ?: "No Description"
         holder.textViewExpandedTaskDate.text = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(task.date)
         holder.textViewExpandedTaskDuration.text = formatTime(task.duration ?: 0)
 
-        // Set up the image loading with Glide
         Glide.with(holder.itemView.context)
             .load(task.photoUrl)
-            .placeholder(R.drawable.sun)  // Consider adding a placeholder
+            .placeholder(R.drawable.sun)
             .into(holder.imageViewTaskPhoto)
 
-        // Set up toggle button actions
         setupToggleButton(holder, task)
 
-        // Handle item view click to toggle expanded/collapsed state
         holder.itemView.setOnClickListener {
             toggleDetailsVisibility(holder)
         }
     }
 
+    /**
+     * Sets up the toggle button for the task timer.
+     * @param holder The ViewHolder for the task.
+     * @param task The task.
+     */
     private fun setupToggleButton(holder: TaskViewHolder, task: Task) {
         val toggleAction = { isExpanded: Boolean ->
             if (task.isRunning) {
@@ -95,12 +112,22 @@ class TaskAdapter(private var tasks: List<Task>, private var firebaseHelper: Fir
         holder.toggleTimerExpanded.setOnClickListener { toggleAction(true) }
     }
 
+    /**
+     * Toggles the visibility of the task details.
+     * @param holder The ViewHolder for the task.
+     */
     private fun toggleDetailsVisibility(holder: TaskViewHolder) {
         val isVisible = holder.detailsLayout.visibility == View.VISIBLE
         holder.detailsLayout.visibility = if (isVisible) View.GONE else View.VISIBLE
         holder.summaryLayout.visibility = if (isVisible) View.VISIBLE else View.GONE
     }
 
+    /**
+     * Updates the view of the task.
+     * @param holder The ViewHolder for the task.
+     * @param task The task.
+     * @param isExpanded Whether the task details are expanded.
+     */
     private fun updateView(holder: TaskViewHolder, task: Task, isExpanded: Boolean) {
         holder.textViewTaskDuration.text = formatTime(task.duration ?: 0)
         if (isExpanded) {
@@ -111,6 +138,11 @@ class TaskAdapter(private var tasks: List<Task>, private var firebaseHelper: Fir
         holder.toggleTimerExpanded.setImageResource(iconRes)
     }
 
+    /**
+     * Formats the given time in seconds to a string in the format "HH:mm:ss".
+     * @param secondsTotal The time in seconds.
+     * @return The formatted time string.
+     */
     private fun formatTime(secondsTotal: Int): String {
         val hours = secondsTotal / 3600
         val minutes = (secondsTotal % 3600) / 60
@@ -118,14 +150,26 @@ class TaskAdapter(private var tasks: List<Task>, private var firebaseHelper: Fir
         return String.format("%02d:%02d:%02d", hours, minutes, seconds)
     }
 
-
+    /**
+     * Returns the total number of items in the data set held by the adapter.
+     * @return The total number of items in this adapter.
+     */
     override fun getItemCount(): Int = tasks.size
 
+    /**
+     * Adds a new task to the list and notifies the adapter of the data set change.
+     * @param newTask The new task to be added.
+     */
     fun addTask(newTask: Task) {
         tasks = tasks + newTask
         notifyDataSetChanged()
     }
 
+    /**
+     * Starts the timer for the task.
+     * @param holder The ViewHolder for the task.
+     * @param task The task.
+     */
     private fun startTimer(holder: TaskViewHolder, task: Task) {
         val timer = object : CountDownTimer(Long.MAX_VALUE, 1000) {
             override fun onTick(millisUntilFinished: Long) {
@@ -141,35 +185,38 @@ class TaskAdapter(private var tasks: List<Task>, private var firebaseHelper: Fir
         task.isRunning = true
     }
 
-
-
+    /**
+     * Stops the timer for the task.
+     * @param holder The ViewHolder for the task.
+     * @param task The task.
+     */
     private fun stopTimer(holder: TaskViewHolder, task: Task) {
         timers[task.taskId]?.let {
             it.cancel()
             timers.remove(task.taskId)
             task.isRunning = false
-            val finalDuration = (task.duration ?: 0) + 1  // Capture the final tick if needed
+            val finalDuration = (task.duration ?: 0) + 1
             task.duration = finalDuration
             holder.textViewTaskDuration.text = formatTime(finalDuration)
             holder.textViewExpandedTaskDuration.text = formatTime(finalDuration)
-            // Update Firebase with the final duration
             updateTaskDurationInFirebase(task)
         }
     }
 
+    /**
+     * Updates the duration of the task in Firebase.
+     * @param task The task.
+     */
     private fun updateTaskDurationInFirebase(task: Task) {
         val updateDuration = hashMapOf<String, Int?>("duration" to task.duration)
         firebaseHelper.updateTaskDuration(task.taskId!!, firebaseHelper.getUserId(), updateDuration)
     }
-    private fun updateView(holder: TaskViewHolder, task: Task) {
-        holder.textViewTaskDuration.text = formatTime(task.duration ?: 0)
-        holder.textViewExpandedTaskDuration.text = formatTime(task.duration ?: 0)
 
-        holder.toggleTimer.setImageResource(if (task.isRunning) R.drawable.stop else R.drawable.play_button_shape)
-        holder.toggleTimerExpanded.setImageResource(if (task.isRunning) R.drawable.stop else R.drawable.play_button_shape)
-    }
-
-
+    /**
+     * Filters the tasks by a date range and notifies the adapter of the data set change.
+     * @param startDate The start date of the range.
+     * @param endDate The end date of the range.
+     */
     fun filterByDateRange(startDate: String, endDate: String) {
         val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
         try {
@@ -185,4 +232,3 @@ class TaskAdapter(private var tasks: List<Task>, private var firebaseHelper: Fir
         }
     }
 }
-
