@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- The root LinearLayout for the CreateNewTeamView -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:background="@drawable/rounded_bg_white">
 
+    <!-- LinearLayout for the 'Create New Team' button -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_margin="10dp">
 
+        <!-- Button for creating a new team -->
         <Button
             android:id="@+id/addNewTeam"
             android:layout_width="match_parent"
@@ -24,18 +27,20 @@
 
     </LinearLayout>
 
+    <!-- View for separating the 'Create New Team' button and the team selection -->
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="#D9D9D9" />
 
-    <!-- RecyclerView to replace ScrollView and its content -->
+    <!-- LinearLayout for the team selection -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="16dp">
 
+        <!-- AutoCompleteTextView for selecting a team -->
         <AutoCompleteTextView
             android:id="@+id/autoCompleteTextViewTeam"
             android:layout_width="match_parent"
@@ -47,17 +52,20 @@
 
     </LinearLayout>
 
-
+    <!-- View for separating the team selection and the Cancel and Save buttons -->
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="#D9D9D9" />
 
+    <!-- LinearLayout for the Cancel and Save buttons -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_horizontal">
+
+        <!-- Button for cancelling the creation of a new team -->
         <Button
             android:id="@+id/buttonCancelTeam"
             android:layout_width="wrap_content"
@@ -66,6 +74,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginRight="20dp"/>
 
+        <!-- Button for saving the new team -->
         <Button
             android:id="@+id/buttonSaveTeam"
             android:layout_width="wrap_content"
@@ -73,6 +82,5 @@
             android:text="Save"
             android:layout_marginTop="16dp"/>
     </LinearLayout>
-
 
 </LinearLayout>

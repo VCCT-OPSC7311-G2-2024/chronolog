@@ -1,3 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The root RelativeLayout for the HomePageActivity fragment -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -5,12 +7,14 @@
     android:layout_height="match_parent"
     tools:context=".pages.HomePageActivity">
 
+    <!-- LinearLayout for the 'Timesheet' text and 'YOUR ACTIVITY' text -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:padding="20dp">
 
+        <!-- LinearLayout for the 'Timesheet' text -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -19,28 +23,30 @@
             android:layout_marginTop="10dp"
             android:layout_gravity="start">
 
-                <TextView
-                    android:id="@+id/border"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/inter_extrabold"
-                    android:text="Timesheet"
-                    android:textColor="@color/white"
-                    android:textSize="34sp" />
+            <!-- TextView for the 'Timesheet' text -->
+            <TextView
+                android:id="@+id/border"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/inter_extrabold"
+                android:text="Timesheet"
+                android:textColor="@color/white"
+                android:textSize="34sp" />
 
-                <TextView
-                    android:layout_marginTop="20dp"
-                    android:id="@+id/textView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/inter"
-                    android:text="YOUR ACTIVITY"
-                    android:textColor="#FFFFFF"
-                    android:textSize="24sp" />
-
+            <!-- TextView for the 'YOUR ACTIVITY' text -->
+            <TextView
+                android:layout_marginTop="20dp"
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/inter"
+                android:text="YOUR ACTIVITY"
+                android:textColor="#FFFFFF"
+                android:textSize="24sp" />
 
         </LinearLayout>
 
+        <!-- LinearLayout for the filter button and date range selection -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -48,6 +54,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="50dp">
 
+            <!-- ImageButton for the filter button -->
             <ImageButton
                 android:id="@+id/imageButton"
                 android:layout_width="wrap_content"
@@ -56,6 +63,7 @@
                 android:src="@drawable/filter_button"
                 android:background="@null" />
 
+            <!-- TextView for the date range selection -->
             <TextView
                 android:id="@+id/dateRangeTextView"
                 android:layout_width="0dp"
@@ -73,9 +81,9 @@
                 android:textColorHint="@color/white"
                 android:textSize="12sp" />
 
-
         </LinearLayout>
 
+        <!-- Include for the 'Add New Task' button -->
         <include
             android:id="@+id/addNewTaskButton"
             android:layout_margin="20dp"
@@ -85,11 +93,14 @@
             android:layout_height="75dp"
             android:layout_marginBottom="25dp"
             />
+
+        <!-- LinearLayout for the RecyclerView -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
+            <!-- RecyclerView for displaying the recent tasks -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recentTasksRecyclerView"
                 android:layout_width="wrap_content"
@@ -98,12 +109,9 @@
 
         </LinearLayout>
 
-
-
     </LinearLayout>
 
-
-
+    <!-- Include for the 'Enter Task Details' view -->
     <include
         android:id="@+id/enterTaskDetails"
         layout="@layout/activity_enter_task_details_view"
@@ -112,6 +120,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
+    <!-- Include for the 'Choose Category' list -->
     <include
         android:id="@+id/chooseCategoryList"
         layout="@layout/create_new_category_view"
@@ -120,6 +129,7 @@
         android:visibility="gone"
         android:layout_above="@id/enterTaskDetails"/>
 
+    <!-- Include for the 'Choose Team' list -->
     <include
         android:id="@+id/chooseTeamList"
         layout="@layout/create_new_team_view"
@@ -128,7 +138,7 @@
         android:visibility="gone"
         android:layout_above="@id/enterTaskDetails"/>
 
-
+    <!-- Include for the 'Edit Duration' view -->
     <include
         android:id="@+id/editDuration"
         layout="@layout/duration_view"
@@ -137,6 +147,7 @@
         android:visibility="gone"
         android:layout_above="@id/enterTaskDetails"/>
 
+    <!-- Include for the 'Create New Category' view -->
     <include
         android:id="@+id/createNewCategory"
         layout="@layout/create_category_view"
@@ -145,6 +156,7 @@
         android:visibility="gone"
         android:layout_above="@id/chooseCategoryList"/>
 
+    <!-- Include for the 'Create New Team' view -->
     <include
         android:id="@+id/createNewTeam"
         layout="@layout/create_team_view"
@@ -153,6 +165,7 @@
         android:visibility="gone"
         android:layout_above="@id/chooseCategoryList"/>
 
+    <!-- ProgressBar for loading -->
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"

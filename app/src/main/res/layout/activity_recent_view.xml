@@ -1,3 +1,4 @@
+<!-- The root LinearLayout for the RecentViewActivity -->
 <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="300dp"
@@ -8,11 +9,14 @@
     android:layout_gravity="center_horizontal"
     android:orientation="horizontal">
 
+    <!-- LinearLayout for the task duration and icon -->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:layout_weight="0.5">
+
+        <!-- TextView for displaying the task duration -->
         <TextView
             android:id="@+id/recentActivityTaskDuration"
             android:layout_width="wrap_content"
@@ -25,6 +29,7 @@
             android:layout_marginTop="1dp"
             android:textAlignment="center"/>
 
+        <!-- ImageView for displaying the time icon -->
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="25dp"
@@ -33,11 +38,13 @@
             android:layout_margin="2dp"/>
     </LinearLayout>
 
+    <!-- View for separating the task duration and task details -->
     <View
         android:layout_width="1dp"
         android:layout_height="match_parent"
         android:background="@color/white" />
 
+    <!-- LinearLayout for the task details -->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
@@ -45,6 +52,7 @@
         android:layout_weight="1"
         android:paddingLeft="5dp">
 
+        <!-- TextView for displaying the task date -->
         <TextView
             android:id="@+id/recentActivityTaskDate"
             android:layout_width="wrap_content"
@@ -55,6 +63,7 @@
             android:textSize="12sp"
             android:layout_margin="1dp"/>
 
+        <!-- TextView for displaying the task name -->
         <TextView
             android:id="@+id/recentActivityTaskName"
             android:layout_width="wrap_content"
@@ -66,7 +75,7 @@
             android:layout_margin="1dp"
             />
 
-
+        <!-- TextView for displaying the task description -->
         <TextView
             android:id="@+id/recentActivityTaskDescription"
             android:layout_width="wrap_content"
@@ -78,12 +87,16 @@
             android:layout_margin="1dp"/>
 
     </LinearLayout>
+
+    <!-- LinearLayout for the play button -->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:layout_weight="1"
         android:gravity="center_vertical">
+
+        <!-- ImageButton for starting the task -->
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -91,8 +104,4 @@
             android:background="@null"
             android:layout_gravity="center_horizontal"/>
     </LinearLayout>
-
-
-
-
 </LinearLayout>

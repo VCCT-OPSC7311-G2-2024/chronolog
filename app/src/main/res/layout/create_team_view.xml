@@ -1,3 +1,4 @@
+<!-- The root LinearLayout for the CreateNewTeamView -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -5,6 +6,7 @@
     android:padding="16dp"
     android:background="@drawable/rounded_bg_white">
 
+    <!-- EditText for entering the team name -->
     <EditText
         android:id="@+id/editTextTeamName"
         android:layout_width="match_parent"
@@ -13,6 +15,7 @@
         android:inputType="text"
         android:fontFamily="@font/inter"/>
 
+    <!-- CheckBox for setting the team as active or inactive -->
     <CheckBox
         android:id="@+id/checkBoxTeamIsActive"
         android:layout_width="match_parent"
@@ -21,11 +24,14 @@
         android:checked="true"
         android:fontFamily="@font/inter"/>
 
+    <!-- LinearLayout for the Cancel and Save buttons -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_horizontal">
+
+        <!-- Button for cancelling the creation of a new team -->
         <Button
             android:id="@+id/buttonCancelNewTeam"
             android:layout_width="wrap_content"
@@ -34,6 +40,7 @@
             android:layout_marginRight="20dp"
             android:layout_marginTop="16dp"/>
 
+        <!-- Button for saving the new team -->
         <Button
             android:id="@+id/buttonSaveNewTeam"
             android:layout_width="wrap_content"
@@ -41,6 +48,5 @@
             android:text="Save"
             android:layout_marginTop="16dp"/>
     </LinearLayout>
-
 
 </LinearLayout>

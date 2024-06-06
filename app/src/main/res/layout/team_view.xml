@@ -1,22 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- The root LinearLayout for the team_view layout -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@drawable/rounded_bg_white">
 
+    <!-- LinearLayout for the 'Create New Team' button and text -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_margin="10dp">
 
+        <!-- ImageButton for the 'Create New Team' button -->
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/baseline_add_24"
             android:background="@null" />
 
+        <!-- TextView for the 'Create New Team' text -->
         <TextView
             android:layout_marginLeft="50dp"
             android:layout_width="wrap_content"
@@ -28,23 +32,27 @@
 
     </LinearLayout>
 
+    <!-- View for the horizontal separator -->
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="#D9D9D9" />
 
+    <!-- LinearLayout for the 'Chronolog' team -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_margin="10dp">
 
+        <!-- ImageView for the team icon -->
         <ImageView
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:src="@drawable/team"
             android:layout_gravity="center_vertical"/>
 
+        <!-- TextView for the 'Chronolog' team name -->
         <TextView
             android:layout_marginLeft="50dp"
             android:layout_width="wrap_content"
@@ -56,14 +64,15 @@
 
     </LinearLayout>
 
+    <!-- View for the horizontal separator -->
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="#D9D9D9" />
 
+    <!-- Space for separating the teams -->
     <Space
         android:layout_width="match_parent"
         android:layout_height="40dp" />
-
 
 </LinearLayout>
