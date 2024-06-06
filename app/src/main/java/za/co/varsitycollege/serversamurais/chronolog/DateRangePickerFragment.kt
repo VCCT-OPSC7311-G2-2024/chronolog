@@ -9,22 +9,46 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import za.co.varsitycollege.serversamurais.chronolog.R
 
+/**
+ * A DialogFragment that allows the user to pick a date range.
+ */
 class DateRangePickerFragment : DialogFragment() {
 
     private lateinit var startDatePicker: DatePicker
     private lateinit var endDatePicker: DatePicker
     var listener: DateRangePickerListener? = null
 
+    /**
+     * Interface for receiving callbacks from the DateRangePickerFragment.
+     */
     interface DateRangePickerListener {
+        /**
+         * Called when the user sets a date range.
+         * @param startYear The start year of the range.
+         * @param startMonth The start month of the range.
+         * @param startDay The start day of the range.
+         * @param endYear The end year of the range.
+         * @param endMonth The end month of the range.
+         * @param endDay The end day of the range.
+         */
         fun onDateRangeSelected(startYear: Int, startMonth: Int, startDay: Int, endYear: Int, endMonth: Int, endDay: Int)
     }
 
+    /**
+     * Called when a fragment is first attached to its context.
+     * @param context The context the fragment is being attached to.
+     */
     override fun onAttach(context: Context) {
         super.onAttach(context)
         listener = context as? DateRangePickerListener
             ?: throw ClassCastException("$context must implement DateRangePickerListener")
     }
 
+    /**
+     * Called to do initial creation of the fragment.
+     * @param savedInstanceState If the fragment is being re-created from a previous saved state, this is the state.
+     * @return Return a new Dialog instance to be displayed by the Fragment.
+     */
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(requireActivity())
         val inflater = requireActivity().layoutInflater
