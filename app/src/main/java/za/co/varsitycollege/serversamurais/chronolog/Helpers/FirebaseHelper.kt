@@ -74,20 +74,34 @@ fun getUserId(): String {
  * @param email The email of the user.
  * @param password The password of the user.
  */
-fun signUp(email: String, password: String, name: String, bio: String){
-    mAuth.createUserWithEmailAndPassword(email, password)
-        .addOnCompleteListener{ task ->
-            if(task.isSuccessful){
-                val firebaseUser = mAuth.currentUser
-                if (firebaseUser != null) {
-                    val user = User(firebaseUser.uid, email, name, bio)
-                    saveUserDetails(user)
+    fun signUp(email: String, password: String, name: String, bio: String) {
+        mAuth.createUserWithEmailAndPassword(email, password)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val firebaseUser = mAuth.currentUser
+                    firebaseUser?.let {
+                        // Update display name in authentication
+                        val profileUpdates = UserProfileChangeRequest.Builder()
+                            .setDisplayName(name)
+                            .build()
+
+                        it.updateProfile(profileUpdates)
+                            .addOnCompleteListener { profileUpdateTask ->
+                                if (profileUpdateTask.isSuccessful) {
+                                    // Save additional user details in Realtime Database
+                                    val user = User(it.uid, email, name, bio)
+                                    saveUserDetails(user)
+                                    listener.onSuccess(it)
+                                } else {
+                                    listener.onFailure(profileUpdateTask.exception?.message ?: "Couldn't update display name")
+                                }
+                            }
+                    }
+                } else {
+                    listener.onFailure(task.exception?.message ?: "Unknown error")
                 }
-            } else {
-                listener.onFailure(task.exception?.message ?: "Unknown error")
             }
-        }
-}
+    }
 
 /**
  * Attempts to sign in a user with the provided email and password.

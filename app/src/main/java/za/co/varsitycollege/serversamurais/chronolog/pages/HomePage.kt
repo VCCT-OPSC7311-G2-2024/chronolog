@@ -255,60 +255,99 @@ class HomePage : Fragment(), FirebaseHelper.FirebaseOperationListener {
      * @param userId The ID of the user whose data is to be organized.
      */
     private fun organizeDurationData(userId: String) {
+
         firebaseHelper.getTotalDuration(userId) { totalDuration ->
             val totalHours = totalDuration.toFloat()
 
             // Calculate the percentage of total hours compared to the maximum
-            val percentage = (totalHours / 100) * 100
+            var percentage = (totalHours / 100) * 100
+
+            if (percentage == 0.0f) {
+                percentage = 1.0f // Set a default percentage if the calculation is zero
+            }
+
             var progressWidth = (250 * (percentage / 100)).toInt()
 
             // Constrain the progress width to be at most 250dp
             progressWidth = progressWidth.coerceAtMost(dpToPx(250))
+
+            // Ensure a minimum progress width if it's zero
+            if (progressWidth == 0) {
+                progressWidth = dpToPx(1) // Set a minimum progress width in dp
+            }
 
             // Set the width of progressBar2 dynamically
             val params = line2View.layoutParams
             params.width = progressWidth
             line2View.layoutParams = params
 
-            progressBar2Txt.text = (totalDuration / 60).toString() + " minutes"
-           // bioTxt.text = (totalDuration / 60).toString() + " minutes"
+            progressBar2Txt.text = if (totalDuration == 0) {
+                "0 minutes"
+            } else {
+                (totalDuration / 60).toString() + " minutes"
+            }
         }
     }
+
 
     /**
      * Organizes the minimum goal data and updates the UI.
      * @param userId The ID of the user whose data is to be organized.
      */
     private fun organizeMinGoalData(userId: String) {
+
         firebaseHelper.getMinGoal(userId) { minGoal ->
+            // Ensure minGoal is within a reasonable range
+            val validMinGoal = if (minGoal > 200000) 0 else minGoal
+
             // Calculate progress for progressBar1
-            val minProgressWidth = calculateProgressWidth(minGoal)
+            val minProgressWidth = calculateProgressWidth(validMinGoal)
 
             // Set the width of progressBar1 dynamically
             val params = line1View.layoutParams
-            params.width = minProgressWidth.coerceAtMost(dpToPx(250))
+
+            // Ensure a minimum progress width if it's zero
+            val adjustedMinProgressWidth = if (minProgressWidth == 0) dpToPx(1) else minProgressWidth
+            params.width = adjustedMinProgressWidth.coerceAtMost(dpToPx(250))
             line1View.layoutParams = params
 
-            progressBar1Txt.text = minGoal.toString() + " minutes"
+            // Update the progressBar1 text
+            progressBar1Txt.text = if (validMinGoal > 20000) {
+                "0 minutes"
+            } else {
+                "$validMinGoal minutes"
+            }
         }
     }
+
 
     /**
      * Organizes the maximum goal data and updates the UI.
      * @param userId The ID of the user whose data is to be organized.
      */
     private fun organizeMaxGoalData(userId: String) {
+
         firebaseHelper.getMaxGoal(userId) { maxGoal ->
-            val maxProgressWidth = calculateProgressWidth(maxGoal)
+
+            // Ensure maxGoal is within a reasonable range
+            val validMaxGoal = if (maxGoal < 0) 0 else maxGoal
+
+            // Calculate progress for progressBar3
+            val maxProgressWidth = calculateProgressWidth(validMaxGoal)
 
             // Set the width of progressBar3 dynamically
             val params = line3View.layoutParams
-            params.width = maxProgressWidth.coerceAtMost(dpToPx(250))
+
+            // Ensure a minimum progress width if it's zero
+            val adjustedMaxProgressWidth = if (maxProgressWidth == 0) dpToPx(1) else maxProgressWidth
+            params.width = adjustedMaxProgressWidth.coerceAtMost(dpToPx(250))
             line3View.layoutParams = params
 
-            progressBar3Txt.text = maxGoal.toString() + " minutes"
+            // Update the progressBar3 text
+            progressBar3Txt.text = "$validMaxGoal minutes"
         }
     }
+
 
     /**
      * Formats the time in seconds to a string in the format "HH:mm:ss".
