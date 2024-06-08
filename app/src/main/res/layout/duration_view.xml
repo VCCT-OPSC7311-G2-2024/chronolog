@@ -1,8 +1,11 @@
+<!-- The root LinearLayout for the DurationView -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="24dp">
+
+    <!-- TextView for displaying the 'DURATION' label -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -10,16 +13,20 @@
         android:text="DURATION"
         android:textColor="@color/black"/>
 
+    <!-- LinearLayout for the NumberPickers for hours and minutes -->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
+
+        <!-- NumberPicker for selecting the hours -->
         <NumberPicker
             android:id="@+id/numberPickerHours"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"/>
 
+        <!-- TextView for displaying the ':' separator -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -27,6 +34,7 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:layout_gravity="center"/>
 
+        <!-- NumberPicker for selecting the minutes -->
         <NumberPicker
             android:id="@+id/numberPickerMinutes"
             android:layout_width="wrap_content"
@@ -35,24 +43,26 @@
 
     </LinearLayout>
 
+    <!-- LinearLayout for the 'Hours' and 'Minutes' labels -->
     <LinearLayout
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="horizontal">
 
+    <!-- TextView for displaying the 'Hours' label -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Hours"
         android:fontFamily="@font/inter" android:layout_marginRight="60dp"/>
 
+    <!-- TextView for displaying the 'Minutes' label -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Minutes"
         android:fontFamily="@font/inter"
         android:textAlignment="center"/>
-</LinearLayout>
-
+    </LinearLayout>
 
 </LinearLayout>

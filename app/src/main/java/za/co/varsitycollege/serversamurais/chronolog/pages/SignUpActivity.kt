@@ -2,8 +2,6 @@ package za.co.varsitycollege.serversamurais.chronolog.pages
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -15,8 +13,16 @@ import za.co.varsitycollege.serversamurais.chronolog.Helpers.openIntent
 import za.co.varsitycollege.serversamurais.chronolog.R
 import za.co.varsitycollege.serversamurais.chronolog.databinding.ActivitySignUpBinding
 
+/**
+ * Activity for handling user sign up.
+ */
 class SignUpActivity : AppCompatActivity(), View.OnClickListener, FirebaseHelper.FirebaseOperationListener {
     private lateinit var firebaseHelper: FirebaseHelper
+
+    /**
+     * Called when the activity is starting.
+     * @param savedInstanceState If the activity is being re-initialized after previously being shut down then this Bundle contains the data it most recently supplied in onSaveInstanceState(Bundle).
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -28,15 +34,23 @@ class SignUpActivity : AppCompatActivity(), View.OnClickListener, FirebaseHelper
 
         firebaseHelper = FirebaseHelper(this)
 
+        // Set click listener for sign up button
         binding.signupBtn.setOnClickListener {
             if(binding.editPassword.text.toString().trim() == binding.editConfirmPasword.text.toString().trim()){
                 val email = binding.editEmail.text.toString().trim()
                 val password = binding.editPassword.text.toString().trim()
-                firebaseHelper.signUp(email, password)
+                val name = binding.editTextFullName.text.toString().trim()
+                val bio = binding.editTextBio.text.toString().trim()
+
+                firebaseHelper.signUp(email, password, name, bio)
             }
         }
     }
 
+    /**
+     * Called when a Firebase operation is successful.
+     * @param user The current FirebaseUser or null if no user is currently authenticated.
+     */
     override fun onSuccess(user: FirebaseUser?) {
         if (user != null) {
             Toast.makeText(this, "Register successful", Toast.LENGTH_SHORT).show()
@@ -48,16 +62,21 @@ class SignUpActivity : AppCompatActivity(), View.OnClickListener, FirebaseHelper
         }
     }
 
+    /**
+     * Called when a Firebase operation fails.
+     * @param errorMessage The error message associated with the failure.
+     */
     override fun onFailure(errorMessage: String) {
         Toast.makeText(this, "Error: $errorMessage", Toast.LENGTH_SHORT).show()
     }
 
+    /**
+     * Called when a view has been clicked.
+     * @param v The view that was clicked.
+     */
     override fun onClick(v: View?) {
         when(v?.id) {
             R.id.alreadyHaveAnAccBtn -> openIntent(this, LoginActivity::class.java)
-
         }
     }
-
-
 }

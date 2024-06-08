@@ -39,28 +39,39 @@ class NotificationPage : Fragment() {
     }
 
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.fragment_notification_page, container, false)
+    /**
+ * Called to have the fragment instantiate its user interface view.
+ * @param inflater The LayoutInflater object that can be used to inflate any views in the fragment.
+ * @param container If non-null, this is the parent view that the fragment's UI should be attached to.
+ * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state as given here.
+ * @return Return the View for the fragment's UI, or null.
+ */
+override fun onCreateView(
+    inflater: LayoutInflater, container: ViewGroup?,
+    savedInstanceState: Bundle?
+): View? {
+    // Inflate the layout for this fragment
+    val view = inflater.inflate(R.layout.fragment_notification_page, container, false)
 
-        val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+    // Initialize RecyclerView and set its layout manager
+    val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
+    recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        val model: SharedViewModel by activityViewModels()
+    // Get a reference to the shared ViewModel
+    val model: SharedViewModel by activityViewModels()
 
-      Log.d("NotificationPage", "Current data: ${model.data.value}")
-            model.data.observe(viewLifecycleOwner) { itemList ->
-                Log.d("NotificationPage", "Data observed: $itemList")
-                val adapter = RecyclerAdapter(requireContext(), itemList)
-                model.adapter.value = adapter
-                recyclerView.adapter = adapter
-            }
-
-        return view
+    // Log the current data and observe changes
+    Log.d("NotificationPage", "Current data: ${model.data.value}")
+    model.data.observe(viewLifecycleOwner) { itemList ->
+        Log.d("NotificationPage", "Data observed: $itemList")
+        // Create a new adapter with the updated data and set it on the RecyclerView
+        val adapter = RecyclerAdapter(requireContext(), itemList)
+        model.adapter.value = adapter
+        recyclerView.adapter = adapter
     }
 
+    return view
+}
 
 
     companion object {

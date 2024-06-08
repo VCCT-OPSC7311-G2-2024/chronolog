@@ -1,3 +1,4 @@
+<!-- The root ConstraintLayout for the quick action buttons view -->
 <androidx.constraintlayout.widget.ConstraintLayout
     android:id="@+id/main"
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -7,7 +8,7 @@
     android:layout_height="match_parent"
     android:layout_marginTop="245dp">
 
-
+    <!-- Background view for the quick action buttons -->
     <View
         android:id="@+id/backgroundView"
         android:layout_width="match_parent"
@@ -17,6 +18,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
+    <!-- Goals button -->
     <ImageButton
         android:id="@+id/goalsBtn"
         android:layout_width="60dp"
@@ -29,6 +31,7 @@
         android:background="@drawable/goals_btn_background"
         android:src="@drawable/goal_svgrepo_com"/>
 
+    <!-- Progress button -->
     <ImageButton
         android:id="@+id/progressBtn"
         android:layout_width="60dp"
@@ -41,6 +44,7 @@
         android:background="@drawable/progress_btn_background"
         android:src="@drawable/progress_svgrepo_com" />
 
+    <!-- Profile button -->
     <ImageButton
         android:id="@+id/profileBtn"
         android:layout_width="60dp"
@@ -53,6 +57,7 @@
         android:background="@drawable/profile_btn_background"
         android:src="@drawable/profile_round_1342_svgrepo_com" />
 
+    <!-- Music button -->
     <ImageButton
         android:id="@+id/musicBtn"
         android:layout_width="60dp"
@@ -64,6 +69,7 @@
         android:background="@drawable/music_btn_background"
         android:src="@drawable/music_svgrepo_com" />
 
+    <!-- TextView for the goals label -->
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
@@ -75,6 +81,7 @@
         app:layout_constraintEnd_toStartOf="@+id/backgroundView"
         app:layout_constraintTop_toBottomOf="@+id/goalsBtn" />
 
+    <!-- TextView for the progress label -->
     <TextView
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
@@ -86,6 +93,7 @@
         app:layout_constraintEnd_toStartOf="@+id/backgroundView"
         app:layout_constraintTop_toBottomOf="@+id/progressBtn" />
 
+    <!-- TextView for the profile label -->
     <TextView
         android:id="@+id/textView5"
         android:layout_width="wrap_content"
@@ -97,6 +105,7 @@
         app:layout_constraintEnd_toStartOf="@+id/backgroundView"
         app:layout_constraintTop_toBottomOf="@+id/profileBtn" />
 
+    <!-- TextView for the break label -->
     <TextView
         android:id="@+id/textView6"
         android:layout_width="wrap_content"
@@ -108,6 +117,7 @@
         app:layout_constraintEnd_toStartOf="@+id/backgroundView"
         app:layout_constraintTop_toBottomOf="@+id/musicBtn" />
 
+    <!-- HorizontalScrollView for the widgets -->
     <HorizontalScrollView
         android:id="@+id/horizontalScrollView"
         android:layout_width="0dp"
@@ -496,20 +506,20 @@
                         app:layout_constraintVertical_bias="0.043" />
 
                     <TextView
-                        android:id="@+id/editText1"
+                        android:id="@+id/fullNameTxt"
                         android:layout_width="120dp"
                         android:layout_height="30dp"
                         android:layout_marginStart="100dp"
                         android:layout_marginTop="96dp"
                         android:layout_marginEnd="-40dp"
                         android:background="@drawable/rounded_edittext"
-                        app:layout_constraintEnd_toStartOf="@id/editText2"
+                        app:layout_constraintEnd_toStartOf="@id/emaiTxt"
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
-                        android:id="@+id/editText2"
+                        android:id="@+id/emaiTxt"
                         android:layout_width="120dp"
                         android:layout_height="30dp"
                         android:layout_marginStart="100dp"
@@ -518,7 +528,7 @@
                         android:background="@drawable/rounded_edittext"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toEndOf="@id/editText1"
+                        app:layout_constraintStart_toEndOf="@id/fullNameTxt"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
@@ -544,7 +554,7 @@
                         android:textColor="@color/white"
                         android:textSize="15dp"
                         android:textStyle="bold"
-                        app:layout_constraintBottom_toTopOf="@+id/editText1"
+                        app:layout_constraintBottom_toTopOf="@+id/fullNameTxt"
                         app:layout_constraintEnd_toStartOf="@+id/email"
                         app:layout_constraintStart_toStartOf="parent" />
 
@@ -574,7 +584,7 @@
                         android:textColor="@color/white"
                         android:textSize="15dp"
                         android:textStyle="bold"
-                        app:layout_constraintBottom_toTopOf="@+id/editText2"
+                        app:layout_constraintBottom_toTopOf="@+id/emaiTxt"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="1.0"
                         app:layout_constraintStart_toStartOf="parent" />
@@ -583,6 +593,7 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </androidx.cardview.widget.CardView>
+
 
             <!-- This is for the music widget -->
             <androidx.cardview.widget.CardView
@@ -681,8 +692,6 @@
 
 
             </androidx.cardview.widget.CardView>
-
-
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

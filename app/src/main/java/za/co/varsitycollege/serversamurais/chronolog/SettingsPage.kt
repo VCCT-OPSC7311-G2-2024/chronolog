@@ -55,38 +55,47 @@ class SettingsPage : Fragment() {
         })
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_settings_page, container, false).apply {
-            val editTexts = listOf(
-                findViewById(R.id.editTextFullName),
-                findViewById<EditText>(R.id.editPassword)
-            )
+    /**
+ * Called to have the fragment instantiate its user interface view.
+ * @param inflater The LayoutInflater object that can be used to inflate any views in the fragment.
+ * @param container If non-null, this is the parent view that the fragment's UI should be attached to.
+ * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state as given here.
+ * @return Return the View for the fragment's UI, or null.
+ */
+override fun onCreateView(
+    inflater: LayoutInflater, container: ViewGroup?,
+    savedInstanceState: Bundle?
+): View? {
+    // Inflate the layout for this fragment
+    return inflater.inflate(R.layout.fragment_settings_page, container, false).apply {
+        // Initialize EditTexts for full name and password
+        val editTexts = listOf(
+            findViewById(R.id.editTextFullName),
+            findViewById<EditText>(R.id.editPassword)
+        )
 
-            val emailTxt = findViewById<EditText>(R.id.editEmail)
+        // Initialize EditText for email and disable it
+        val emailTxt = findViewById<EditText>(R.id.editEmail)
+        emailTxt.isEnabled = false
 
-            emailTxt.isEnabled = false
+        // Initialize editor buttons for full name and password
+        val editorButtons = listOf(
+            findViewById(R.id.fullnameEditor),
+            findViewById<ImageButton>(R.id.passwordEditor)
+        )
 
+        // Disable EditTexts initially
+        editTexts.forEach { it.isEnabled = false }
 
-
-
-            val editorButtons = listOf(
-                findViewById(R.id.fullnameEditor),
-                findViewById<ImageButton>(R.id.passwordEditor)
-            )
-
-            editTexts.forEach { it.isEnabled = false }
-
-            editorButtons.zip(editTexts).forEach { (button, editText) ->
-                button.setOnClickListener {
-                    editText.isEnabled = true
-                    editText.requestFocus()
-                }
+        // Set click listeners for editor buttons to enable corresponding EditTexts
+        editorButtons.zip(editTexts).forEach { (button, editText) ->
+            button.setOnClickListener {
+                editText.isEnabled = true
+                editText.requestFocus()
             }
+        }
 
-           try {
+        try {
             // Get the current user
             val user = firebaseHelper.getCurrentUser()
 
@@ -95,7 +104,7 @@ class SettingsPage : Fragment() {
                 Log.d("SettingsPage", "User: $user, Name: ${it.displayName}, Email: ${it.email}")
             }
 
-            // Set the user's full name as the text of the EditText field
+            // Set the user's full name and email as the text of the corresponding EditText fields
             user?.let {
                 editTexts[0].text = Editable.Factory.getInstance().newEditable(it.displayName)
                 emailTxt.text = Editable.Factory.getInstance().newEditable(it.email)
@@ -105,11 +114,12 @@ class SettingsPage : Fragment() {
             Log.e("SettingsPage", "Error: ${exception.message}")
         }
 
-            findViewById<Button>(R.id.updateBtn).setOnClickListener {
-                handleUpdateButtonClick(editTexts[0], editTexts[1])
-            }
+        // Set click listener for the update button
+        findViewById<Button>(R.id.updateBtn).setOnClickListener {
+            handleUpdateButtonClick(editTexts[0], editTexts[1])
         }
     }
+}
 
     /**
      * Handles the click event of the update button.

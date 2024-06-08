@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- The root LinearLayout for the LoginActivity -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -8,6 +9,8 @@
     tools:context=".pages.LoginActivity"
     android:orientation="vertical"
     android:background="@drawable/background">
+
+    <!-- LinearLayout for the ChronoLog logo and sun image -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,6 +19,7 @@
         android:orientation="horizontal"
         android:layout_marginTop="10dp">
 
+        <!-- LinearLayout for the ChronoLog logo -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -23,6 +27,7 @@
             android:orientation="horizontal"
             android:layout_marginEnd="50dp">
 
+            <!-- TextView for the 'chrono' part of the logo -->
             <TextView
                 android:id="@+id/chronoTV"
                 android:layout_width="wrap_content"
@@ -32,6 +37,7 @@
                 android:textColor="#011327"
                 android:textSize="34sp" />
 
+            <!-- TextView for the 'log' part of the logo -->
             <TextView
                 android:id="@+id/logTV"
                 android:layout_width="wrap_content"
@@ -42,6 +48,7 @@
                 android:textSize="34sp" />
         </LinearLayout>
 
+        <!-- ImageView for the sun image -->
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="wrap_content"
@@ -51,13 +58,14 @@
 
     </LinearLayout>
 
+    <!-- LinearLayout for the ChronoLog logo -->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_weight="1">
 
-
+        <!-- ImageView for the ChronoLog logo -->
         <ImageView
             android:id="@+id/imageView3"
             android:layout_width="wrap_content"
@@ -65,6 +73,7 @@
             app:srcCompat="@drawable/logo" />
     </LinearLayout>
 
+    <!-- LinearLayout for the 'Sign in and get logging' text -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -72,7 +81,7 @@
         android:orientation="horizontal"
         android:gravity="center_horizontal">
 
-
+        <!-- TextView for the 'Sign in and' text -->
         <TextView
             android:id="@+id/signInTV"
             android:layout_width="wrap_content"
@@ -84,6 +93,7 @@
             android:textSize="24dp"
             android:paddingRight="7dp"/>
 
+        <!-- TextView for the 'get logging' text -->
         <TextView
             android:id="@+id/getLoggingTV"
             android:layout_width="wrap_content"
@@ -96,6 +106,7 @@
             android:textStyle="italic" />
     </LinearLayout>
 
+    <!-- LinearLayout for the email and password input fields -->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -103,6 +114,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_weight="1">
 
+        <!-- TextView for the 'Email:' label -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -112,6 +124,7 @@
             android:textColor="@color/white"
             android:layout_margin="5dp"/>
 
+        <!-- EditText for the email input field -->
         <EditText
             android:id="@+id/editEmail"
             android:layout_width="wrap_content"
@@ -127,7 +140,7 @@
             android:paddingLeft="10dp"
             android:textSize="14sp"/>
 
-
+        <!-- TextView for the 'Password: ' label -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -137,6 +150,7 @@
             android:textColor="@color/white"
             android:layout_margin="5dp"/>
 
+        <!-- EditText for the password input field -->
         <EditText
             android:id="@+id/editPassword"
             android:layout_width="wrap_content"
@@ -154,7 +168,7 @@
 
     </LinearLayout>
 
-
+    <!-- LinearLayout for the 'Log in' and 'Sign in with Google' buttons -->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -164,7 +178,7 @@
         android:orientation="horizontal"
         android:layout_gravity="center_horizontal">
 
-
+        <!-- Button for logging in -->
         <Button
             android:id="@+id/loginBtn"
             android:layout_width="175dp"
@@ -176,11 +190,13 @@
             android:textSize="14sp"
             android:fontFamily="@font/inter_extrabold"/>
 
+        <!-- Space for separating the 'Log in' and 'Sign in with Google' buttons -->
         <Space
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:minWidth="40dp"/>
 
+        <!-- Button for signing in with Google -->
         <Button
             android:id="@+id/signInWithGoogleBtn"
             android:layout_width="40dp"
@@ -188,9 +204,9 @@
             android:background="@drawable/google_logo"
             android:gravity="center" />
 
-
     </LinearLayout>
 
+    <!-- LinearLayout for the 'Sign up for an account' button -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -199,6 +215,7 @@
         android:orientation="vertical"
         android:layout_marginBottom="50dp">
 
+        <!-- Button for signing up for an account -->
         <Button
             android:id="@+id/signUpForAccBtn"
             android:layout_width="wrap_content"
@@ -209,7 +226,6 @@
             android:textColor="@color/white"
             android:fontFamily="@font/inter"
             android:textSize="16sp"/>
-
 
     </LinearLayout>
 

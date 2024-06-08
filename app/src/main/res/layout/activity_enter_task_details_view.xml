@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- The root RelativeLayout for the EnterTaskDetailsView activity -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -9,6 +10,7 @@
     android:orientation="vertical"
     android:background="@drawable/rounded_background">
 
+    <!-- LinearLayout that contains the entire layout for the activity -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,81 +18,90 @@
         android:elevation="4dp"
         android:padding="16dp">
 
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <ImageButton
-            android:id="@+id/closeEnterTaskDetailsBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/close_svgrepo_com"
-            android:background="@null"
-            android:layout_weight="0.5"/>
+        <!-- LinearLayout for the close button, timer, and add task button -->
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal" android:layout_weight="0.5"
-            android:gravity="center_horizontal">
-            <TextView
-                android:id="@+id/timerTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/inter_extrabold"
-                android:text="0:00:00"
-                android:textColor="@color/white"
-                android:textAlignment="center"
-                android:textSize="20sp"
-                android:layout_marginLeft="30dp"/>
+            android:orientation="horizontal">
 
+            <!-- ImageButton for closing the task details -->
             <ImageButton
-                android:id="@+id/editDurationButton"
+                android:id="@+id/closeEnterTaskDetailsBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:src="@drawable/close_svgrepo_com"
+                android:background="@null"
+                android:layout_weight="0.5"/>
+
+            <!-- LinearLayout for the timer and edit duration button -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" android:layout_weight="0.5"
+                android:gravity="center_horizontal">
+
+                <!-- TextView for displaying the timer -->
+                <TextView
+                    android:id="@+id/timerTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/inter_extrabold"
+                    android:text="0:00:00"
+                    android:textColor="@color/white"
+                    android:textAlignment="center"
+                    android:textSize="20sp"
+                    android:layout_marginLeft="30dp"/>
+
+                <!-- ImageButton for editing the duration -->
+                <ImageButton
+                    android:id="@+id/editDurationButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/inter_extrabold"
+                    android:textAllCaps="false"
+                    android:src="@drawable/edit"
+                    android:background="@drawable/white_circle"
+                    android:padding="2dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginHorizontal="10dp" />
+
+            </LinearLayout>
+
+            <!-- TextView for adding a task -->
+            <TextView
+                android:id="@+id/addTaskButton"
+                android:layout_width="50dp"
+                android:layout_height="20dp"
+                android:textAlignment="center"
                 android:fontFamily="@font/inter_extrabold"
-                android:textAllCaps="false"
-                android:src="@drawable/edit"
-                android:background="@drawable/white_circle"
-                android:padding="2dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginHorizontal="10dp" />
+                android:text="Add Task"
+                android:textColor="@color/white"
+                android:layout_weight="0.5"
+                android:textSize="12sp"
+                android:background="@drawable/custom_btn_no_bg"
+                android:layout_marginBottom="10dp"
+                android:textAllCaps="false" />
 
         </LinearLayout>
 
+        <!-- EditText for entering the task name -->
+        <EditText
+            android:id="@+id/taskNameEditText"
+            android:padding="5dp"
+            android:textSize="16sp"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:textColor="#D3D3D3"
+            android:ems="17"
+            android:hint="Current Task..."
+            android:textColorHint="#D3D3D3"
+            android:background="@drawable/custom_current_task_edit_text"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"/>
 
-        <TextView
-            android:id="@+id/addTaskButton"
-            android:layout_width="50dp"
-            android:layout_height="20dp"
-            android:textAlignment="center"
-            android:fontFamily="@font/inter_extrabold"
-            android:text="Add Task"
-            android:textColor="@color/white"
-            android:layout_weight="0.5"
-            android:textSize="12sp"
-            android:background="@drawable/custom_btn_no_bg"
-            android:layout_marginBottom="10dp"
-            android:textAllCaps="false" />
-
-    </LinearLayout>
-
-    <EditText
-        android:id="@+id/taskNameEditText"
-        android:padding="5dp"
-        android:textSize="16sp"
-        android:layout_gravity="center_horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="text"
-        android:textColor="#D3D3D3"
-        android:ems="17"
-        android:hint="Current Task..."
-        android:textColorHint="#D3D3D3"
-        android:background="@drawable/custom_current_task_edit_text"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"/>
-
+        <!-- EditText for entering the task description -->
         <EditText
             android:id="@+id/descriptionEditText"
             android:layout_width="wrap_content"
@@ -106,12 +117,14 @@
             android:textColorHint="#D3D3D3"
             android:textSize="16sp" />
 
+        <!-- LinearLayout for the category, team, and date buttons -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_horizontal">
 
+            <!-- Button for selecting the category -->
             <Button
                 android:id="@+id/categoryButton"
                 android:layout_width="wrap_content"
@@ -124,6 +137,7 @@
                 android:layout_marginRight="10dp"
                 android:textColor="@color/buttonColor"/>
 
+            <!-- Button for selecting the team -->
             <Button
                 android:id="@+id/teamButton"
                 android:layout_width="wrap_content"
@@ -136,6 +150,7 @@
                 android:layout_marginRight="10dp"
                 android:textColor="@color/buttonColor"/>
 
+            <!-- Button for selecting the date -->
             <Button
                 android:id="@+id/taskDatePicker"
                 android:layout_width="wrap_content"
@@ -149,6 +164,7 @@
 
         </LinearLayout>
 
+        <!-- LinearLayout for the add photo button -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -156,8 +172,7 @@
             android:gravity="center_horizontal"
             android:layout_marginTop="10dp">
 
-
-
+            <!-- Button for adding a photo -->
             <Button
                 android:id="@+id/addPhotoButton"
                 android:layout_width="wrap_content"
@@ -171,12 +186,7 @@
                 android:textColor="@color/buttonColor"
                 android:drawableLeft="@drawable/add_photo_darkblue"/>
 
-
-
-
         </LinearLayout>
-
-
 
     </LinearLayout>
 
