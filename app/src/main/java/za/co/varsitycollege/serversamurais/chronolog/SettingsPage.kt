@@ -1,5 +1,6 @@
 package za.co.varsitycollege.serversamurais.chronolog
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.util.Log
@@ -13,6 +14,8 @@ import android.widget.ImageButton
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseUser
 import za.co.varsitycollege.serversamurais.chronolog.Helpers.FirebaseHelper
+import za.co.varsitycollege.serversamurais.chronolog.pages.HomePageActivity
+import za.co.varsitycollege.serversamurais.chronolog.pages.MainActivity
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
@@ -89,7 +92,12 @@ class SettingsPage : Fragment() {
             }
 
             findViewById<Button>(R.id.logoutBtn).setOnClickListener {
+                Toast.makeText(context, "Goodbye!.", Toast.LENGTH_SHORT).show()
                 firebaseHelper.signOut()
+                // Navigate to HomeActivity after signing out
+                val intent = Intent(context, MainActivity::class.java)
+                startActivity(intent)
+                activity?.finish() // Optional: Call finish() to prevent user from returning to SettingsPage with back button
             }
         }
     }

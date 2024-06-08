@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- The root RelativeLayout for the HomePageActivity fragment -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -8,14 +7,12 @@
     tools:context=".pages.HomePageActivity"
     android:background="@drawable/background">
 
-    <!-- LinearLayout for the 'Statistics' text and 'Duration Per Category' text -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:padding="20dp">
 
-        <!-- LinearLayout for the 'Statistics' text -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -24,7 +21,6 @@
             android:layout_marginTop="10dp"
             android:layout_gravity="start">
 
-            <!-- TextView for the 'Statistics' text -->
             <TextView
                 android:id="@+id/border"
                 android:layout_width="wrap_content"
@@ -34,7 +30,6 @@
                 android:textColor="@color/white"
                 android:textSize="34sp" />
 
-            <!-- TextView for the 'Duration Per Category' text -->
             <TextView
                 android:layout_marginTop="20dp"
                 android:id="@+id/textView"
@@ -45,10 +40,8 @@
                 android:textColor="#FFFFFF"
                 android:textSize="24sp" />
 
-
         </LinearLayout>
 
-        <!-- LinearLayout for the filter button and date range selection -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -56,7 +49,6 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="50dp">
 
-            <!-- ImageButton for the filter button -->
             <ImageButton
                 android:id="@+id/imageButton"
                 android:layout_width="wrap_content"
@@ -65,7 +57,6 @@
                 android:src="@drawable/filter_button"
                 android:background="@null" />
 
-            <!-- TextView for the date range selection -->
             <TextView
                 android:id="@+id/statsDateRangeTextView"
                 android:layout_width="0dp"
@@ -82,28 +73,24 @@
                 android:textColor="@color/white"
                 android:textColorHint="@color/white"
                 android:textSize="12sp" />
-
-
         </LinearLayout>
 
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/lineChart"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_marginTop="20dp"/>
 
-        <!-- LinearLayout for the RecyclerView -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <!-- RecyclerView for displaying the statistics -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/categoryRecyclerView"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_horizontal" />
-
         </LinearLayout>
-
-
-
     </LinearLayout>
-
 </RelativeLayout>
