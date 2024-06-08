@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- The root FrameLayout for the SettingsPage fragment -->
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- The root ScrollView for the SettingsPage fragment -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,218 +8,274 @@
     tools:context=".SettingsPage"
     android:background="@drawable/gradient_settingspage">
 
-    <!-- LinearLayout for the 'Settings' text and profile image -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="192dp"
-        android:gravity="center"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-        <!-- TextView for the 'Settings' text -->
-        <TextView
-            android:id="@+id/textView9"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginStart="130dp"
-            android:text="@string/Settings"
-            android:textColor="@color/white"
-            android:textSize="40sp"
-            android:textStyle="bold" />
+        <!-- LinearLayout for the 'Settings' text and profile image -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:gravity="center"
+            android:orientation="horizontal">
 
-        <!-- ImageView for the profile image -->
-        <ImageView
-            android:id="@+id/imageView4"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:layout_weight="1"
-            android:src="@drawable/sun" />
+            <!-- TextView for the 'Settings' text -->
+            <TextView
+                android:id="@+id/textView9"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/Settings"
+                android:textColor="@color/white"
+                android:textSize="40sp"
+                android:textStyle="bold"
+                android:layout_gravity="center_vertical"
+                android:gravity="center" />
 
-    </LinearLayout>
+            <!-- ImageView for the profile image -->
+            <ImageView
+                android:id="@+id/imageView4"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@drawable/sun"
+                android:layout_gravity="center_vertical"
+                android:gravity="center" />
 
-    <!-- LinearLayout for the profile image -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        </LinearLayout>
 
         <!-- ImageView for the profile image -->
         <ImageView
             android:id="@+id/imageView2"
             android:layout_width="90dp"
             android:layout_height="90dp"
-            android:layout_marginTop="200dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginStart="160dp"
-            android:background="@drawable/profile"/>
-
-    </LinearLayout>
-
-    <!-- ConstraintLayout for the user details form -->
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="374dp"
-        android:layout_height="278dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="310dp">
-
-        <!-- TextView for the 'Full Name' label -->
-        <TextView
-            android:id="@+id/textViewFullName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="10dp"
-            android:fontFamily="@font/inter_extrabold"
-            android:text="Full Name:"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <!-- EditText for the 'Full Name' input -->
-        <EditText
-            android:id="@+id/editTextFullName"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_marginTop="24dp"
-            android:background="@drawable/custom_input"
-            android:ems="15"
-            android:fontFamily="@font/inter"
-            android:inputType="textPersonName"
-            android:paddingLeft="10dp"
-            android:text="Full Name"
-            android:textColor="#FFFFFF"
-            android:textSize="14sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewFullName" />
-
-        <!-- TextView for the 'Email' label -->
-        <TextView
-            android:id="@+id/textViewEmail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="10dp"
-            android:fontFamily="@font/inter_extrabold"
-            android:text="Email:"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editTextFullName" />
-
-        <!-- EditText for the 'Email' input -->
-        <EditText
-            android:id="@+id/editEmail"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_marginStart="1dp"
-            android:layout_marginTop="15dp"
-            android:background="@drawable/custom_input"
-            android:ems="15"
-            android:fontFamily="@font/inter"
-            android:inputType="textEmailAddress"
-            android:paddingLeft="10dp"
-            android:text="Email"
-            android:textColor="#FFFFFF"
-            android:textSize="14sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewEmail" />
-
-        <!-- TextView for the 'Password' label -->
-        <TextView
-            android:id="@+id/textViewPassword"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
+            android:layout_gravity="center"
+            android:background="@drawable/profile"
             android:layout_marginTop="20dp"
-            android:fontFamily="@font/inter_extrabold"
-            android:text="Password: "
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editEmail" />
+            android:layout_marginBottom="10dp" />
 
-        <!-- EditText for the 'Password' input -->
-        <EditText
-            android:id="@+id/editPassword"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_marginTop="3dp"
-            android:background="@drawable/custom_input"
-            android:ems="15"
-            android:fontFamily="@font/inter"
-            android:inputType="textPassword"
-            android:paddingLeft="10dp"
-            android:text="Password"
-            android:textColor="#FFFFFF"
-            android:textSize="14sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewPassword" />
-
-        <!-- ImageButton for the 'Password' editor -->
-        <ImageButton
-            android:id="@+id/passwordEditor"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="114dp"
-            android:layout_marginEnd="44dp"
-            android:background="@android:color/transparent"
-            android:src="@drawable/edit_3_svgrepo_com"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/fullnameEditor" />
-
-        <!-- ImageButton for the 'Full Name' editor -->
-        <ImageButton
-            android:id="@+id/fullnameEditor"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="57dp"
-            android:layout_marginEnd="44dp"
-            android:background="@android:color/transparent"
-            android:src="@drawable/edit_3_svgrepo_com"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <!-- LinearLayout for the 'Log Out' and 'Update Details' buttons -->
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="610dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:layout_gravity="center_horizontal">
-
-        <!-- Button for 'Log Out' -->
-        <Button
-            android:id="@+id/signupBtn"
-            android:layout_width="175dp"
-            android:layout_height="40dp"
-            android:background="@drawable/custom_button"
-            android:text="Log Out"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:textSize="14sp"
-            android:fontFamily="@font/inter_extrabold"/>
-
-        <!-- Space for separating the buttons -->
-        <Space
-            android:layout_width="wrap_content"
+        <!-- LinearLayout for the user details form -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minWidth="25dp"/>
+            android:orientation="vertical"
+            android:padding="16dp">
 
-        <!-- Button for 'Update Details' -->
-        <Button
-            android:id="@+id/updateBtn"
-            android:layout_width="175dp"
-            android:layout_height="40dp"
-            android:background="@drawable/custom_button"
-            android:text="Update Details"
-            android:textColor="@color/white"
-            android:gravity="center" />
+            <!-- TextView for the 'Full Name' label -->
+            <TextView
+                android:id="@+id/textViewFullName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/inter_extrabold"
+                android:text="Full Name:"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:layout_marginTop="10dp" />
+
+            <!-- LinearLayout for the 'Full Name' EditText and ImageButton -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp">
+
+                <!-- EditText for the 'Full Name' input -->
+                <EditText
+                    android:id="@+id/editTextFullName"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/custom_input"
+                    android:ems="15"
+                    android:fontFamily="@font/inter"
+                    android:inputType="textPersonName"
+                    android:paddingLeft="10dp"
+                    android:textColorHint="@color/white"
+                    android:hint="Full Name"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp" />
+
+                <!-- ImageButton for the 'Full Name' editor -->
+                <ImageButton
+                    android:id="@+id/fullnameEditor"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/edit_3_svgrepo_com" />
+
+            </LinearLayout>
+
+            <!-- TextView for the 'Email' label -->
+            <TextView
+                android:id="@+id/textViewEmail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/inter_extrabold"
+                android:text="Email:"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:layout_marginTop="10dp" />
+
+            <!-- LinearLayout for the 'Email' EditText and ImageButton -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp">
+
+                <!-- EditText for the 'Email' input -->
+                <EditText
+                    android:id="@+id/editEmail"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/custom_input"
+                    android:ems="15"
+                    android:fontFamily="@font/inter"
+                    android:inputType="textEmailAddress"
+                    android:paddingLeft="10dp"
+                    android:hint="Email"
+                    android:textColorHint="@color/white"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp" />
+
+                <!-- ImageButton for the 'Email' editor -->
+                <ImageButton
+                    android:id="@+id/emailEditor"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/edit_3_svgrepo_com" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/textViewOldPassword"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/inter_extrabold"
+                android:text="Old Password: "
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:layout_marginTop="10dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp">
+
+                <!-- EditText for the 'Password' input -->
+                <EditText
+                    android:id="@+id/editOldPassword"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/custom_input"
+                    android:ems="15"
+                    android:fontFamily="@font/inter"
+                    android:inputType="textPassword"
+                    android:paddingLeft="10dp"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
+                    android:hint="Old Password"
+                    android:textColorHint="@color/white" />
+
+                <!-- ImageButton for the 'Password' editor -->
+                <ImageButton
+                    android:id="@+id/passwordOldEditor"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/edit_3_svgrepo_com" />
+
+            </LinearLayout>
+
+            <!-- TextView for the 'Password' label -->
+            <TextView
+                android:id="@+id/textViewPassword"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/inter_extrabold"
+                android:text="New Password: "
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:layout_marginTop="10dp" />
+
+            <!-- LinearLayout for the 'Password' EditText and ImageButton -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp">
+
+                <!-- EditText for the 'Password' input -->
+                <EditText
+                    android:id="@+id/editPassword"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/custom_input"
+                    android:ems="15"
+                    android:fontFamily="@font/inter"
+                    android:inputType="textPassword"
+                    android:paddingLeft="10dp"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
+                    android:hint="New Password"
+                    android:textColorHint="@color/white" />
+
+                <!-- ImageButton for the 'Password' editor -->
+                <ImageButton
+                    android:id="@+id/passwordEditor"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/edit_3_svgrepo_com" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- LinearLayout for the 'Log Out' and 'Update Details' buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:layout_marginTop="20dp"
+            android:padding="16dp">
+
+            <Button
+                android:id="@+id/logoutBtn"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:background="@drawable/custom_button"
+                android:text="Log Out"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:fontFamily="@font/inter_extrabold" />
+
+            <!-- Space for separating the buttons -->
+            <Space
+                android:layout_width="16dp"
+                android:layout_height="wrap_content" />
+
+            <!-- Button for 'Update Details' -->
+            <Button
+                android:id="@+id/updateBtn"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:background="@drawable/custom_button"
+                android:text="Update Details"
+                android:textColor="@color/white"
+                android:gravity="center" />
+
+        </LinearLayout>
 
     </LinearLayout>
-
-</FrameLayout>
+</ScrollView>

@@ -14,18 +14,11 @@ import android.widget.Toast
 import com.google.firebase.auth.FirebaseUser
 import za.co.varsitycollege.serversamurais.chronolog.Helpers.FirebaseHelper
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [SettingsPage.newInstance] factory method to
- * create an instance of this fragment.
- */
+
 class SettingsPage : Fragment() {
-    // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
     private lateinit var firebaseHelper: FirebaseHelper
@@ -37,138 +30,134 @@ class SettingsPage : Fragment() {
             param2 = it.getString(ARG_PARAM2)
         }
         firebaseHelper = FirebaseHelper(object : FirebaseHelper.FirebaseOperationListener {
-            /**
-             * Called when a Firebase operation is successful.
-             * Displays a success message.
-             */
             override fun onSuccess(user: FirebaseUser?) {
                 Toast.makeText(context, "Operation successful!", Toast.LENGTH_SHORT).show()
+                // Reload user data to update UI
+                loadUserData()
             }
 
-            /**
-             * Called when a Firebase operation fails.
-             * Displays the error message.
-             */
             override fun onFailure(errorMessage: String) {
                 Toast.makeText(context, "Error: $errorMessage", Toast.LENGTH_SHORT).show()
             }
         })
     }
 
-    /**
- * Called to have the fragment instantiate its user interface view.
- * @param inflater The LayoutInflater object that can be used to inflate any views in the fragment.
- * @param container If non-null, this is the parent view that the fragment's UI should be attached to.
- * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state as given here.
- * @return Return the View for the fragment's UI, or null.
- */
-override fun onCreateView(
-    inflater: LayoutInflater, container: ViewGroup?,
-    savedInstanceState: Bundle?
-): View? {
-    // Inflate the layout for this fragment
-    return inflater.inflate(R.layout.fragment_settings_page, container, false).apply {
-        // Initialize EditTexts for full name and password
-        val editTexts = listOf(
-            findViewById(R.id.editTextFullName),
-            findViewById<EditText>(R.id.editPassword)
-        )
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.fragment_settings_page, container, false).apply {
+            val fullNameEditText = findViewById<EditText>(R.id.editTextFullName)
+            val emailEditText = findViewById<EditText>(R.id.editEmail)
+            val oldPasswordEditText = findViewById<EditText>(R.id.editOldPassword)
+            val newPasswordEditText = findViewById<EditText>(R.id.editPassword)
 
-        // Initialize EditText for email and disable it
-        val emailTxt = findViewById<EditText>(R.id.editEmail)
-        emailTxt.isEnabled = false
+            val editTexts = listOf(fullNameEditText, emailEditText, oldPasswordEditText, newPasswordEditText)
+            editTexts.forEach { it.isEnabled = false }
 
-        // Initialize editor buttons for full name and password
-        val editorButtons = listOf(
-            findViewById(R.id.fullnameEditor),
-            findViewById<ImageButton>(R.id.passwordEditor)
-        )
+            val editorButtons = listOf(
+                findViewById<ImageButton>(R.id.fullnameEditor),
+                findViewById<ImageButton>(R.id.emailEditor),
+                findViewById<ImageButton>(R.id.passwordOldEditor),
+                findViewById<ImageButton>(R.id.passwordEditor)
+            )
 
-        // Disable EditTexts initially
-        editTexts.forEach { it.isEnabled = false }
-
-        // Set click listeners for editor buttons to enable corresponding EditTexts
-        editorButtons.zip(editTexts).forEach { (button, editText) ->
-            button.setOnClickListener {
-                editText.isEnabled = true
-                editText.requestFocus()
-            }
-        }
-
-        try {
-            // Get the current user
-            val user = firebaseHelper.getCurrentUser()
-
-            // Log the user object along with the displayName and email
-            user?.let {
-                Log.d("SettingsPage", "User: $user, Name: ${it.displayName}, Email: ${it.email}")
+            editorButtons.zip(editTexts).forEach { (button, editText) ->
+                button.setOnClickListener {
+                    editText.isEnabled = !editText.isEnabled
+                    if (editText.isEnabled) {
+                        editText.requestFocus()
+                    } else {
+                        editText.clearFocus()
+                    }
+                }
             }
 
-            // Set the user's full name and email as the text of the corresponding EditText fields
-            user?.let {
-                editTexts[0].text = Editable.Factory.getInstance().newEditable(it.displayName)
-                emailTxt.text = Editable.Factory.getInstance().newEditable(it.email)
+            try {
+                val user = firebaseHelper.getCurrentUser()
+                user?.let {
+                    Log.d("SettingsPage", "User: $user, Name: ${it.displayName}, Email: ${it.email}")
+                    fullNameEditText.hint = user.displayName.toString()
+                    emailEditText.hint = user.email.toString()
+                }
+            } catch (exception: Exception) {
+                Log.e("SettingsPage", "Error: ${exception.message}")
             }
-        } catch (exception: Exception) {
-            // Log the error
-            Log.e("SettingsPage", "Error: ${exception.message}")
-        }
 
-        // Set click listener for the update button
-        findViewById<Button>(R.id.updateBtn).setOnClickListener {
-            handleUpdateButtonClick(editTexts[0], editTexts[1])
+            findViewById<Button>(R.id.updateBtn).setOnClickListener {
+                handleUpdateButtonClick(fullNameEditText, emailEditText, oldPasswordEditText, newPasswordEditText)
+            }
+
+            findViewById<Button>(R.id.logoutBtn).setOnClickListener {
+                firebaseHelper.signOut()
+            }
         }
     }
-}
 
-    /**
-     * Handles the click event of the update button.
-     * Updates the user's full name and password.
-     */
-    private fun handleUpdateButtonClick(fullNameEditText: EditText, passwordEditText: EditText) {
-        val fullname = fullNameEditText.text.toString()
-        val password = passwordEditText.text.toString()
+    private fun handleUpdateButtonClick(
+        fullNameEditText: EditText, emailEditText: EditText,
+        oldPasswordEditText: EditText, newPasswordEditText: EditText
+    ) {
+        val fullName = fullNameEditText.text.toString().trim()
+        val email = emailEditText.text.toString().trim()
+        val oldPassword = oldPasswordEditText.text.toString().trim()
+        val newPassword = newPasswordEditText.text.toString().trim()
 
-        // Make everything read-only again
-        setFieldsEnabled(false, fullNameEditText, passwordEditText)
+        if (newPassword.isNotEmpty() && oldPassword.isEmpty()) {
+            Toast.makeText(context, "Old password is required to update the password.", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        if (email.isNotEmpty() && oldPassword.isEmpty()) {
+            Toast.makeText(context, "Old password is required to update the email.", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        setFieldsEnabled(false, fullNameEditText, emailEditText, oldPasswordEditText, newPasswordEditText)
 
         try {
-            // Perform update operation here
-            updateDetails(fullname, password)
-
+            updateDetails(fullName, email, oldPassword, newPassword)
         } catch (exception: Exception) {
             Toast.makeText(context, "Error: ${exception.message}", Toast.LENGTH_SHORT).show()
         }
     }
 
-    /**
-     * Updates the user's full name and password.
-     */
-    private fun updateDetails(fullName: String, password: String) {
-        listOf(fullName, password).takeIf { it.all(String::isNotEmpty) }?.let {
-            firebaseHelper.run {
-                updateFullName(fullName)
-                updateUserPassword(password)
+    private fun updateDetails(fullName: String, email: String, oldPassword: String, newPassword: String) {
+        val user = firebaseHelper.getCurrentUser()
+
+        user?.let {
+            if (fullName.isNotEmpty()) {
+                firebaseHelper.updateFullName(fullName)
+            }
+            if (email.isNotEmpty() && oldPassword.isNotEmpty()) {
+                firebaseHelper.sendEmailVerification(email, oldPassword)
+                Toast.makeText(context, "Please check your new email address for a verification link.", Toast.LENGTH_LONG).show()
+            } else {
+                Toast.makeText(context, "Please enter the current password and new email.", Toast.LENGTH_SHORT).show()
+            }
+
+            if (newPassword.isNotEmpty() && oldPassword.isNotEmpty()) {
+                firebaseHelper.updateUserPassword(oldPassword, newPassword)
             }
         }
     }
 
-    /**
-     * Sets the enabled state of the specified EditText fields.
-     */
     private fun setFieldsEnabled(enabled: Boolean, vararg fields: EditText) {
         fields.forEach { it.isEnabled = enabled }
     }
+
+    private fun loadUserData() {
+        val user = firebaseHelper.getCurrentUser()
+        val fullNameEditText = view?.findViewById<EditText>(R.id.editTextFullName)
+        val emailEditText = view?.findViewById<EditText>(R.id.editEmail)
+
+        user?.let {
+            fullNameEditText?.setText(it.displayName)
+            emailEditText?.setText(it.email)
+        }
+    }
+
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment SettingsPage.
-         */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
             SettingsPage().apply {
