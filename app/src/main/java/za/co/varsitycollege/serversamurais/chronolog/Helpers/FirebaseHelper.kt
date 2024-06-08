@@ -9,6 +9,7 @@ import com.google.firebase.auth.UserProfileChangeRequest
 import za.co.varsitycollege.serversamurais.chronolog.model.Task
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
@@ -16,6 +17,7 @@ import za.co.varsitycollege.serversamurais.chronolog.adapters.CategoryAdapter
 import za.co.varsitycollege.serversamurais.chronolog.adapters.TaskAdapter
 import za.co.varsitycollege.serversamurais.chronolog.model.Category
 import za.co.varsitycollege.serversamurais.chronolog.model.Team
+import za.co.varsitycollege.serversamurais.chronolog.model.User
 
 
 class FirebaseHelper(private val listener: FirebaseOperationListener) {
@@ -24,6 +26,7 @@ class FirebaseHelper(private val listener: FirebaseOperationListener) {
     private val databaseTasksReference = database.getReference("tasks")
     private val databaseCategoriesReference = database.getReference("categories")
     private val databaseTeamsReference = database.getReference("teams")
+    private val databaseUsersReference = database.getReference("users")
     private var mAuth: FirebaseAuth = FirebaseAuth.getInstance()
 
     /**
@@ -43,6 +46,8 @@ interface FirebaseOperationListener {
     fun onFailure(errorMessage: String)
 }
 
+
+
 /**
  * Returns the user ID of the currently authenticated user.
  * @return The user ID as a String.
@@ -52,17 +57,32 @@ fun getUserId(): String {
     return user?.uid.toString()
 }
 
-/**
+    /**
+     * Returns the user ID of the currently authenticated user.
+     * @return The user ID as a String.
+     */
+    fun getEmail(): String {
+        val user = FirebaseAuth.getInstance().currentUser
+        return user?.email.toString()
+    }
+
+
+
+
+    /**
  * Attempts to sign up a new user with the provided email and password.
  * @param email The email of the user.
  * @param password The password of the user.
  */
-fun signUp(email: String, password: String){
+fun signUp(email: String, password: String, name: String, bio: String){
     mAuth.createUserWithEmailAndPassword(email, password)
         .addOnCompleteListener{ task ->
             if(task.isSuccessful){
-                val user = mAuth.currentUser
-                listener.onSuccess(user)
+                val firebaseUser = mAuth.currentUser
+                if (firebaseUser != null) {
+                    val user = User(firebaseUser.uid, email, name, bio)
+                    saveUserDetails(user)
+                }
             } else {
                 listener.onFailure(task.exception?.message ?: "Unknown error")
             }
@@ -85,6 +105,26 @@ fun signIn(email: String, password: String){
             }
         }
 }
+
+    /**
+     * Saves user details to the Firebase database.
+     * @param user The User object containing the user details.
+     */
+    fun saveUserDetails(user: User) {
+        val userId = user.userId
+        val databaseUsersReference = database.getReference("users")
+
+        databaseUsersReference.child(userId).setValue(user)
+            .addOnCompleteListener { task ->
+                if(task.isSuccessful) {
+                    val firebaseUser = mAuth.currentUser
+                    listener.onSuccess(firebaseUser)
+                } else {
+                    listener.onFailure(task.exception?.message ?: "Unknown error")
+                }
+            }
+    }
+
 
 /**
  * Signs out the currently authenticated user.
@@ -453,4 +493,17 @@ fun getMaxGoal(userId: String, onMaxGoalReceived: (Int) -> Unit) {
     })
 }
 
+    fun getUserBio(userId: String, onBioReceived: (String?) -> Unit) {
+        databaseUsersReference.child(userId).addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val bio = snapshot.child("bio").getValue(String::class.java)
+                onBioReceived(bio)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("FirebaseHelper", "Error fetching bio: ${error.message}")
+                onBioReceived(null)
+            }
+        })
+    }
 }

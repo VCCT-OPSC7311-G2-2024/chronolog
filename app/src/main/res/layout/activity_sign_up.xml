@@ -111,6 +111,33 @@
             android:paddingLeft="10dp"
             android:textSize="14sp"/>
 
+        <!-- TextView for the 'Full Name:' label -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Bio:"
+            android:textSize="16sp"
+            android:fontFamily="@font/inter_extrabold"
+            android:textColor="@color/white"
+            android:layout_margin="5dp"/>
+
+        <!-- EditText for the full name input field -->
+        <EditText
+            android:id="@+id/editTextBio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="15"
+            android:fontFamily="@font/inter"
+            android:inputType="textPersonName"
+            android:hint="Enter a short bio about yourself"
+            android:textColorHint="@color/white"
+            android:textColor="@color/white"
+            android:background="@drawable/custom_input"
+            android:paddingLeft="10dp"
+            android:textSize="14sp"/>
+
+
         <!-- TextView for the 'Email:' label -->
         <TextView
             android:layout_width="wrap_content"

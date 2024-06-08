@@ -506,20 +506,20 @@
                         app:layout_constraintVertical_bias="0.043" />
 
                     <TextView
-                        android:id="@+id/editText1"
+                        android:id="@+id/fullNameTxt"
                         android:layout_width="120dp"
                         android:layout_height="30dp"
                         android:layout_marginStart="100dp"
                         android:layout_marginTop="96dp"
                         android:layout_marginEnd="-40dp"
                         android:background="@drawable/rounded_edittext"
-                        app:layout_constraintEnd_toStartOf="@id/editText2"
+                        app:layout_constraintEnd_toStartOf="@id/emaiTxt"
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
-                        android:id="@+id/editText2"
+                        android:id="@+id/emaiTxt"
                         android:layout_width="120dp"
                         android:layout_height="30dp"
                         android:layout_marginStart="100dp"
@@ -528,7 +528,7 @@
                         android:background="@drawable/rounded_edittext"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toEndOf="@id/editText1"
+                        app:layout_constraintStart_toEndOf="@id/fullNameTxt"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
@@ -554,7 +554,7 @@
                         android:textColor="@color/white"
                         android:textSize="15dp"
                         android:textStyle="bold"
-                        app:layout_constraintBottom_toTopOf="@+id/editText1"
+                        app:layout_constraintBottom_toTopOf="@+id/fullNameTxt"
                         app:layout_constraintEnd_toStartOf="@+id/email"
                         app:layout_constraintStart_toStartOf="parent" />
 
@@ -584,7 +584,7 @@
                         android:textColor="@color/white"
                         android:textSize="15dp"
                         android:textStyle="bold"
-                        app:layout_constraintBottom_toTopOf="@+id/editText2"
+                        app:layout_constraintBottom_toTopOf="@+id/emaiTxt"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="1.0"
                         app:layout_constraintStart_toStartOf="parent" />
@@ -593,6 +593,7 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </androidx.cardview.widget.CardView>
+
 
             <!-- This is for the music widget -->
             <androidx.cardview.widget.CardView

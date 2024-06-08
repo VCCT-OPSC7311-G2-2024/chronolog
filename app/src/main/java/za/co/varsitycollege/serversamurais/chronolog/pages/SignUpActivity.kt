@@ -39,7 +39,10 @@ class SignUpActivity : AppCompatActivity(), View.OnClickListener, FirebaseHelper
             if(binding.editPassword.text.toString().trim() == binding.editConfirmPasword.text.toString().trim()){
                 val email = binding.editEmail.text.toString().trim()
                 val password = binding.editPassword.text.toString().trim()
-                firebaseHelper.signUp(email, password)
+                val name = binding.editTextFullName.text.toString().trim()
+                val bio = binding.editTextBio.text.toString().trim()
+
+                firebaseHelper.signUp(email, password, name, bio)
             }
         }
     }
