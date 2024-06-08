@@ -13,6 +13,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
+import android.media.MediaPlayer
 import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DatabaseReference
@@ -53,6 +54,9 @@ class HomePage : Fragment(), FirebaseHelper.FirebaseOperationListener {
     private lateinit var fullNameTxt: TextView
     private lateinit var emailTxt: TextView
     private lateinit var bioTxt: TextView
+    private lateinit var musicTxt: TextView
+    private lateinit var stop_startBtn: Button
+    private lateinit var shuffleBtn: ImageButton
 
     // Firebase helper
     private lateinit var firebaseHelper: FirebaseHelper
@@ -99,6 +103,10 @@ class HomePage : Fragment(), FirebaseHelper.FirebaseOperationListener {
         fullNameTxt = view.findViewById(R.id.fullNameTxt)
         emailTxt = view.findViewById(R.id.emaiTxt)
         bioTxt = view.findViewById(R.id.descriptionProfileTxt)
+        musicTxt = view.findViewById(R.id.musicTxtView)
+        stop_startBtn = view.findViewById(R.id.Start_StopBtn)
+        shuffleBtn = view.findViewById(R.id.ShuffleBtn)
+
 
 
         // Initialize Firebase helper
@@ -164,6 +172,14 @@ class HomePage : Fragment(), FirebaseHelper.FirebaseOperationListener {
 
         view.findViewById<Button>(R.id.saveBtn).setOnClickListener {
             updateGoals()
+        }
+
+        stop_startBtn.setOnClickListener {
+            toggleMusicPlay()
+        }
+
+        shuffleBtn.setOnClickListener {
+            shuffleMusic()
         }
 
         return view
@@ -255,60 +271,99 @@ class HomePage : Fragment(), FirebaseHelper.FirebaseOperationListener {
      * @param userId The ID of the user whose data is to be organized.
      */
     private fun organizeDurationData(userId: String) {
+
         firebaseHelper.getTotalDuration(userId) { totalDuration ->
             val totalHours = totalDuration.toFloat()
 
             // Calculate the percentage of total hours compared to the maximum
-            val percentage = (totalHours / 100) * 100
+            var percentage = (totalHours / 100) * 100
+
+            if (percentage == 0.0f) {
+                percentage = 1.0f // Set a default percentage if the calculation is zero
+            }
+
             var progressWidth = (250 * (percentage / 100)).toInt()
 
             // Constrain the progress width to be at most 250dp
             progressWidth = progressWidth.coerceAtMost(dpToPx(250))
+
+            // Ensure a minimum progress width if it's zero
+            if (progressWidth == 0) {
+                progressWidth = dpToPx(1) // Set a minimum progress width in dp
+            }
 
             // Set the width of progressBar2 dynamically
             val params = line2View.layoutParams
             params.width = progressWidth
             line2View.layoutParams = params
 
-            progressBar2Txt.text = (totalDuration / 60).toString() + " minutes"
-           // bioTxt.text = (totalDuration / 60).toString() + " minutes"
+            progressBar2Txt.text = if (totalDuration == 0) {
+                "0 minutes"
+            } else {
+                (totalDuration / 60).toString() + " minutes"
+            }
         }
     }
+
 
     /**
      * Organizes the minimum goal data and updates the UI.
      * @param userId The ID of the user whose data is to be organized.
      */
     private fun organizeMinGoalData(userId: String) {
+
         firebaseHelper.getMinGoal(userId) { minGoal ->
+            // Ensure minGoal is within a reasonable range
+            val validMinGoal = if (minGoal > 200000) 0 else minGoal
+
             // Calculate progress for progressBar1
-            val minProgressWidth = calculateProgressWidth(minGoal)
+            val minProgressWidth = calculateProgressWidth(validMinGoal)
 
             // Set the width of progressBar1 dynamically
             val params = line1View.layoutParams
-            params.width = minProgressWidth.coerceAtMost(dpToPx(250))
+
+            // Ensure a minimum progress width if it's zero
+            val adjustedMinProgressWidth = if (minProgressWidth == 0) dpToPx(1) else minProgressWidth
+            params.width = adjustedMinProgressWidth.coerceAtMost(dpToPx(250))
             line1View.layoutParams = params
 
-            progressBar1Txt.text = minGoal.toString() + " minutes"
+            // Update the progressBar1 text
+            progressBar1Txt.text = if (validMinGoal > 20000) {
+                "0 minutes"
+            } else {
+                "$validMinGoal minutes"
+            }
         }
     }
+
 
     /**
      * Organizes the maximum goal data and updates the UI.
      * @param userId The ID of the user whose data is to be organized.
      */
     private fun organizeMaxGoalData(userId: String) {
+
         firebaseHelper.getMaxGoal(userId) { maxGoal ->
-            val maxProgressWidth = calculateProgressWidth(maxGoal)
+
+            // Ensure maxGoal is within a reasonable range
+            val validMaxGoal = if (maxGoal < 0) 0 else maxGoal
+
+            // Calculate progress for progressBar3
+            val maxProgressWidth = calculateProgressWidth(validMaxGoal)
 
             // Set the width of progressBar3 dynamically
             val params = line3View.layoutParams
-            params.width = maxProgressWidth.coerceAtMost(dpToPx(250))
+
+            // Ensure a minimum progress width if it's zero
+            val adjustedMaxProgressWidth = if (maxProgressWidth == 0) dpToPx(1) else maxProgressWidth
+            params.width = adjustedMaxProgressWidth.coerceAtMost(dpToPx(250))
             line3View.layoutParams = params
 
-            progressBar3Txt.text = maxGoal.toString() + " minutes"
+            // Update the progressBar3 text
+            progressBar3Txt.text = "$validMaxGoal minutes"
         }
     }
+
 
     /**
      * Formats the time in seconds to a string in the format "HH:mm:ss".
@@ -336,6 +391,71 @@ class HomePage : Fragment(), FirebaseHelper.FirebaseOperationListener {
 
         Toast.makeText(context, "Goals updated successfully!", Toast.LENGTH_SHORT).show()
     }
+
+    private var mediaPlayer: MediaPlayer? = null
+    private var isPlaying = false
+    private var currentSongIndex = 0
+
+    private val songs = listOf(
+        R.raw.firstsong,
+        R.raw.secondsong,
+        R.raw.songthrees,
+        R.raw.songfour,
+        R.raw.songfive
+    )
+    private fun toggleMusicPlay() {
+        if (isPlaying) {
+            stopMusic()
+        } else {
+            startMusic()
+        }
+        isPlaying = !isPlaying
+    }
+
+    private fun startMusic() {
+        if (mediaPlayer == null) {
+            mediaPlayer = MediaPlayer.create(context, songs[currentSongIndex])
+            mediaPlayer?.apply {
+                setOnPreparedListener {
+                    start()
+                    musicTxt.text = "Playing: ${resources.getResourceEntryName(songs[currentSongIndex])}"
+
+                }
+                setOnCompletionListener {
+                    stopMusic()
+                }
+                start()
+            }
+        } else {
+            mediaPlayer?.start()
+            musicTxt.text = "Playing: ${resources.getResourceEntryName(songs[currentSongIndex])}"
+
+        }
+    }
+
+    private fun stopMusic() {
+        mediaPlayer?.pause()
+        musicTxt.text = "Music stopped"
+
+    }
+
+    private fun shuffleMusic() {
+        currentSongIndex = (songs.indices).random()
+        if (isPlaying) {
+            mediaPlayer?.reset()
+            mediaPlayer = MediaPlayer.create(context, songs[currentSongIndex])
+            startMusic()
+        } else {
+            musicTxt.text = "Ready to play: ${resources.getResourceEntryName(songs[currentSongIndex])}"
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mediaPlayer?.release()
+        mediaPlayer = null
+    }
+
 
     /**
      * Shows the daily goals card and hides all other cards.
