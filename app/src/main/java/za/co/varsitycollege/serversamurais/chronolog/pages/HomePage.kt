@@ -399,6 +399,9 @@ class HomePage : Fragment(), FirebaseHelper.FirebaseOperationListener {
     private val songs = listOf(
         R.raw.firstsong,
         R.raw.secondsong,
+        R.raw.songthrees,
+        R.raw.songfour,
+        R.raw.songfive
     )
     private fun toggleMusicPlay() {
         if (isPlaying) {
