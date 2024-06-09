@@ -9,6 +9,9 @@ import za.co.varsitycollege.serversamurais.chronolog.R
 import za.co.varsitycollege.serversamurais.chronolog.adapters.CategoryAdapter
 import za.co.varsitycollege.serversamurais.chronolog.adapters.TaskAdapter
 import za.co.varsitycollege.serversamurais.chronolog.model.*
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class FirebaseHelper(private val listener: FirebaseOperationListener) {
 
@@ -16,6 +19,7 @@ class FirebaseHelper(private val listener: FirebaseOperationListener) {
         FirebaseDatabase.getInstance("https://chronolog-db9b8-default-rtdb.europe-west1.firebasedatabase.app/")
     private val databaseTasksReference = database.getReference("tasks")
     private val databaseCategoriesReference = database.getReference("categories")
+    private val databaseGoalsReference = database.getReference("goals")
     private val databaseTeamsReference = database.getReference("teams")
     private val databaseUsersReference = database.getReference("users")
     private var mAuth: FirebaseAuth = FirebaseAuth.getInstance()
@@ -460,25 +464,63 @@ class FirebaseHelper(private val listener: FirebaseOperationListener) {
      * @param newMinGoal The new minimum goal.
      * @param newMaxGoal The new maximum goal.
      */
-    fun updateTasksWithNonZeroGoals(userId: String, newMinGoal: Int, newMaxGoal: Int) {
-        databaseTasksReference.child(userId)
+
+    fun addNewGoalEntry(userId: String, minGoal: Int, maxGoal: Int) {
+        val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+        val userGoalsReference = databaseGoalsReference.child(userId)
+
+        userGoalsReference.orderByChild("date").equalTo(currentDate)
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    for (taskSnapshot in snapshot.children) {
-                        val task = taskSnapshot.getValue(Task::class.java)
-                        if (task != null && task.minGoal > 0 && task.maxGoal > 0) {
-                            task.minGoal = newMinGoal
-                            task.maxGoal = newMaxGoal
-                            taskSnapshot.ref.setValue(task)
+                    if (snapshot.exists()) {
+                        // Goal for the current date exists, update it
+                        for (goalSnapshot in snapshot.children) {
+                            val goalId = goalSnapshot.key
+                            if (goalId != null) {
+                                val updatedGoal = Goal(
+                                    minGoal = minGoal,
+                                    maxGoal = maxGoal,
+                                    date = currentDate
+                                )
+                                userGoalsReference.child(goalId).setValue(updatedGoal)
+                                    .addOnSuccessListener {
+                                        Log.d("FirebaseHelper", "Goal updated successfully")
+                                    }
+                                    .addOnFailureListener { error ->
+                                        Log.e("FirebaseHelper", "Error updating goal: ${error.message}")
+                                    }
+                            }
                         }
+                    } else {
+                        // No goal for the current date, create a new one
+                        val goalId = userGoalsReference.push().key
+                            ?: throw Exception("Failed to generate unique key for goal")
+
+                        val newGoal = Goal(
+                            minGoal = minGoal,
+                            maxGoal = maxGoal,
+                            date = currentDate
+                        )
+
+                        userGoalsReference.child(goalId).setValue(newGoal)
+                            .addOnSuccessListener {
+                                Log.d("FirebaseHelper", "New goal added successfully")
+                            }
+                            .addOnFailureListener { error ->
+                                Log.e("FirebaseHelper", "Error adding new goal: ${error.message}")
+                            }
                     }
                 }
 
                 override fun onCancelled(error: DatabaseError) {
-                    Log.e("FirebaseHelper", "Error updating tasks: ${error.message}")
+                    Log.e("FirebaseHelper", "Error checking existing goals: ${error.message}")
                 }
             })
     }
+
+
+
+
 
     /**
      * Fetches the total duration of all tasks from the Firebase database and passes it to the provided callback.

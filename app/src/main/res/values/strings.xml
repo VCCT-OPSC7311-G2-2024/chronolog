@@ -23,5 +23,9 @@
     <string name="Music">Music</string>
     <string name="Start_Stop">Start/Stop</string>
     <string name="Settings">Settings</string>
+    <string-array name="stats_types">
+        <item>Hours worked per day</item>
+        <item>Hours per category</item>
+    </string-array>
 
 </resources>

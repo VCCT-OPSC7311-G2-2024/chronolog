@@ -26,7 +26,6 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
-
 /**
  * HomePage is a Fragment that represents the home page of the application.
  * It contains methods for displaying and updating user progress, daily goals, and recent activities.
@@ -107,8 +106,6 @@ class HomePage : Fragment(), FirebaseHelper.FirebaseOperationListener {
         stop_startBtn = view.findViewById(R.id.Start_StopBtn)
         shuffleBtn = view.findViewById(R.id.ShuffleBtn)
 
-
-
         // Initialize Firebase helper
         firebaseHelper = FirebaseHelper(this)
         val userId = firebaseHelper.getUserId()
@@ -121,8 +118,6 @@ class HomePage : Fragment(), FirebaseHelper.FirebaseOperationListener {
                 recentActivityTaskDescription.text = task.description
             }
         }
-
-
 
         // Initialize adapter
         adapter = RecyclerAdapter(requireContext(), data)
@@ -140,7 +135,6 @@ class HomePage : Fragment(), FirebaseHelper.FirebaseOperationListener {
 
         // Update the greeting message based on the time of the day
         updateGreeting()
-       // fetchUserName()
 
         // Set visibility of all CardViews to GONE
         dailyGoalsCardView.visibility = View.GONE
@@ -160,10 +154,7 @@ class HomePage : Fragment(), FirebaseHelper.FirebaseOperationListener {
 
         view.findViewById<ImageButton>(R.id.profileBtn).setOnClickListener {
             showProfileCard()
-
             fetchUserDetails()
-
-
         }
 
         view.findViewById<ImageButton>(R.id.musicBtn).setOnClickListener {
@@ -221,9 +212,6 @@ class HomePage : Fragment(), FirebaseHelper.FirebaseOperationListener {
         }
     }
 
-
-
-
     /**
      * Animates the appearance of a CardView.
      * @param cardView The CardView to be animated.
@@ -271,7 +259,6 @@ class HomePage : Fragment(), FirebaseHelper.FirebaseOperationListener {
      * @param userId The ID of the user whose data is to be organized.
      */
     private fun organizeDurationData(userId: String) {
-
         firebaseHelper.getTotalDuration(userId) { totalDuration ->
             val totalHours = totalDuration.toFloat()
 
@@ -305,13 +292,11 @@ class HomePage : Fragment(), FirebaseHelper.FirebaseOperationListener {
         }
     }
 
-
     /**
      * Organizes the minimum goal data and updates the UI.
      * @param userId The ID of the user whose data is to be organized.
      */
     private fun organizeMinGoalData(userId: String) {
-
         firebaseHelper.getMinGoal(userId) { minGoal ->
             // Ensure minGoal is within a reasonable range
             val validMinGoal = if (minGoal > 200000) 0 else minGoal
@@ -336,15 +321,12 @@ class HomePage : Fragment(), FirebaseHelper.FirebaseOperationListener {
         }
     }
 
-
     /**
      * Organizes the maximum goal data and updates the UI.
      * @param userId The ID of the user whose data is to be organized.
      */
     private fun organizeMaxGoalData(userId: String) {
-
         firebaseHelper.getMaxGoal(userId) { maxGoal ->
-
             // Ensure maxGoal is within a reasonable range
             val validMaxGoal = if (maxGoal < 0) 0 else maxGoal
 
@@ -364,7 +346,6 @@ class HomePage : Fragment(), FirebaseHelper.FirebaseOperationListener {
         }
     }
 
-
     /**
      * Formats the time in seconds to a string in the format "HH:mm:ss".
      * @param secondsTotal The total time in seconds.
@@ -377,17 +358,15 @@ class HomePage : Fragment(), FirebaseHelper.FirebaseOperationListener {
         return String.format("%02d:%02d:%02d", hours, minutes, seconds)
     }
 
-
     /**
      * Updates the user's goals in Firebase and displays a success message.
      */
-    private fun updateGoals()
-    {
+    private fun updateGoals() {
         val minGoal = minGoalEdit.text.toString().toInt()
         val maxGoal = maxGoalEdit.text.toString().toInt()
         val userid = firebaseHelper.getUserId()
 
-        firebaseHelper.updateTasksWithNonZeroGoals(userid, minGoal, maxGoal)
+        firebaseHelper.addNewGoalEntry(userid, minGoal, maxGoal)
 
         Toast.makeText(context, "Goals updated successfully!", Toast.LENGTH_SHORT).show()
     }
@@ -419,7 +398,6 @@ class HomePage : Fragment(), FirebaseHelper.FirebaseOperationListener {
                 setOnPreparedListener {
                     start()
                     musicTxt.text = "Playing: ${resources.getResourceEntryName(songs[currentSongIndex])}"
-
                 }
                 setOnCompletionListener {
                     stopMusic()
@@ -429,14 +407,12 @@ class HomePage : Fragment(), FirebaseHelper.FirebaseOperationListener {
         } else {
             mediaPlayer?.start()
             musicTxt.text = "Playing: ${resources.getResourceEntryName(songs[currentSongIndex])}"
-
         }
     }
 
     private fun stopMusic() {
         mediaPlayer?.pause()
         musicTxt.text = "Music stopped"
-
     }
 
     private fun shuffleMusic() {
@@ -455,7 +431,6 @@ class HomePage : Fragment(), FirebaseHelper.FirebaseOperationListener {
         mediaPlayer?.release()
         mediaPlayer = null
     }
-
 
     /**
      * Shows the daily goals card and hides all other cards.
@@ -506,7 +481,7 @@ class HomePage : Fragment(), FirebaseHelper.FirebaseOperationListener {
      * @param user The current FirebaseUser or null if no user is currently authenticated.
      */
     override fun onSuccess(user: FirebaseUser?) {
-        TODO("Not yet implemented")
+        // Implementation can be added as needed
     }
 
     /**
@@ -514,6 +489,6 @@ class HomePage : Fragment(), FirebaseHelper.FirebaseOperationListener {
      * @param errorMessage The error message associated with the failure.
      */
     override fun onFailure(errorMessage: String) {
-        TODO("Not yet implemented")
+        // Implementation can be added as needed
     }
 }

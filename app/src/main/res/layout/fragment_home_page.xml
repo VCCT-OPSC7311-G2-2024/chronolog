@@ -1,110 +1,127 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- The root LinearLayout for the HomePage fragment -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@drawable/gradient_background"
     tools:context=".pages.HomePage">
 
-    <!-- LinearLayout for the profile image -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp">
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- ImageView for the profile image -->
-        <ImageView
-            android:id="@+id/imageView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/profile" />
-
-    </LinearLayout>
-
-    <!-- LinearLayout for the 'Hello' text and recent activity -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <!-- LinearLayout for the 'Hello' text -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_horizontal"
-            android:layout_marginBottom="20dp">
+            android:orientation="vertical"
+            android:padding="0dp">
 
-            <!-- TextView for the 'Hello' text -->
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="wrap_content"
+            <!-- LinearLayout for the profile image -->
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="1dp"
-                android:text="Hello"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                android:textColor="@color/white" />
+                android:gravity="center_horizontal"
+                android:orientation="horizontal"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp">
+
+                <!-- ImageView for the profile image -->
+                <ImageView
+                    android:id="@+id/imageView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/profile" />
+
+            </LinearLayout>
+
+            <!-- LinearLayout for the 'Hello' text and recent activity -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- LinearLayout for the 'Hello' text -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_horizontal"
+                    android:layout_marginBottom="20dp">
+
+                    <!-- TextView for the 'Hello' text -->
+                    <TextView
+                        android:id="@+id/textView2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="1dp"
+                        android:text="Hello"
+                        android:textSize="24sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/white" />
+
+                </LinearLayout>
+
+                <!-- LinearLayout for the recent activity -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_horizontal"
+                    android:layout_marginBottom="40dp">
+
+                    <!-- View for the left line separator -->
+                    <View
+                        android:id="@+id/view1"
+                        android:layout_width="0dp"
+                        android:layout_height="5dp"
+                        android:layout_weight="1"
+                        android:background="@android:color/white" />
+
+                    <!-- TextView for the 'Recent Activity' text -->
+                    <TextView
+                        android:id="@+id/textView4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/recent_activty"
+                        android:textSize="15sp"
+                        android:textColor="@color/white"
+                        android:layout_marginHorizontal="20dp"/>
+
+                    <!-- View for the right line separator -->
+                    <View
+                        android:id="@+id/view2"
+                        android:layout_width="0dp"
+                        android:layout_height="5dp"
+                        android:layout_weight="1"
+                        android:background="@android:color/white" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- Include for the recent activity view -->
+            <include
+                layout="@layout/activity_recent_view"
+                android:layout_width="300dp"
+                android:layout_height="75dp"
+                android:layout_marginBottom="40dp"
+                android:layout_gravity="center_horizontal"/>
+
+            <!-- Include for the quick action buttons view -->
+            <include
+                layout="@layout/activity_home_quick_action_buttons_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp" />
 
         </LinearLayout>
 
-        <!-- LinearLayout for the recent activity -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_horizontal"
-            android:layout_marginBottom="40dp">
+    </ScrollView>
 
-            <!-- View for the left line separator -->
-            <View
-                android:id="@+id/view1"
-                android:layout_width="100dp"
-                android:layout_height="5dp"
-                android:background="@android:color/white"
-                app:layout_constraintEnd_toStartOf="@+id/textView4" />
-
-            <!-- TextView for the 'Recent Activity' text -->
-            <TextView
-                android:id="@+id/textView4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/recent_activty"
-                android:textSize="15sp"
-                android:textColor="@color/white"
-                android:layout_marginHorizontal="20dp"/>
-
-            <!-- View for the right line separator -->
-            <View
-                android:id="@+id/view2"
-                android:layout_width="100dp"
-                android:layout_height="5dp"
-                android:background="@android:color/white" />
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <!-- Include for the recent activity view -->
-    <include
-        layout="@layout/activity_recent_view"
-        android:layout_width="300dp"
-        android:layout_height="75dp"
-        android:layout_marginBottom="40dp"
-        android:layout_gravity="center_horizontal"/>
-
-    <!-- Include for the quick action buttons view -->
-    <include
-        layout="@layout/activity_home_quick_action_buttons_view"
-        android:layout_width="match_parent"
-        android:layout_height="400dp"
-        android:layout_marginTop="10dp" />
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,137 +1,123 @@
-<!-- The root ConstraintLayout for the quick action buttons view -->
-<androidx.constraintlayout.widget.ConstraintLayout
+<!-- The root LinearLayout for the quick action buttons view -->
+<LinearLayout
     android:id="@+id/main"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="245dp">
+    android:orientation="vertical">
 
     <!-- Background view for the quick action buttons -->
-    <View
-        android:id="@+id/backgroundView"
+
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:background="#115183"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        android:gravity="center_horizontal">
+        <!-- Horizontal LinearLayout for buttons -->
 
-    <!-- Goals button -->
-    <ImageButton
-        android:id="@+id/goalsBtn"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_marginTop="10dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/progressBtn"
-        android:layout_marginEnd="10dp"
-        android:background="@drawable/goals_btn_background"
-        android:src="@drawable/goal_svgrepo_com"/>
-
-    <!-- Progress button -->
-    <ImageButton
-        android:id="@+id/progressBtn"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_marginTop="10dp"
-        app:layout_constraintStart_toEndOf="@id/goalsBtn"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/profileBtn"
-        android:layout_marginEnd="10dp"
-        android:background="@drawable/progress_btn_background"
-        android:src="@drawable/progress_svgrepo_com" />
-
-    <!-- Profile button -->
-    <ImageButton
-        android:id="@+id/profileBtn"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_marginTop="10dp"
-        app:layout_constraintStart_toEndOf="@id/progressBtn"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/musicBtn"
-        android:layout_marginEnd="10dp"
-        android:background="@drawable/profile_btn_background"
-        android:src="@drawable/profile_round_1342_svgrepo_com" />
-
-    <!-- Music button -->
-    <ImageButton
-        android:id="@+id/musicBtn"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_marginTop="10dp"
-        app:layout_constraintStart_toEndOf="@id/profileBtn"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:background="@drawable/music_btn_background"
-        android:src="@drawable/music_svgrepo_com" />
-
-    <!-- TextView for the goals label -->
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="3dp"
-        android:layout_marginEnd="-75dp"
-        android:text="@string/goals"
-        android:textColor="@color/white"
-        app:layout_constraintEnd_toStartOf="@+id/backgroundView"
-        app:layout_constraintTop_toBottomOf="@+id/goalsBtn" />
-
-    <!-- TextView for the progress label -->
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="3dp"
-        android:layout_marginEnd="-185dp"
-        android:text="@string/progress"
-        android:textColor="@color/white"
-        app:layout_constraintEnd_toStartOf="@+id/backgroundView"
-        app:layout_constraintTop_toBottomOf="@+id/progressBtn" />
-
-    <!-- TextView for the profile label -->
-    <TextView
-        android:id="@+id/textView5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="3dp"
-        android:layout_marginEnd="-275dp"
-        android:text="@string/profile"
-        android:textColor="@color/white"
-        app:layout_constraintEnd_toStartOf="@+id/backgroundView"
-        app:layout_constraintTop_toBottomOf="@+id/profileBtn" />
-
-    <!-- TextView for the break label -->
-    <TextView
-        android:id="@+id/textView6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="3dp"
-        android:layout_marginEnd="-370dp"
-        android:text="@string/Break"
-        android:textColor="@color/white"
-        app:layout_constraintEnd_toStartOf="@+id/backgroundView"
-        app:layout_constraintTop_toBottomOf="@+id/musicBtn" />
-
-    <!-- HorizontalScrollView for the widgets -->
-    <HorizontalScrollView
-        android:id="@+id/horizontalScrollView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:scrollbars="none"
-        android:layout_marginTop="50dp"
-        app:layout_constraintTop_toBottomOf="@id/goalsBtn"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center">
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:layout_margin="10dp">
+            <ImageButton
+                android:id="@+id/goalsBtn"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:background="@drawable/goals_btn_background"
+                android:src="@drawable/goal_svgrepo_com"/>
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/goals"
+                android:textColor="@color/white" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:layout_margin="10dp">
+            <ImageButton
+                android:id="@+id/progressBtn"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:background="@drawable/progress_btn_background"
+                android:src="@drawable/progress_svgrepo_com" />
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/progress"
+                android:textColor="@color/white" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:layout_margin="10dp">
+            <ImageButton
+                android:id="@+id/profileBtn"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:background="@drawable/profile_btn_background"
+                android:src="@drawable/profile_round_1342_svgrepo_com" />
+
+            <TextView
+                android:id="@+id/textView5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/profile"
+                android:textColor="@color/white" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="10dp"
+            android:gravity="center_horizontal">
+            <ImageButton
+                android:id="@+id/musicBtn"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:background="@drawable/music_btn_background"
+                android:src="@drawable/music_svgrepo_com"/>
+
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/Break"
+                android:textColor="@color/white"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- HorizontalScrollView for the widgets -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp">
 
             <!-- This is for the daily goal widget -->
             <androidx.cardview.widget.CardView
@@ -139,124 +125,105 @@
                 android:layout_width="369dp"
                 android:layout_height="266dp"
                 android:layout_margin="1dp"
-
                 app:cardBackgroundColor="#FF0000"
-                app:cardCornerRadius="10dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:cardCornerRadius="10dp">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center"
                     android:background="@drawable/graident_dailgoal">
 
-
-                    <ImageButton
-                        android:id="@+id/closeDailyGoal"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="15dp"
-                        android:layout_marginStart="1dp"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginEnd="45dp"
-                        android:background="#001E1F22"
-                        app:layout_constraintEnd_toStartOf="@+id/dailyGoalTextView"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:srcCompat="@drawable/close_svgrepo_com" />
 
                     <TextView
                         android:id="@+id/dailyGoalTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="117dp"
-                        android:layout_marginBottom="39dp"
                         android:text="@string/DailyGoal"
                         android:textColor="@color/white"
                         android:textSize="30sp"
                         android:textStyle="bold"
-                        app:layout_constraintBottom_toTopOf="@+id/minTxt"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        android:layout_marginTop="8dp" />
 
-                    <EditText
-                        android:id="@+id/minGoalEditText"
-                        android:layout_width="120dp"
-                        android:layout_height="30dp"
-                        android:layout_marginStart="100dp"
-                        android:layout_marginTop="116dp"
-                        android:layout_marginEnd="-40dp"
-                        android:paddingStart="10dp"
-                        android:inputType="number"
-                        android:background="@drawable/rounded_edittext"
-                        app:layout_constraintEnd_toStartOf="@id/maxgoalEditText"
-                        app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <EditText
-                        android:id="@+id/maxgoalEditText"
-                        android:layout_width="120dp"
-                        android:layout_height="30dp"
-                        android:layout_marginStart="100dp"
-                        android:layout_marginTop="116dp"
-                        android:layout_marginEnd="100dp"
-                        android:paddingStart="10dp"
-                        android:inputType="number"
-                        android:background="@drawable/rounded_edittext"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toEndOf="@id/minGoalEditText"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/minTxt"
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="34dp"
-                        android:layout_marginTop="40dp"
-                        android:layout_marginEnd="83dp"
-                        android:text="@string/MinGoal"
-                        android:textColor="@color/white"
-                        android:textSize="15dp"
-                        android:textStyle="bold"
-                        app:layout_constraintEnd_toStartOf="@+id/maxTxt"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/closeDailyGoal" />
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:layout_weight="1">
 
-                    <TextView
-                        android:id="@+id/maxTxt"
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:gravity="center"
+                            android:layout_marginRight="20dp">
+
+                            <TextView
+                                android:id="@+id/minTxt"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/MinGoal"
+                                android:textColor="@color/white"
+                                android:textSize="15dp"
+                                android:textStyle="bold"/>
+
+                            <EditText
+                                android:id="@+id/minGoalEditText"
+                                android:layout_width="120dp"
+                                android:layout_height="30dp"
+                                android:paddingStart="10dp"
+                                android:inputType="number"
+                                android:background="@drawable/rounded_edittext"/>
+
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:gravity="center">
+
+                            <TextView
+                                android:id="@+id/maxTxt"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/MaxGoal"
+                                android:textColor="@color/white"
+                                android:textSize="15dp"
+                                android:textStyle="bold" />
+                            <EditText
+                                android:id="@+id/maxgoalEditText"
+                                android:layout_width="120dp"
+                                android:layout_height="30dp"
+                                android:paddingStart="10dp"
+                                android:inputType="number"
+                                android:background="@drawable/rounded_edittext" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="87dp"
-                        android:layout_marginEnd="53dp"
-                        android:text="@string/MaxGoal"
-                        android:textColor="@color/white"
-                        android:textSize="15dp"
-                        android:textStyle="bold"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/minTxt"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:layout_weight="0.5">
+                        <Button
+                            android:id="@+id/saveBtn"
+                            android:layout_width="150dp"
+                            android:layout_height="wrap_content"
+                            android:text="@string/Save"
+                            android:textColor="@color/black"
+                            android:textStyle="bold"
+                            android:background="@drawable/rounded_homebtn"
+                            android:backgroundTint="#FFFFFF" />
+                    </LinearLayout>
 
-                    <Button
-                        android:id="@+id/saveBtn"
-                        android:layout_width="150dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="115dp"
-                        android:layout_marginTop="172dp"
-                        android:background="@drawable/rounded_homebtn"
-                        android:backgroundTint="#FFFFFF"
-                        android:textColor="@color/black"
-                        android:text="@string/Save"
-                        android:textStyle="bold"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
+                </LinearLayout>
             </androidx.cardview.widget.CardView>
 
             <!-- This is for the progress widget -->
@@ -265,198 +232,180 @@
                 android:layout_width="369dp"
                 android:layout_height="266dp"
                 android:layout_margin="1dp"
-
                 app:cardBackgroundColor="#FF0000"
                 app:cardCornerRadius="10dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                android:visibility="gone">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal"
                     android:background="@drawable/progress_gradient">
 
-
-                    <ImageButton
-                        android:id="@+id/closeProgeressBtn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="15dp"
-                        android:layout_marginStart="1dp"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginEnd="45dp"
-                        android:background="#001E1F22"
-                        app:layout_constraintEnd_toStartOf="@+id/progressTxt"
-                        app:layout_constraintHorizontal_bias="0.294"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:srcCompat="@drawable/close_svgrepo_com" />
 
                     <TextView
                         android:id="@+id/progressTxt"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="117dp"
-                        android:layout_marginBottom="39dp"
                         android:text="@string/Progress"
                         android:textColor="@color/white"
                         android:textSize="30dp"
                         android:textStyle="bold"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="20dp"/>
 
-                    <View
-                        android:id="@+id/line1"
-                        android:layout_width="250dp"
-                        android:layout_height="10dp"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="84dp"
-                        android:background="@drawable/rounded_line"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/progress_bar1_text"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="-5dp"
-                        android:text="Line 1"
-                        android:textColor="@color/white"
-                        app:layout_constraintStart_toEndOf="@id/line1"
-                        app:layout_constraintTop_toTopOf="@id/line1" />
+                        android:orientation="vertical"
+                        android:gravity="start"
+                        android:paddingTop="20dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="1">
 
-                    <View
-                        android:id="@+id/line2"
-                        android:layout_width="250dp"
-                        android:layout_height="10dp"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="20dp"
-                        android:background="@drawable/rounded_line2"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/line1" />
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/progress_bar2_text"
-                        android:layout_width="wrap_content"
+                            <View
+                                android:id="@+id/line1"
+                                android:layout_width="250dp"
+                                android:layout_height="10dp"
+                                android:background="@drawable/rounded_line" />
+
+                            <TextView
+                                android:id="@+id/progress_bar1_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Line 1"
+                                android:textColor="@color/white"
+                                android:layout_marginTop="-5dp"/>
+
+
+                        </LinearLayout>
+
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <View
+                                android:id="@+id/line2"
+                                android:layout_width="250dp"
+                                android:layout_height="10dp"
+                                android:background="@drawable/rounded_line2" />
+
+                            <TextView
+                                android:id="@+id/progress_bar2_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Line 2"
+                                android:textColor="@color/white" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <View
+                                android:id="@+id/line3"
+                                android:layout_width="250dp"
+                                android:layout_height="10dp"
+                                android:background="@drawable/rounded_line3" />
+
+                            <TextView
+                                android:id="@+id/progress_bar3_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Line 3"
+                                android:textColor="@color/white" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="-5dp"
-                        android:text="Line 2"
-                        android:textColor="@color/white"
-                        app:layout_constraintStart_toEndOf="@id/line2"
-                        app:layout_constraintTop_toTopOf="@id/line2" />
+                        android:orientation="horizontal"
+                        android:gravity="center_horizontal">
 
-                    <View
-                        android:id="@+id/line3"
-                        android:layout_width="250dp"
-                        android:layout_height="10dp"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="24dp"
-                        android:background="@drawable/rounded_line3"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/line2" />
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_margin="10dp"
+                            android:gravity="center_horizontal">
+                            <View
+                                android:id="@+id/view3"
+                                android:layout_width="29dp"
+                                android:layout_height="28dp"
+                                android:background="@drawable/circle_shapemin" />
+                            <TextView
+                                android:id="@+id/textView10"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/Min"
+                                android:textColor="@color/white"
+                                android:textSize="15dp"
+                                android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/progress_bar3_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="-5dp"
-                        android:text="Line 3"
-                        android:textColor="@color/white"
-                        app:layout_constraintStart_toEndOf="@id/line3"
-                        app:layout_constraintTop_toTopOf="@id/line3" />
+                        </LinearLayout>
 
-                    <View
-                        android:id="@+id/view3"
-                        android:layout_width="29dp"
-                        android:layout_height="28dp"
-                        android:layout_margin="8dp"
-                        android:background="@drawable/circle_shapemin"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.047"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.848" />
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_margin="10dp"
+                            android:gravity="center_horizontal">
 
-                    <View
-                        android:id="@+id/view4"
-                        android:layout_width="28dp"
-                        android:layout_height="28dp"
-                        android:layout_margin="8dp"
-                        android:background="@drawable/circle_shapeactual"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.096"
-                        app:layout_constraintStart_toEndOf="@+id/view3"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.848" />
+                            <View
+                                android:id="@+id/view4"
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
+                                android:background="@drawable/circle_shapeactual" />
+                            <TextView
+                                android:id="@+id/textView11"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/ActualTime"
+                                android:textColor="@color/white"
+                                android:textSize="15dp"
+                                android:textStyle="bold" />
 
-                    <View
-                        android:layout_width="29dp"
-                        android:layout_height="28dp"
-                        android:layout_margin="8dp"
-                        android:layout_marginEnd="2dp"
-                        android:background="@drawable/circle_shapemax"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.098"
-                        app:layout_constraintStart_toEndOf="@+id/view4"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.861" />
+                        </LinearLayout>
 
-                    <TextView
-                        android:id="@+id/textView10"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="16dp"
-                        android:text="@string/Min"
-                        android:textColor="@color/white"
-                        android:textSize="15dp"
-                        android:textStyle="bold"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.066"
-                        app:layout_constraintStart_toStartOf="parent" />
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_margin="10dp"
+                            android:gravity="center_horizontal">
 
-                    <TextView
-                        android:id="@+id/textView11"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="16dp"
-                        android:text="@string/ActualTime"
-                        android:textColor="@color/white"
-                        android:textSize="15dp"
-                        android:textStyle="bold"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.245"
-                        app:layout_constraintStart_toStartOf="parent" />
+                            <View
+                                android:layout_width="29dp"
+                                android:layout_height="28dp"
+                                android:background="@drawable/circle_shapemax" />
 
-                    <TextView
-                        android:id="@+id/textView12"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="16dp"
-                        android:text="@string/Max"
-                        android:textColor="@color/white"
-                        android:textSize="15sp"
-                        android:textStyle="bold"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.42"
-                        app:layout_constraintStart_toStartOf="parent" />
+                            <TextView
+                                android:id="@+id/textView12"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/Max"
+                                android:textColor="@color/white"
+                                android:textSize="15sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
 
+                    </LinearLayout>
 
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-
+                </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- This is for the profile widget --> <!-- This is for the profile widget -->
+            <!-- This is for the profile widget -->
             <androidx.cardview.widget.CardView
                 android:id="@+id/profilecardview"
                 android:layout_width="369dp"
@@ -464,137 +413,107 @@
                 android:layout_margin="1dp"
                 app:cardBackgroundColor="#FF0000"
                 app:cardCornerRadius="10dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                android:visibility="gone">
 
-
-                <androidx.constraintlayout.widget.ConstraintLayout
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal"
                     android:background="@drawable/graident_profile">
 
-
-                    <ImageButton
-                        android:id="@+id/closeProfileBtn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="15dp"
-                        android:layout_marginStart="1dp"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginEnd="45dp"
-                        android:background="#001E1F22"
-                        app:layout_constraintEnd_toStartOf="@+id/textView77"
-                        app:layout_constraintHorizontal_bias="0.017"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:srcCompat="@drawable/close_svgrepo_com"/>
 
                     <TextView
                         android:id="@+id/textView77"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="140dp"
-                        android:layout_marginBottom="39dp"
                         android:text="@string/Profile"
                         android:textColor="@color/white"
                         android:textSize="30dp"
                         android:textStyle="bold"
-                        app:layout_constraintBottom_toTopOf="@+id/fullname"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.043" />
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="10dp"/>
 
-                    <TextView
-                        android:id="@+id/fullNameTxt"
-                        android:layout_width="120dp"
-                        android:layout_height="40dp"
-                        android:layout_marginStart="100dp"
-                        android:layout_marginTop="96dp"
-                        android:layout_marginEnd="-40dp"
-                        android:padding="10dp"
-                        android:background="@drawable/rounded_edittext"
-                        app:layout_constraintEnd_toStartOf="@id/emaiTxt"
-                        app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/emaiTxt"
-                        android:layout_width="120dp"
-                        android:layout_height="40dp"
-                        android:layout_marginStart="100dp"
-                        android:layout_marginTop="96dp"
-                        android:layout_marginEnd="100dp"
-                        android:padding="10dp"
-                        android:background="@drawable/rounded_edittext"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toEndOf="@id/fullNameTxt"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/descriptionProfileTxt"
-                        android:layout_width="300dp"
-                        android:layout_height="73dp"
-                        android:layout_marginStart="34dp"
-                        android:layout_marginEnd="35dp"
-                        android:layout_marginBottom="16dp"
-                        android:padding="10dp"
-                        android:background="@drawable/rounded_edittext"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent" />
-
-                    <TextView
-                        android:id="@+id/fullname"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="34dp"
-                        android:layout_marginEnd="108dp"
-                        android:layout_marginBottom="12dp"
-                        android:text="@string/Name"
-                        android:textColor="@color/white"
-                        android:textSize="15dp"
-                        android:textStyle="bold"
-                        app:layout_constraintBottom_toTopOf="@+id/fullNameTxt"
-                        app:layout_constraintEnd_toStartOf="@+id/email"
-                        app:layout_constraintStart_toStartOf="parent" />
+                        android:orientation="horizontal"
+                        android:gravity="center">
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_marginRight="10dp">
+                            <TextView
+                                android:id="@+id/fullname"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/Name"
+                                android:textColor="@color/white"
+                                android:textSize="15dp"
+                                android:textStyle="bold"/>
+                            <TextView
+                                android:id="@+id/fullNameTxt"
+                                android:layout_width="120dp"
+                                android:layout_height="30dp"
+                                android:background="@drawable/rounded_edittext"
+                                android:textAlignment="center"/>
+                        </LinearLayout>
 
-                    <TextView
-                        android:id="@+id/bio"
-                        android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/email"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/Email"
+                                android:textColor="@color/white"
+                                android:textSize="15dp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/emaiTxt"
+                                android:layout_width="120dp"
+                                android:layout_height="30dp"
+                                android:background="@drawable/rounded_edittext"
+                                android:textAlignment="center"/>
+                        </LinearLayout>
+
+
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="34dp"
-                        android:layout_marginEnd="309dp"
-                        android:layout_marginBottom="15dp"
-                        android:text="@string/Bio"
-                        android:textColor="@color/white"
-                        android:textSize="15dp"
-                        android:textStyle="bold"
-                        app:layout_constraintBottom_toTopOf="@+id/descriptionProfileTxt"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent" />
-
-                    <TextView
-                        android:id="@+id/email"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="109dp"
-                        android:layout_marginEnd="114dp"
-                        android:layout_marginBottom="12dp"
-                        android:text="@string/Email"
-                        android:textColor="@color/white"
-                        android:textSize="15dp"
-                        android:textStyle="bold"
-                        app:layout_constraintBottom_toTopOf="@+id/emaiTxt"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="1.0"
-                        app:layout_constraintStart_toStartOf="parent" />
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:paddingTop="20dp">
 
 
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                        <TextView
+                            android:id="@+id/bio"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/Bio"
+                            android:textColor="@color/white"
+                            android:textSize="15dp"
+                            android:textStyle="bold" />
+                        
+                        <TextView
+                            android:id="@+id/descriptionProfileTxt"
+                            android:layout_width="300dp"
+                            android:layout_height="73dp"
+                            android:padding="10dp"
+                            android:background="@drawable/rounded_edittext" />
 
+                        
+                    </LinearLayout>
+                </LinearLayout>
             </androidx.cardview.widget.CardView>
 
             <!-- This is for the music widget -->
@@ -605,118 +524,88 @@
                 android:layout_margin="1dp"
                 app:cardBackgroundColor="#FFFFFF"
                 app:cardCornerRadius="10dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                android:visibility="gone">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal"
                     android:background="@drawable/graident_music">
 
-                    <ImageButton
-                        android:id="@+id/closeMusicBtn"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="15dp"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginEnd="45dp"
-                        android:background="#001E1F22"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:srcCompat="@drawable/close_svgrepo_com" />
+                        android:orientation="horizontal"
+                        android:layout_marginTop="8dp">
+                        <ImageButton
+                            android:id="@+id/imageButton6"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="#001E1F22"
+                            app:srcCompat="@drawable/music_notes_svgrepo_com"
+                            android:layout_marginLeft="20dp"/>
+
+                        <TextView
+                            android:id="@+id/textView7"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/Music"
+                            android:textColor="@color/white"
+                            android:textSize="30dp"
+                            android:textStyle="bold"
+                            android:layout_marginLeft="80dp"/>
+
+                    </LinearLayout>
 
 
-                    <TextView
-                        android:id="@+id/textView7"
-                        android:layout_width="wrap_content"
+
+
+                    <!-- LinearLayout for text and button -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="116dp"
-                        android:layout_marginTop="15dp"
-                        android:layout_marginEnd="117dp"
-                        android:text="@string/Music"
-                        android:textColor="@color/white"
-                        android:textSize="30dp"
-                        android:textStyle="bold"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:layout_marginTop="10dp"
+                        android:layout_weight="1">
 
+                        <TextView
+                            android:id="@+id/musicTxtView"
+                            android:layout_width="250dp"
+                            android:layout_height="35dp"
+                            android:padding="7dp"
+                            android:text="Your break waits you"
+                            android:textStyle="bold"
+                            android:background="@drawable/rounded_edittext"
+                            android:layout_marginRight="10dp"/>
 
-                    <TextView
-                        android:id="@+id/musicTxtView"
-                        android:layout_width="250dp"
-                        android:layout_height="35dp"
-                        android:layout_marginStart="1dp"
-                        android:layout_marginEnd="26dp"
-                        android:layout_marginBottom="116dp"
-                        android:text="Your break waits you"
-                        android:padding="7dp"
-                        android:textStyle="bold"
-                        android:background="@drawable/rounded_edittext"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.63"
-                        app:layout_constraintStart_toStartOf="parent" />
+                        <ImageButton
+                            android:id="@+id/ShuffleBtn"
+                            android:layout_width="60dp"
+                            android:layout_height="40dp"
+                            android:background="@drawable/rounded_homebtn"
+                            app:srcCompat="@drawable/shuffle_svgrepo_com"/>
+                    </LinearLayout>
 
-                    <ImageButton
-                        android:id="@+id/imageButton6"
-                        android:layout_width="wrap_content"
+                    <!-- LinearLayout for Start/Stop button -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="15dp"
-                        android:layout_marginStart="29dp"
-                        android:layout_marginTop="172dp"
-                        android:layout_marginEnd="322dp"
-                        android:layout_marginBottom="116dp"
-                        android:background="#001E1F22"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/closeMusicBtn"
-                        app:layout_constraintVertical_bias="0.336"
-                        app:srcCompat="@drawable/music_notes_svgrepo_com" />
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:layout_weight="0.5">
 
-                    <Button
-                        android:id="@+id/Start_StopBtn"
-                        android:layout_width="150dp"
-                        android:layout_height="40dp"
-                        android:layout_marginStart="106dp"
-                        android:layout_marginEnd="200dp"
-                        android:layout_marginBottom="56dp"
-                        android:background="@drawable/rounded_homebtn"
-                        android:text="@string/Start_Stop"
-                        android:textColor="@color/black"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent" />
+                        <Button
+                            android:id="@+id/Start_StopBtn"
+                            android:layout_width="150dp"
+                            android:layout_height="40dp"
+                            android:text="@string/Start_Stop"
+                            android:textColor="@color/black"
+                            android:background="@drawable/rounded_homebtn"/>
+                    </LinearLayout>
 
-                    <ImageButton
-                        android:id="@+id/ShuffleBtn"
-                        android:layout_width="60dp"
-                        android:layout_height="40dp"
-                        android:layout_marginStart="200dp"
-                        android:layout_marginEnd="2dp"
-                        android:layout_marginBottom="56dp"
-                        android:background="@drawable/rounded_homebtn"
-                        app:srcCompat="@drawable/shuffle_svgrepo_com"
-                        android:contentDescription="@string/Start_Stop"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent" />
-
-
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
+                </LinearLayout>
             </androidx.cardview.widget.CardView>
-
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </HorizontalScrollView>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+</LinearLayout>
