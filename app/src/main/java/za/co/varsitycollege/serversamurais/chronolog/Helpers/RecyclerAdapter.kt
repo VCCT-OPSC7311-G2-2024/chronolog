@@ -1,4 +1,5 @@
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -51,6 +52,21 @@ class RecyclerAdapter(private val context: Context, private var data: List<Notif
      */
     fun addItem(item: NotificationItem) {
         data = data + item
+        notifyDataSetChanged()
+    }
+
+    fun clearAllItems() {
+        data = emptyList()
+        notifyDataSetChanged()
+        Log.d("RecyclerAdapter", "All items cleared. Data size: ${data.size}")
+    }
+
+    /**
+     * Updates the data set and notifies the adapter that the data set has changed.
+     * @param newData The new list of NotificationItems to be displayed.
+     */
+    fun updateData(newData: List<NotificationItem>) {
+        data = newData
         notifyDataSetChanged()
     }
 

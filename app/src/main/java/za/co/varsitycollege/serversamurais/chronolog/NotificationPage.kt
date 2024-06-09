@@ -8,7 +8,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -30,6 +32,10 @@ class NotificationPage : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
 
+    private lateinit var clearAllBtn: Button
+
+    private lateinit var adapter: RecyclerAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -46,32 +52,44 @@ class NotificationPage : Fragment() {
  * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state as given here.
  * @return Return the View for the fragment's UI, or null.
  */
-override fun onCreateView(
-    inflater: LayoutInflater, container: ViewGroup?,
-    savedInstanceState: Bundle?
-): View? {
-    // Inflate the layout for this fragment
-    val view = inflater.inflate(R.layout.fragment_notification_page, container, false)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        // Inflate the layout for this fragment
+        val view = inflater.inflate(R.layout.fragment_notification_page, container, false)
 
-    // Initialize RecyclerView and set its layout manager
-    val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
-    recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        // Initialize RecyclerView and set its layout manager
+        val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-    // Get a reference to the shared ViewModel
-    val model: SharedViewModel by activityViewModels()
-
-    // Log the current data and observe changes
-    Log.d("NotificationPage", "Current data: ${model.data.value}")
-    model.data.observe(viewLifecycleOwner) { itemList ->
-        Log.d("NotificationPage", "Data observed: $itemList")
-        // Create a new adapter with the updated data and set it on the RecyclerView
-        val adapter = RecyclerAdapter(requireContext(), itemList)
-        model.adapter.value = adapter
+        // Initialize the adapter with an empty list
+        adapter = RecyclerAdapter(requireContext(), mutableListOf())
         recyclerView.adapter = adapter
+
+        // Initialize UI components
+        clearAllBtn = view.findViewById(R.id.clearAllBtn)
+
+        // Set click listener for the clear all button
+        clearAllBtn.setOnClickListener {
+            adapter.clearAllItems()
+            Toast.makeText(requireContext(), "All notifications cleared", Toast.LENGTH_SHORT).show()
+        }
+
+        // Get a reference to the shared ViewModel
+        val model: SharedViewModel by activityViewModels()
+
+        // Log the current data and observe changes
+        Log.d("NotificationPage", "Current data: ${model.data.value}")
+        model.data.observe(viewLifecycleOwner) { itemList ->
+            Log.d("NotificationPage", "Data observed: $itemList")
+            // Update the adapter with the new data
+            adapter.updateData(itemList)
+        }
+
+        return view
     }
 
-    return view
-}
 
 
     companion object {

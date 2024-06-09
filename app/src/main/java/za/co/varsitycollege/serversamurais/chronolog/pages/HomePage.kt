@@ -273,30 +273,21 @@ class HomePage : Fragment(), FirebaseHelper.FirebaseOperationListener {
     private fun organizeDurationData(userId: String) {
 
         firebaseHelper.getTotalDuration(userId) { totalDuration ->
-            val totalHours = totalDuration.toFloat()
 
-            // Calculate the percentage of total hours compared to the maximum
-            var percentage = (totalHours / 100) * 100
-
-            if (percentage == 0.0f) {
-                percentage = 1.0f // Set a default percentage if the calculation is zero
-            }
-
-            var progressWidth = (250 * (percentage / 100)).toInt()
+            var progressWidth = calculateProgressWidth(totalDuration)
 
             // Constrain the progress width to be at most 250dp
             progressWidth = progressWidth.coerceAtMost(dpToPx(250))
 
             // Ensure a minimum progress width if it's zero
-            if (progressWidth == 0) {
-                progressWidth = dpToPx(1) // Set a minimum progress width in dp
-            }
+            val adjustedProgressWidth = if (progressWidth == 0) dpToPx(1) else progressWidth
 
             // Set the width of progressBar2 dynamically
             val params = line2View.layoutParams
-            params.width = progressWidth
+            params.width = adjustedProgressWidth
             line2View.layoutParams = params
 
+            // Update the progressBar2 text
             progressBar2Txt.text = if (totalDuration == 0) {
                 "0 minutes"
             } else {
@@ -304,6 +295,8 @@ class HomePage : Fragment(), FirebaseHelper.FirebaseOperationListener {
             }
         }
     }
+
+
 
 
     /**
