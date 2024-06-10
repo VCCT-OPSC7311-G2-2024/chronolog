@@ -2,16 +2,19 @@ package za.co.varsitycollege.serversamurais.chronolog
 
 import RecyclerAdapter
 import SharedViewModel
+import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
@@ -22,6 +25,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import za.co.varsitycollege.serversamurais.chronolog.Helpers.FirebaseHelper
 import za.co.varsitycollege.serversamurais.chronolog.adapters.NotiAdapter
+import za.co.varsitycollege.serversamurais.chronolog.databinding.FragmentNotificationPageBinding
 import za.co.varsitycollege.serversamurais.chronolog.model.NotificationItem
 
 
@@ -40,10 +44,18 @@ class NotificationPage : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
 
-    private lateinit var dbRef: DatabaseReference
+    //private lateinit var dbRef: DatabaseReference
     private lateinit var notificationRecyclerView: RecyclerView
     private lateinit var notiArrayList: ArrayList<NotificationItem>
     private lateinit var firebaseHelper: FirebaseHelper
+    private lateinit var adapter: NotiAdapter
+    var dbRef:DatabaseReference? = null
+    var eventListener: ValueEventListener? = null
+    private lateinit var binding: FragmentNotificationPageBinding
+
+
+    private val database = FirebaseDatabase.getInstance("https://chronolog-db9b8-default-rtdb.europe-west1.firebasedatabase.app/")
+    private var databaseNotificationRef = database.getReference("notifications")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,51 +78,74 @@ class NotificationPage : Fragment() {
     inflater: LayoutInflater, container: ViewGroup?,
     savedInstanceState: Bundle?
 ): View? {
-    // Inflate the layout for this fragment
-    val view = inflater.inflate(R.layout.fragment_notification_page, container, false)
-    notificationRecyclerView = view.findViewById(R.id.recyclerView)
-    notificationRecyclerView.layoutManager = LinearLayoutManager(context)
-    notificationRecyclerView.setHasFixedSize(true)
+    binding = FragmentNotificationPageBinding.inflate(inflater, container, false)
 
-    notiArrayList = arrayListOf<NotificationItem>()
-    getUserNotification()
+    val gridLayoutManager = GridLayoutManager(context, 1, LinearLayoutManager.VERTICAL, false)
+    binding.recyclerView.layoutManager = gridLayoutManager
 
-    return view
+    notiArrayList = arrayListOf()
+    adapter = NotiAdapter(requireContext(), notiArrayList)
+    binding.recyclerView.adapter = adapter
+
+    val user = FirebaseAuth.getInstance().currentUser
+    user?.let {
+        dbRef = database.getReference("notifications/${it.uid}")
+    }
+
+    var builder = AlertDialog.Builder(requireContext())
+    builder.setCancelable(false)
+    builder.setView(R.layout.fragment_notification_page)
+    var dialog = builder.create()
+    dialog.show()
+
+    eventListener = dbRef!!.addValueEventListener(object : ValueEventListener {
+        override fun onDataChange(snapshot: DataSnapshot) {
+            notiArrayList.clear()
+            for (snap in snapshot.children) {
+                val noti = snap.getValue(String::class.java)?.let { NotificationItem(it) }
+                if (noti != null) {
+                    notiArrayList.add(noti)
+                }
+            }
+            adapter.notifyDataSetChanged()
+            dialog.dismiss()
+        }
+
+        override fun onCancelled(error: DatabaseError) {
+            dialog.dismiss()
+            Toast.makeText(requireContext(), "Error: ${error.message}", Toast.LENGTH_SHORT).show()
+        }
+    })
+
+    return binding.root
 }
 
-    private val database =
-        FirebaseDatabase.getInstance("https://chronolog-db9b8-default-rtdb.europe-west1.firebasedatabase.app/")
-    private var databaseNotificationRef = database.getReference("notifications")
-    fun getUserNotification() {
-        val userId = FirebaseAuth.getInstance().currentUser?.uid
-        if (userId != null) {
-            Log.d("NotificationPage", "User ID: $userId")
-            databaseNotificationRef =
-                FirebaseDatabase.getInstance().getReference("notifications/$userId")
-            databaseNotificationRef.addValueEventListener(object : ValueEventListener {
 
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    if (snapshot.exists()) {
-                        Log.d("NotificationPage", "Snapshot exists")
-                        notiArrayList.clear()
-                        for (userSnapshot in snapshot.children) {
-                            val notification = userSnapshot.getValue(NotificationItem::class.java)
-                            notiArrayList.add(notification!!)
-                        }
-                        notificationRecyclerView.adapter = NotiAdapter(notiArrayList)
-                    } else {
-                        Log.d("NotificationPage", "Snapshot does not exist")
-                    }
-                }
+//    private fun fetchUserNotifications(userID: String, newNotification: MutableList<String>, adapter: ArrayAdapter<String> ) {
+//        databaseNotificationRef.child(userID)
+//            .addValueEventListener(object : ValueEventListener {
+//                override fun onDataChange(dataSnapshot: DataSnapshot) {
+//                    newNotification.clear()
+//                    for (postSnapshot in dataSnapshot.children) {
+//                        val date = postSnapshot.child("date").getValue(String::class.java)
+//                        val title = postSnapshot.child("title").getValue(String::class.java)
+//                        if (date != null && title != null) {
+//                            val notification = NotificationItem(title, date)
+//                            newNotification.add(notification.toString())
+//                        }
+//                    }
+//                    adapter.notifyDataSetChanged()
+//                }
+//
+//                    override fun onCancelled(error: DatabaseError) {
+//                        Log.e("NotificationPage", "Database error: ${error.message}")
+//                    }
+//                })
+//        }
 
-                override fun onCancelled(error: DatabaseError) {
-                    Log.e("NotificationPage", "Database error: ${error.message}")
-                }
-            })
-        } else {
-            Log.d("NotificationPage", "User ID is null")
-        }
-    }
+//   private fun updateRecyclerView(notifications: List<NotificationItem>) {
+//    notificationRecyclerView.adapter = NotiAdapter(ArrayList(notifications))
+//}
 
 
 

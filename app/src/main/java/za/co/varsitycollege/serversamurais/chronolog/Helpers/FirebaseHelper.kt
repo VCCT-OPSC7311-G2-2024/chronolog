@@ -691,28 +691,28 @@ class FirebaseHelper(private val listener: FirebaseOperationListener) {
         }
     }
 
-    fun getUserNotification() {
-        val userId = FirebaseAuth.getInstance().currentUser?.uid
-        if (userId != null) {
-            databaseNotificationRef =
-                FirebaseDatabase.getInstance().getReference("notifications/$userId")
-            databaseNotificationRef.addValueEventListener(object : ValueEventListener {
-
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    if (snapshot.exists()) {
-                        notiArrayList.clear()
-                        for (userSnapshot in snapshot.children) {
-                            val notification = userSnapshot.getValue(NotificationItem::class.java)
-                            notiArrayList.add(notification!!)
-                        }
-                        notificationRecyclerView.adapter = NotiAdapter(notiArrayList)
-                    }
-                }
-
-                override fun onCancelled(error: DatabaseError) {
-                    // Handle possible errors.
-                }
-            })
-        }
-    }
+//    fun getUserNotification() {
+//        val userId = FirebaseAuth.getInstance().currentUser?.uid
+//        if (userId != null) {
+//            databaseNotificationRef =
+//                FirebaseDatabase.getInstance().getReference("notifications/$userId")
+//            databaseNotificationRef.addValueEventListener(object : ValueEventListener {
+//
+//                override fun onDataChange(snapshot: DataSnapshot) {
+//                    if (snapshot.exists()) {
+//                        notiArrayList.clear()
+//                        for (userSnapshot in snapshot.children) {
+//                            val notification = userSnapshot.getValue(NotificationItem::class.java)
+//                            notiArrayList.add(notification!!)
+//                        }
+//                        notificationRecyclerView.adapter = NotiAdapter(notiArrayList)
+//                    }
+//                }
+//
+//                override fun onCancelled(error: DatabaseError) {
+//                    // Handle possible errors.
+//                }
+//            })
+//        }
+//    }
 }

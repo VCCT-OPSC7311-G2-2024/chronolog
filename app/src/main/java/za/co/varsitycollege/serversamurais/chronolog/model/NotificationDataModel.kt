@@ -1,6 +1,9 @@
 package za.co.varsitycollege.serversamurais.chronolog.model
 
+import java.lang.reflect.Constructor
+
 data class NotificationItem(
-    val title: String,
-    val date: String
+    var title: String = "",
+    var date: String = ""
 )
+

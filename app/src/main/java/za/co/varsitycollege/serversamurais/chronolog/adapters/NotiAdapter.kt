@@ -1,5 +1,6 @@
 package za.co.varsitycollege.serversamurais.chronolog.adapters
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,11 +9,11 @@ import androidx.recyclerview.widget.RecyclerView
 import za.co.varsitycollege.serversamurais.chronolog.R
 import za.co.varsitycollege.serversamurais.chronolog.model.NotificationItem
 
-class NotiAdapter(private val notiList: ArrayList<NotificationItem>) : RecyclerView.Adapter<NotiAdapter.MyViewHolder>(){
+class NotiAdapter(private val context: Context, private val notiList: ArrayList<NotificationItem>) : RecyclerView.Adapter<NotiAdapter.MyViewHolder>(){
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.notification_list, parent, false)
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.fragment_notification_page, parent, false)
         return MyViewHolder(itemView)
 
     }
