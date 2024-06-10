@@ -170,18 +170,29 @@ class HomePage : Fragment(), FirebaseHelper.FirebaseOperationListener {
 
     private fun fetchAndUpdateProgressBars() {
         val userId = firebaseHelper.getUserId()
-        val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+        val currentDate = Date()
+        val oneMonthAgo = Calendar.getInstance().apply {
+            add(Calendar.MONTH, -1)
+        }.time
 
-        firebaseHelper.getGoalValues(userId, currentDate) { min, max ->
-            firebaseHelper.getTotalTaskHours(userId, currentDate) { actual ->
-                Log.d("HomePage", "Min: $min, Max: $max, Actual: $actual") // Log the values for debugging
+        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val currentDateStr = sdf.format(currentDate)
+        val oneMonthAgoStr = sdf.format(oneMonthAgo)
+
+        firebaseHelper.getGoalValuesForLastMonth(userId, oneMonthAgoStr, currentDateStr) { minGoals, maxGoals ->
+            firebaseHelper.getTotalTaskHoursForLastMonth(userId, oneMonthAgo.time, currentDate.time) { actualHours ->
+                val averageMinGoal = if (minGoals.isNotEmpty()) minGoals.average().toInt() else 0
+                val averageMaxGoal = if (maxGoals.isNotEmpty()) maxGoals.average().toInt() else 0
+                val averageActualHours = if (actualHours.isNotEmpty()) actualHours.average().toInt() else 0
+
+                Log.d("HomePage", "Avg Min: $averageMinGoal, Avg Max: $averageMaxGoal, Avg Actual: $averageActualHours") // Log the values for debugging
 
                 val maxProgressWidthPx = dpToPx(MAX_PROGRESS_WIDTH_DP)
 
                 // Assuming min and max are in hours, convert them to seconds
-                val minInSeconds = min * 3600
-                val maxInSeconds = max * 3600
-                val actualInSeconds = actual
+                val minInSeconds = averageMinGoal * 3600
+                val maxInSeconds = averageMaxGoal * 3600
+                val actualInSeconds = averageActualHours
 
                 // Find the largest value among min, max, and actual
                 val largestValue = maxOf(minInSeconds, maxInSeconds, actualInSeconds)

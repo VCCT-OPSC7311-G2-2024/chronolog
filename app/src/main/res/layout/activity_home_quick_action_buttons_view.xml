@@ -230,8 +230,8 @@
             <!-- This is for the progress widget -->
             <androidx.cardview.widget.CardView
                 android:id="@+id/progressCardView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="369dp"
+                android:layout_height="266dp"
                 android:layout_margin="1dp"
                 app:cardBackgroundColor="#FF0000"
                 app:cardCornerRadius="10dp"

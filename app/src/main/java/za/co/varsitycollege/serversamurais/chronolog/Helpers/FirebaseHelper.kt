@@ -519,22 +519,58 @@ class FirebaseHelper(private val listener: FirebaseOperationListener) {
     }
 
 
-    fun getGoalValues(userId: String, date: String, onGoalsReceived: (Int, Int) -> Unit) {
-        databaseGoalsReference.child(userId).orderByChild("date").equalTo(date)
-            .addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    for (goalSnapshot in snapshot.children) {
-                        val goal = goalSnapshot.getValue(Goal::class.java)
-                        goal?.let {
-                            onGoalsReceived(it.minGoal, it.maxGoal)
+    fun getGoalValuesForLastMonth(userId: String, startDate: String, endDate: String, callback: (List<Int>, List<Int>) -> Unit) {
+        val goalsRef = databaseGoalsReference.child(userId)
+        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val startTimestamp = sdf.parse(startDate)?.time ?: 0
+        val endTimestamp = sdf.parse(endDate)?.time ?: Long.MAX_VALUE
+
+        goalsRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val minGoals = mutableListOf<Int>()
+                val maxGoals = mutableListOf<Int>()
+                for (goalSnapshot in snapshot.children) {
+                    val goal = goalSnapshot.getValue(Goal::class.java)
+                    if (goal != null && goal.date != null) {
+                        val goalDateTimestamp = sdf.parse(goal.date)?.time
+                        if (goalDateTimestamp != null && goalDateTimestamp in startTimestamp..endTimestamp) {
+                            minGoals.add(goal.minGoal)
+                            maxGoals.add(goal.maxGoal)
                         }
                     }
                 }
+                callback(minGoals, maxGoals)
+            }
 
-                override fun onCancelled(error: DatabaseError) {
-                    Log.e("FirebaseHelper", "Error fetching goals: ${error.message}")
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("FirebaseHelper", "Error fetching goals: ${error.message}")
+                callback(emptyList(), emptyList())
+            }
+        })
+    }
+
+    fun getTotalTaskHoursForLastMonth(userId: String, startDate: Long, endDate: Long, callback: (List<Int>) -> Unit) {
+        val tasksRef = databaseTasksReference.child(userId)
+        tasksRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val taskDurations = mutableListOf<Int>()
+                for (taskSnapshot in snapshot.children) {
+                    val task = taskSnapshot.getValue(Task::class.java)
+                    if (task != null && task.date != null) {
+                        val taskDateTimestamp = task.date.time
+                        if (taskDateTimestamp in startDate..endDate) {
+                            taskDurations.add(task.duration)
+                        }
+                    }
                 }
-            })
+                callback(taskDurations)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("FirebaseHelper", "Error fetching tasks: ${error.message}")
+                callback(emptyList())
+            }
+        })
     }
 
 
@@ -545,6 +581,7 @@ class FirebaseHelper(private val listener: FirebaseOperationListener) {
         tasksRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 var totalDuration = 0
+                var count = 0
                 for (taskSnapshot in snapshot.children) {
                     val task = taskSnapshot.getValue(Task::class.java)
                     Log.d("FirebaseHelper", "Fetched Task: ${task?.date} ${task?.duration}")
