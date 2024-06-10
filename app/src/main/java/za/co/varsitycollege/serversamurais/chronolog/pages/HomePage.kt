@@ -2,6 +2,7 @@ package za.co.varsitycollege.serversamurais.chronolog.pages
 
 import RecyclerAdapter
 import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -17,19 +18,13 @@ import android.media.MediaPlayer
 import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
 import za.co.varsitycollege.serversamurais.chronolog.Helpers.FirebaseHelper
 import za.co.varsitycollege.serversamurais.chronolog.R
 import za.co.varsitycollege.serversamurais.chronolog.databinding.ActivityHomeQuickActionButtonsViewBinding
 import za.co.varsitycollege.serversamurais.chronolog.model.NotificationItem
 import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Locale
+import java.util.*
 
-/**
- * HomePage is a Fragment that represents the home page of the application.
- * It contains methods for displaying and updating user progress, daily goals, and recent activities.
- */
 class HomePage : Fragment(), FirebaseHelper.FirebaseOperationListener {
 
     // UI components
@@ -67,13 +62,10 @@ class HomePage : Fragment(), FirebaseHelper.FirebaseOperationListener {
     private lateinit var binding: ActivityHomeQuickActionButtonsViewBinding
     private lateinit var db: DatabaseReference
 
-    /**
-     * Called to have the fragment instantiate its user interface view.
-     * @param inflater The LayoutInflater object that can be used to inflate any views in the fragment.
-     * @param container If non-null, this is the parent view that the fragment's UI should be attached to.
-     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state as given here.
-     * @return Return the View for the fragment's UI, or null.
-     */
+    // Define constants
+    private val MAX_PROGRESS_WIDTH_DP = 250 // Maximum width of the progress bar in dp
+    private val MAX_GOAL_LIMIT = 200000 // Example maximum goal, adjust as needed
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -148,7 +140,7 @@ class HomePage : Fragment(), FirebaseHelper.FirebaseOperationListener {
         }
 
         view.findViewById<ImageButton>(R.id.progressBtn).setOnClickListener {
-            showUserProgress()
+            fetchAndUpdateProgressBars()
             showProgressCard()
         }
 
@@ -175,6 +167,59 @@ class HomePage : Fragment(), FirebaseHelper.FirebaseOperationListener {
 
         return view
     }
+
+    private fun fetchAndUpdateProgressBars() {
+        val userId = firebaseHelper.getUserId()
+        val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+
+        firebaseHelper.getGoalValues(userId, currentDate) { min, max ->
+            firebaseHelper.getTotalTaskHours(userId, currentDate) { actual ->
+                Log.d("HomePage", "Min: $min, Max: $max, Actual: $actual") // Log the values for debugging
+
+                val maxProgressWidthPx = dpToPx(MAX_PROGRESS_WIDTH_DP)
+
+                // Find the largest value among min, max, and actual
+                val largestValue = maxOf(min, max, actual / 60)
+
+                // Calculate proportional widths based on the largest value
+                val minWidthPx = (min.toFloat() / largestValue) * maxProgressWidthPx
+                val actualWidthPx = (actual.toFloat() / (largestValue * 60)) * maxProgressWidthPx
+                val maxWidthPx = (max.toFloat() / largestValue) * maxProgressWidthPx
+
+                updateProgressBar(line1View, minWidthPx.toInt())
+                updateProgressBar(line2View, actualWidthPx.toInt())
+                updateProgressBar(line3View, maxWidthPx.toInt())
+
+                progressBar1Txt.text = formatTime(min * 60) // Convert min to seconds
+                progressBar2Txt.text = formatTime(actual) // Actual is already in seconds
+                progressBar3Txt.text = formatTime(max * 60) // Convert max to seconds
+            }
+        }
+    }
+
+    private fun dpToPx(dp: Int): Int {
+        val density = resources.displayMetrics.density
+        return (dp * density).toInt()
+    }
+
+    private fun updateProgressBar(view: View, targetWidth: Int) {
+        val animator = ValueAnimator.ofInt(view.layoutParams.width, targetWidth)
+        animator.addUpdateListener { valueAnimator ->
+            val layoutParams = view.layoutParams
+            layoutParams.width = valueAnimator.animatedValue as Int
+            view.layoutParams = layoutParams
+        }
+        animator.duration = 500
+        animator.start()
+    }
+
+    private fun formatTime(secondsTotal: Int): String {
+        val hours = secondsTotal / 3600
+        val minutes = (secondsTotal % 3600) / 60
+        val seconds = secondsTotal % 60
+        return String.format("%02d:%02d:%02d", hours, minutes, seconds)
+    }
+
 
     /**
      * Updates the greeting message based on the time of the day.
@@ -223,136 +268,6 @@ class HomePage : Fragment(), FirebaseHelper.FirebaseOperationListener {
     }
 
     /**
-     * Shows the user's progress in the progress CardView.
-     */
-    private fun showUserProgress() {
-        val userId = firebaseHelper.getUserId()
-
-        organizeDurationData(userId)
-        organizeMinGoalData(userId)
-        organizeMaxGoalData(userId)
-    }
-
-    /**
-     * Calculates the width of the progress bar based on the goal.
-     * @param goal The goal to be used for the calculation.
-     * @return The width of the progress bar.
-     */
-    private fun calculateProgressWidth(goal: Int): Int {
-        val maxProgressWidth = 250 // Maximum width of the progress bar in dp
-        val percentage = (goal.toFloat() / 100) * 100
-        return (maxProgressWidth * (percentage / 100)).toInt()
-    }
-
-    /**
-     * Converts dp to pixels.
-     * @param dp The value in dp to be converted to pixels.
-     * @return The value in pixels.
-     */
-    private fun dpToPx(dp: Int): Int {
-        val scale = resources.displayMetrics.density
-        return (dp * scale + 0.5f).toInt()
-    }
-
-    /**
-     * Organizes the duration data and updates the UI.
-     * @param userId The ID of the user whose data is to be organized.
-     */
-    private fun organizeDurationData(userId: String) {
-        firebaseHelper.getTotalDuration(userId) { totalDuration ->
-
-            var progressWidth = calculateProgressWidth(totalDuration)
-
-            // Constrain the progress width to be at most 250dp
-            progressWidth = progressWidth.coerceAtMost(dpToPx(250))
-
-            // Ensure a minimum progress width if it's zero
-            val adjustedProgressWidth = if (progressWidth == 0) dpToPx(1) else progressWidth
-
-            // Set the width of progressBar2 dynamically
-            val params = line2View.layoutParams
-            params.width = adjustedProgressWidth
-            line2View.layoutParams = params
-
-            // Update the progressBar2 text
-            progressBar2Txt.text = if (totalDuration == 0) {
-                "0 minutes"
-            } else {
-                (totalDuration / 60).toString() + " minutes"
-            }
-        }
-    }
-
-
-
-
-    /**
-     * Organizes the minimum goal data and updates the UI.
-     * @param userId The ID of the user whose data is to be organized.
-     */
-    private fun organizeMinGoalData(userId: String) {
-        firebaseHelper.getMinGoal(userId) { minGoal ->
-            // Ensure minGoal is within a reasonable range
-            val validMinGoal = if (minGoal > 200000) 0 else minGoal
-
-            // Calculate progress for progressBar1
-            val minProgressWidth = calculateProgressWidth(validMinGoal)
-
-            // Set the width of progressBar1 dynamically
-            val params = line1View.layoutParams
-
-            // Ensure a minimum progress width if it's zero
-            val adjustedMinProgressWidth = if (minProgressWidth == 0) dpToPx(1) else minProgressWidth
-            params.width = adjustedMinProgressWidth.coerceAtMost(dpToPx(250))
-            line1View.layoutParams = params
-
-            // Update the progressBar1 text
-            progressBar1Txt.text = if (validMinGoal > 20000) {
-                "0 minutes"
-            } else {
-                "$validMinGoal minutes"
-            }
-        }
-    }
-
-    /**
-     * Organizes the maximum goal data and updates the UI.
-     * @param userId The ID of the user whose data is to be organized.
-     */
-    private fun organizeMaxGoalData(userId: String) {
-        firebaseHelper.getMaxGoal(userId) { maxGoal ->
-            // Ensure maxGoal is within a reasonable range
-            val validMaxGoal = if (maxGoal < 0) 0 else maxGoal
-
-            // Calculate progress for progressBar3
-            val maxProgressWidth = calculateProgressWidth(validMaxGoal)
-
-            // Set the width of progressBar3 dynamically
-            val params = line3View.layoutParams
-
-            // Ensure a minimum progress width if it's zero
-            val adjustedMaxProgressWidth = if (maxProgressWidth == 0) dpToPx(1) else maxProgressWidth
-            params.width = adjustedMaxProgressWidth.coerceAtMost(dpToPx(250))
-            line3View.layoutParams = params
-
-            // Update the progressBar3 text
-            progressBar3Txt.text = "$validMaxGoal minutes"
-        }
-    }
-
-    /**
-     * Formats the time in seconds to a string in the format "HH:mm:ss".
-     * @param secondsTotal The total time in seconds.
-     * @return The formatted time string.
-     */
-    private fun formatTime(secondsTotal: Int): String {
-        val hours = secondsTotal / 3600
-        val minutes = (secondsTotal % 3600) / 60
-        val seconds = secondsTotal % 60
-        return String.format("%02d:%02d:%02d", hours, minutes, seconds)
-    }
-
-    /**
      * Updates the user's goals in Firebase and displays a success message.
      */
     private fun updateGoals() {
@@ -376,6 +291,7 @@ class HomePage : Fragment(), FirebaseHelper.FirebaseOperationListener {
         R.raw.songfour,
         R.raw.songfive
     )
+
     private fun toggleMusicPlay() {
         if (isPlaying) {
             stopMusic()
