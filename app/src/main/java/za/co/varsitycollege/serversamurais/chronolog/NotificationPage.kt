@@ -14,6 +14,14 @@ import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import za.co.varsitycollege.serversamurais.chronolog.Helpers.FirebaseHelper
+import za.co.varsitycollege.serversamurais.chronolog.adapters.NotiAdapter
 import za.co.varsitycollege.serversamurais.chronolog.model.NotificationItem
 
 
@@ -32,9 +40,10 @@ class NotificationPage : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
 
-    private lateinit var clearAllBtn: Button
-
-    private lateinit var adapter: RecyclerAdapter
+    private lateinit var dbRef: DatabaseReference
+    private lateinit var notificationRecyclerView: RecyclerView
+    private lateinit var notiArrayList: ArrayList<NotificationItem>
+    private lateinit var firebaseHelper: FirebaseHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,6 +51,7 @@ class NotificationPage : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+
     }
 
 
@@ -52,42 +62,54 @@ class NotificationPage : Fragment() {
  * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state as given here.
  * @return Return the View for the fragment's UI, or null.
  */
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_notification_page, container, false)
+   override fun onCreateView(
+    inflater: LayoutInflater, container: ViewGroup?,
+    savedInstanceState: Bundle?
+): View? {
+    // Inflate the layout for this fragment
+    val view = inflater.inflate(R.layout.fragment_notification_page, container, false)
+    notificationRecyclerView = view.findViewById(R.id.recyclerView)
+    notificationRecyclerView.layoutManager = LinearLayoutManager(context)
+    notificationRecyclerView.setHasFixedSize(true)
 
-        // Initialize RecyclerView and set its layout manager
-        val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+    notiArrayList = arrayListOf<NotificationItem>()
+    getUserNotification()
 
-        // Initialize the adapter with an empty list
-        adapter = RecyclerAdapter(requireContext(), mutableListOf())
-        recyclerView.adapter = adapter
+    return view
+}
 
-        // Initialize UI components
-        clearAllBtn = view.findViewById(R.id.clearAllBtn)
+    private val database =
+        FirebaseDatabase.getInstance("https://chronolog-db9b8-default-rtdb.europe-west1.firebasedatabase.app/")
+    private var databaseNotificationRef = database.getReference("notifications")
+    fun getUserNotification() {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid
+        if (userId != null) {
+            Log.d("NotificationPage", "User ID: $userId")
+            databaseNotificationRef =
+                FirebaseDatabase.getInstance().getReference("notifications/$userId")
+            databaseNotificationRef.addValueEventListener(object : ValueEventListener {
 
-        // Set click listener for the clear all button
-        clearAllBtn.setOnClickListener {
-            adapter.clearAllItems()
-            Toast.makeText(requireContext(), "All notifications cleared", Toast.LENGTH_SHORT).show()
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if (snapshot.exists()) {
+                        Log.d("NotificationPage", "Snapshot exists")
+                        notiArrayList.clear()
+                        for (userSnapshot in snapshot.children) {
+                            val notification = userSnapshot.getValue(NotificationItem::class.java)
+                            notiArrayList.add(notification!!)
+                        }
+                        notificationRecyclerView.adapter = NotiAdapter(notiArrayList)
+                    } else {
+                        Log.d("NotificationPage", "Snapshot does not exist")
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Log.e("NotificationPage", "Database error: ${error.message}")
+                }
+            })
+        } else {
+            Log.d("NotificationPage", "User ID is null")
         }
-
-        // Get a reference to the shared ViewModel
-        val model: SharedViewModel by activityViewModels()
-
-        // Log the current data and observe changes
-        Log.d("NotificationPage", "Current data: ${model.data.value}")
-        model.data.observe(viewLifecycleOwner) { itemList ->
-            Log.d("NotificationPage", "Data observed: $itemList")
-            // Update the adapter with the new data
-            adapter.updateData(itemList)
-        }
-
-        return view
     }
 
 

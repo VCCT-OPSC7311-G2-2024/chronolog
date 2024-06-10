@@ -643,22 +643,24 @@ private fun updateTimer() {
  * Sets up the settings button.
  */
 private fun setupSettingsButton() {
-    val model: SharedViewModel by activityViewModels()
+    val recyclerView = view?.findViewById<RecyclerView>(R.id.recyclerView)
+    recyclerView?.layoutManager = LinearLayoutManager(requireContext())
 
     val userId = firebaseHelper.getUserId()
     Log.e("HomePage", "User ID: $userId")
+
     firebaseHelper.fetchTasks(userId) { tasks ->
-        // Clear existing data
-        model.data.value?.clear()
-        // Add new data
-        tasks.forEach { task ->
-            val newItem = NotificationItem(task.name, task.duration.toString())
-            // Use newItem here
-            model.data.value?.add(newItem)
-        }
-        model.adapter.value?.notifyDataSetChanged()
+        // Create a new list of NotificationItems
+        val notificationItems = tasks.map { task ->
+            NotificationItem(task.name, task.duration.toString())
+        }.toMutableList()
+
+        // Set up the adapter with the new data
+        val adapter = RecyclerAdapter(requireContext(), notificationItems)
+        recyclerView?.adapter = adapter
     }
 }
+
 
 /**
  * Toggles the visibility of the task details section.

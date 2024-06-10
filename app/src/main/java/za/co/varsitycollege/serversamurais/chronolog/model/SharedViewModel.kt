@@ -1,12 +1,15 @@
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import za.co.varsitycollege.serversamurais.chronolog.Helpers.FirebaseHelper
 import za.co.varsitycollege.serversamurais.chronolog.model.NotificationItem
 
 class SharedViewModel : ViewModel() {
     val data: MutableLiveData<MutableList<NotificationItem>> = MutableLiveData(mutableListOf())
     val adapter = MutableLiveData<RecyclerAdapter>()
-
 
     init {
         loadData()
@@ -21,7 +24,16 @@ class SharedViewModel : ViewModel() {
         )
         data.value = items
     }
-}
 
+    fun setNotifications(notifications: List<NotificationItem>) {
+        data.value = notifications.toMutableList()
+        adapter.value?.notifyDataSetChanged()
+    }
+
+    fun clearAllNotifications() {
+        data.value?.clear()
+        adapter.value?.notifyDataSetChanged()
+    }
+}
 
 

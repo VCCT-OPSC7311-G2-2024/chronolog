@@ -3,10 +3,12 @@ package za.co.varsitycollege.serversamurais.chronolog.Helpers
 import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.EditText
+import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.*
 import com.google.firebase.database.*
 import za.co.varsitycollege.serversamurais.chronolog.R
 import za.co.varsitycollege.serversamurais.chronolog.adapters.CategoryAdapter
+import za.co.varsitycollege.serversamurais.chronolog.adapters.NotiAdapter
 import za.co.varsitycollege.serversamurais.chronolog.adapters.TaskAdapter
 import za.co.varsitycollege.serversamurais.chronolog.model.*
 import java.text.SimpleDateFormat
@@ -22,7 +24,12 @@ class FirebaseHelper(private val listener: FirebaseOperationListener) {
     private val databaseGoalsReference = database.getReference("goals")
     private val databaseTeamsReference = database.getReference("teams")
     private val databaseUsersReference = database.getReference("users")
+    private var databaseNotificationRef = database.getReference("notifications")
     private var mAuth: FirebaseAuth = FirebaseAuth.getInstance()
+
+    private lateinit var dbRef: DatabaseReference
+    private lateinit var notificationRecyclerView: RecyclerView
+    private lateinit var notiArrayList: ArrayList<NotificationItem>
 
     /**
      * Interface for Firebase operation callbacks.
@@ -40,6 +47,7 @@ class FirebaseHelper(private val listener: FirebaseOperationListener) {
          */
         fun onFailure(errorMessage: String)
     }
+
 
     /**
      * Returns the user ID of the currently authenticated user.
@@ -60,13 +68,11 @@ class FirebaseHelper(private val listener: FirebaseOperationListener) {
     }
 
 
-
-
     /**
- * Attempts to sign up a new user with the provided email and password.
- * @param email The email of the user.
- * @param password The password of the user.
- */
+     * Attempts to sign up a new user with the provided email and password.
+     * @param email The email of the user.
+     * @param password The password of the user.
+     */
     fun signUp(email: String, password: String, name: String, bio: String) {
         mAuth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
@@ -86,7 +92,10 @@ class FirebaseHelper(private val listener: FirebaseOperationListener) {
                                     saveUserDetails(user)
                                     listener.onSuccess(it)
                                 } else {
-                                    listener.onFailure(profileUpdateTask.exception?.message ?: "Couldn't update display name")
+                                    listener.onFailure(
+                                        profileUpdateTask.exception?.message
+                                            ?: "Couldn't update display name"
+                                    )
                                 }
                             }
                     }
@@ -132,6 +141,29 @@ class FirebaseHelper(private val listener: FirebaseOperationListener) {
             }
     }
 
+    // Add a notification
+    /**
+     * Adds a notification to the Firebase database.
+     * @param userId The ID of the user who will receive the notification.
+     * @param notification The notification to be added.
+     */
+    fun addNotification(notification: NotificationItem) {
+    val userId = FirebaseAuth.getInstance().currentUser?.uid
+    if (userId != null) {
+        val databaseNotificationRef = database.getReference("notifications/$userId")
+
+        databaseNotificationRef.setValue(notification)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val firebaseUser = mAuth.currentUser
+                    listener.onSuccess(firebaseUser)
+                } else {
+                    listener.onFailure(task.exception?.message ?: "Unknown error")
+                }
+            }
+    }
+}
+
     /**
      * Signs out the currently authenticated user.
      */
@@ -149,6 +181,13 @@ class FirebaseHelper(private val listener: FirebaseOperationListener) {
         databaseTasksReference.child(userId).child(newTask.taskId).setValue(newTask)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
+                    // Task was successfully added, create a notification
+                    val notification = NotificationItem(
+                        title = "New Task Added",
+                        date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date()),
+                    )
+                    addNotification(notification)
+
                     val user = mAuth.currentUser
                     listener.onSuccess(user)
                 } else {
@@ -156,6 +195,7 @@ class FirebaseHelper(private val listener: FirebaseOperationListener) {
                 }
             }
     }
+
 
     /**
      * Fetches tasks from the Firebase database and updates the provided list and adapter.
@@ -405,13 +445,18 @@ class FirebaseHelper(private val listener: FirebaseOperationListener) {
                                 Log.d("FirebaseHelper", "Verification email sent successfully")
                                 listener.onSuccess(user)
                             } else {
-                                val exceptionMessage = verifyTask.exception?.message ?: "Couldn't send verification email"
-                                Log.e("FirebaseHelper", "Verification email failed: $exceptionMessage")
+                                val exceptionMessage = verifyTask.exception?.message
+                                    ?: "Couldn't send verification email"
+                                Log.e(
+                                    "FirebaseHelper",
+                                    "Verification email failed: $exceptionMessage"
+                                )
                                 listener.onFailure(exceptionMessage)
                             }
                         }
                 } else {
-                    val exceptionMessage = reauthTask.exception?.message ?: "Re-authentication failed"
+                    val exceptionMessage =
+                        reauthTask.exception?.message ?: "Re-authentication failed"
                     Log.e("FirebaseHelper", "Re-authentication failed: $exceptionMessage")
                     listener.onFailure(exceptionMessage)
                 }
@@ -487,7 +532,10 @@ class FirebaseHelper(private val listener: FirebaseOperationListener) {
                                         Log.d("FirebaseHelper", "Goal updated successfully")
                                     }
                                     .addOnFailureListener { error ->
-                                        Log.e("FirebaseHelper", "Error updating goal: ${error.message}")
+                                        Log.e(
+                                            "FirebaseHelper",
+                                            "Error updating goal: ${error.message}"
+                                        )
                                     }
                             }
                         }
@@ -517,9 +565,6 @@ class FirebaseHelper(private val listener: FirebaseOperationListener) {
                 }
             })
     }
-
-
-
 
 
     /**
@@ -607,5 +652,67 @@ class FirebaseHelper(private val listener: FirebaseOperationListener) {
                     onBioReceived(null)
                 }
             })
+    }
+
+    val databaseReference: DatabaseReference = FirebaseDatabase.getInstance().reference
+
+
+    // Fetch notifications
+    fun fetchNotifications(
+        userId: String,
+        onNotificationsFetched: (List<NotificationItem>) -> Unit
+    ) {
+        val notificationsRef = databaseReference.child("notifications").child(userId)
+        notificationsRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val notifications = mutableListOf<NotificationItem>()
+                snapshot.children.forEach { notificationSnapshot ->
+                    val notification = notificationSnapshot.getValue(NotificationItem::class.java)
+                    notification?.let { notifications.add(it) }
+                }
+                onNotificationsFetched(notifications)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("FirebaseHelper", "Error fetching notifications: ${error.message}")
+            }
+        })
+    }
+
+    // Clear notifications
+    fun clearNotifications(userId: String) {
+        val notificationsRef = databaseReference.child("notifications").child(userId)
+        notificationsRef.removeValue().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                listener.onSuccess(null)
+            } else {
+                listener.onFailure(task.exception?.message ?: "Unknown error")
+            }
+        }
+    }
+
+    fun getUserNotification() {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid
+        if (userId != null) {
+            databaseNotificationRef =
+                FirebaseDatabase.getInstance().getReference("notifications/$userId")
+            databaseNotificationRef.addValueEventListener(object : ValueEventListener {
+
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if (snapshot.exists()) {
+                        notiArrayList.clear()
+                        for (userSnapshot in snapshot.children) {
+                            val notification = userSnapshot.getValue(NotificationItem::class.java)
+                            notiArrayList.add(notification!!)
+                        }
+                        notificationRecyclerView.adapter = NotiAdapter(notiArrayList)
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    // Handle possible errors.
+                }
+            })
+        }
     }
 }
