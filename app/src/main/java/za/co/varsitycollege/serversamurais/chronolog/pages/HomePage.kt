@@ -1,6 +1,6 @@
 package za.co.varsitycollege.serversamurais.chronolog.pages
 
-import RecyclerAdapter
+
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.os.Bundle
@@ -21,7 +21,8 @@ import com.google.firebase.database.DatabaseReference
 import za.co.varsitycollege.serversamurais.chronolog.Helpers.FirebaseHelper
 import za.co.varsitycollege.serversamurais.chronolog.R
 import za.co.varsitycollege.serversamurais.chronolog.databinding.ActivityHomeQuickActionButtonsViewBinding
-import za.co.varsitycollege.serversamurais.chronolog.model.NotificationItem
+import za.co.varsitycollege.serversamurais.chronolog.model.Notification
+import za.co.varsitycollege.serversamurais.chronolog.Helpers.RecyclerAdapter
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -56,7 +57,7 @@ class HomePage : Fragment(), FirebaseHelper.FirebaseOperationListener {
     private lateinit var firebaseHelper: FirebaseHelper
 
     // Adapter for the RecyclerView
-    private val data = mutableListOf<NotificationItem>()
+    private val data = mutableListOf<Notification>()
     private lateinit var adapter: RecyclerAdapter
 
     private lateinit var binding: ActivityHomeQuickActionButtonsViewBinding

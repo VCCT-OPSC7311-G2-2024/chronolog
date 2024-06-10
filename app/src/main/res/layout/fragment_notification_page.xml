@@ -1,69 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- The root FrameLayout for the NotificationPage fragment -->
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/notificationpage_gradient"
     tools:context=".NotificationPage"
-    android:background="@drawable/notificationpage_gradient">
+    android:layout_gravity="center">
 
-    <!-- Button for clearing all notifications -->
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="30dp"
+        android:text="Notifications"
+        android:textColor="@color/white"
+        android:textSize="40sp"
+        android:textStyle="bold" />
+
     <Button
         android:id="@+id/clearAllBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="120dp"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="start"
         android:layout_marginStart="40dp"
         android:background="@drawable/rounded_button"
-        android:textColor="@color/white"
-        android:text="Clear All" />
+        android:text="Clear All"
+        android:textColor="@color/white" />
 
-    <!-- LinearLayout for the 'Notifications' text -->
-    <LinearLayout
+    <View
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:layout_marginTop="30dp">
+        android:layout_height="1dp"
+        android:layout_marginTop="20dp"
+        android:background="@android:color/white"/>
 
-        <!-- TextView for the 'Notifications' text -->
-        <TextView
-            android:id="@+id/textView8"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="90dp"
-            android:layout_weight="1"
-            android:textColor="@color/white"
-            android:textSize="40sp"
-            android:textStyle="bold"
-            android:text="Notifications" />
-    </LinearLayout>
-
-    <!-- RelativeLayout for the RecyclerView and the line separator -->
-    <RelativeLayout
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <!-- RecyclerView for displaying the notifications -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginStart="40dp"
-            android:layout_marginTop="150dp"
-            android:layout_marginEnd="4dp"
-            android:layout_marginBottom="4dp"
-            tools:itemCount="17"
-            tools:listitem="@layout/notification_list" />
-
-        <!-- View for the line separator -->
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginStart="40dp"
-            android:layout_marginEnd="40dp"
-            android:layout_below="@id/recyclerView"
-            android:background="@android:color/white"/>
-
-    </RelativeLayout>
-</FrameLayout>
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_margin="20dp"
+        tools:itemCount="17"
+        tools:listitem="@layout/notification_list" />
+</LinearLayout>

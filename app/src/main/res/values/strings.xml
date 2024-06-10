@@ -27,5 +27,6 @@
         <item>Hours worked per day</item>
         <item>Hours per category</item>
     </string-array>
+    <string name="default_web_client_id">515897712068-lmqgena7cvf0v5tdeaab1qaspr7qtltf.apps.googleusercontent.com</string>
 
 </resources>

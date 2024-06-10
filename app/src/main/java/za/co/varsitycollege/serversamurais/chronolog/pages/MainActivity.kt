@@ -35,6 +35,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         // Set click listeners for the signup and login buttons
         binding.signupNavBtn.setOnClickListener(this)
         binding.loginBtn.setOnClickListener(this)
+        binding.homeSignInWithGoogleBtn.setOnClickListener(this)
     }
 
     /**
@@ -44,6 +45,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     override fun onClick(v: View?) {
         // Determine which button was clicked and navigate to the appropriate activity
         when(v?.id) {
+            R.id.homeSignInWithGoogleBtn -> openIntent(this, LoginActivity::class.java)
             R.id.signupNavBtn -> openIntent(this, SignUpActivity::class.java)
             R.id.loginBtn -> openIntent(this, LoginActivity::class.java)
         }

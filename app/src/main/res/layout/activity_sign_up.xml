@@ -249,7 +249,7 @@
 
         <!-- Button for signing in with Google -->
         <Button
-            android:id="@+id/signInWithGoogleBtn"
+            android:id="@+id/signUpWithGoogleBtn"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:background="@drawable/google_logo"

@@ -34,6 +34,10 @@ class SignUpActivity : AppCompatActivity(), View.OnClickListener, FirebaseHelper
 
         firebaseHelper = FirebaseHelper(this)
 
+        binding.signUpWithGoogleBtn.setOnClickListener{
+            openIntent(this, LoginActivity::class.java)
+        }
+
         // Set click listener for sign up button
         binding.signupBtn.setOnClickListener {
             if(binding.editPassword.text.toString().trim() == binding.editConfirmPasword.text.toString().trim()){

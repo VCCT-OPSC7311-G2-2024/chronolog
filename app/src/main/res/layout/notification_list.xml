@@ -1,89 +1,64 @@
-<!-- The root ConstraintLayout for the notification_list layout -->
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="320dp"
-    android:layout_height="80dp"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
     android:id="@+id/main"
     android:clickable="true"
     android:focusable="true"
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:background="@drawable/rounded_background"
     android:layout_gravity="center_horizontal"
-    android:layout_marginTop="35dp">
+    android:layout_marginTop="10dp"
+    android:orientation="horizontal"
+    android:paddingStart="16dp"
+    android:paddingTop="10dp">
 
-    <!-- TextView for displaying the date -->
-    <TextView
-        android:id="@+id/dateTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="114dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="131dp"
-        android:text="2024/02/02"
-        android:textColor="@color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <!-- TextView for displaying the project name -->
-    <TextView
-        android:id="@+id/projectNameView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="114dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="80dp"
-        android:text="Research App"
-        android:textColor="@color/white"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dateTextView" />
-
-    <!-- ImageView for displaying the notification icon -->
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:layout_marginStart="26dp"
-        android:layout_marginTop="55dp"
-        android:layout_marginBottom="15dp"
-        android:background="@drawable/notification_13_svgrepo_com"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:background="@drawable/notification_13_svgrepo_com" />
 
-    <!-- TextView for displaying the hours -->
-    <TextView
-        android:id="@+id/hoursTextView"
-        android:layout_width="53dp"
-        android:layout_height="35dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="9dp"
-        android:paddingRight="5dp"
-        android:text="10 Hours"
-        android:textColor="@color/white"
-        app:layout_constraintBottom_toTopOf="@+id/imageView"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.8" />
-
-    <!-- View for the vertical separator -->
-    <View
-        android:id="@+id/view2"
-        android:layout_width="0dp"
-        android:layout_height="3dp"
-        android:layout_marginStart="-170dp"
-        android:layout_marginTop="8dp"
-        android:background="@android:color/white"
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical"
-        android:rotation="90"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginStart="8dp">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/dateTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2024/02/02"
+            android:textColor="@color/white"
+            android:layout_marginBottom="8dp"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/addTaskNoti"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="New Task Added: "
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/projectNameView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Research App"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

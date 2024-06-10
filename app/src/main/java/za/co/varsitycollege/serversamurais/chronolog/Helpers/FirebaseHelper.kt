@@ -3,6 +3,8 @@ package za.co.varsitycollege.serversamurais.chronolog.Helpers
 import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.EditText
+import android.widget.Toast
+import androidx.core.content.ContentProviderCompat.requireContext
 import com.google.firebase.auth.*
 import com.google.firebase.database.*
 import za.co.varsitycollege.serversamurais.chronolog.R
@@ -19,6 +21,7 @@ class FirebaseHelper(private val listener: FirebaseOperationListener) {
         FirebaseDatabase.getInstance("https://chronolog-db9b8-default-rtdb.europe-west1.firebasedatabase.app/")
     private val databaseTasksReference = database.getReference("tasks")
     private val databaseCategoriesReference = database.getReference("categories")
+    private val databaseNotificationReference = database.getReference("notifications")
     private val databaseGoalsReference = database.getReference("goals")
     private val databaseTeamsReference = database.getReference("teams")
     private val databaseUsersReference = database.getReference("users")
@@ -155,7 +158,57 @@ class FirebaseHelper(private val listener: FirebaseOperationListener) {
                     listener.onFailure(task.exception?.message ?: "Unknown error")
                 }
             }
+
+        val dateTime = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date())
+        val notificationId = databaseNotificationReference.child(userId).push().key ?: return
+        val notification = mapOf(
+            "taskName" to newTask.name,
+            "dateTime" to dateTime
+        )
+
+        // Correctly set the value directly on the notificationId child
+        databaseNotificationReference.child(userId).child(notificationId).setValue(notification)
+            .addOnSuccessListener {
+                Log.d("Notification", "Successfully added ${newTask.name} at $dateTime")
+            }
+            .addOnFailureListener { e ->
+                Log.e("Notification", "Failed to add notification", e)
+            }
     }
+
+    fun fetchNotifications(userId: String, callback: (List<Notification>) -> Unit) {
+        val notificationsRef = databaseNotificationReference.child(userId)
+        notificationsRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val notifications = mutableListOf<Notification>()
+                for (data in snapshot.children) {
+                    val notification = data.getValue(Notification::class.java)
+                    if (notification != null) {
+                        notifications.add(notification)
+                    }
+                }
+                callback(notifications)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("FirebaseHelper", "Failed to fetch notifications", error.toException())
+                callback(emptyList())
+            }
+        })
+    }
+
+    fun clearAllNotifications(userId: String, callback: (Boolean) -> Unit) {
+        val notificationsRef = databaseNotificationReference.child(userId)
+        notificationsRef.removeValue().addOnSuccessListener {
+            callback(true)
+        }.addOnFailureListener { e ->
+            Log.e("FirebaseHelper", "Failed to clear notifications", e)
+            callback(false)
+        }
+    }
+
+
+
 
     /**
      * Fetches tasks from the Firebase database and updates the provided list and adapter.
