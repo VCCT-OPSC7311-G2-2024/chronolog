@@ -16,13 +16,6 @@
         android:fontFamily="@font/inter"/>
 
     <!-- CheckBox for setting the category as active or inactive -->
-    <CheckBox
-        android:id="@+id/checkBoxIsActive"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Active"
-        android:checked="true"
-        android:fontFamily="@font/inter"/>
 
     <!-- LinearLayout for the Cancel and Save buttons -->
     <LinearLayout

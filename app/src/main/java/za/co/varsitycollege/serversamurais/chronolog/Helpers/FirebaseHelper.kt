@@ -519,6 +519,88 @@ class FirebaseHelper(private val listener: FirebaseOperationListener) {
     }
 
 
+    fun getGoalValues(userId: String, date: String, onGoalsReceived: (Int, Int) -> Unit) {
+        databaseGoalsReference.child(userId).orderByChild("date").equalTo(date)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    for (goalSnapshot in snapshot.children) {
+                        val goal = goalSnapshot.getValue(Goal::class.java)
+                        goal?.let {
+                            onGoalsReceived(it.minGoal, it.maxGoal)
+                        }
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Log.e("FirebaseHelper", "Error fetching goals: ${error.message}")
+                }
+            })
+    }
+
+
+
+
+    fun getTotalTaskHours(userId: String, currentDate: String, callback: (Int) -> Unit) {
+        val tasksRef = databaseTasksReference.child(userId)
+        tasksRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                var totalDuration = 0
+                for (taskSnapshot in snapshot.children) {
+                    val task = taskSnapshot.getValue(Task::class.java)
+                    Log.d("FirebaseHelper", "Fetched Task: ${task?.date} ${task?.duration}")
+                    if (task != null && isSameDay(task.date, currentDate)) {
+                        totalDuration += task.duration ?: 0
+                    }
+                }
+                Log.d("FirebaseHelper", "Total Task Hours for $currentDate: $totalDuration")
+                callback(totalDuration)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("FirebaseHelper", "Error fetching tasks: ${error.message}")
+                callback(0)
+            }
+        })
+    }
+
+    private fun isSameDay(date: Date?, dateString: String): Boolean {
+        if (date == null) return false
+        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        return sdf.format(date) == dateString
+    }
+
+
+    fun fetchGoals(userId: String, startDate: Long, endDate: Long, callback: (List<Goal>) -> Unit) {
+        val databaseGoalsReference = database.getReference("goals")
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+
+        databaseGoalsReference.child(userId)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val goals = mutableListOf<Goal>()
+                    for (goalSnapshot in snapshot.children) {
+                        val goal = goalSnapshot.getValue(Goal::class.java)
+                        goal?.let {
+                            val goalDate = dateFormat.parse(it.date)?.time
+                            if (goalDate != null && goalDate in startDate..endDate) {
+                                goals.add(goal)
+                            }
+                        }
+                    }
+                    Log.d("FirebaseHelper", "Fetched goals: $goals")
+                    callback(goals)
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Log.e("FirebaseHelper", "Error fetching goals: ${error.message}")
+                    callback(emptyList())
+                }
+            })
+    }
+
+
+
+
 
 
 

@@ -47,6 +47,7 @@ class TaskAdapter(private var tasks: List<Task>, private var firebaseHelper: Fir
         val textViewExpandedTaskDescription: TextView = itemView.findViewById(R.id.recentDescriptionExpandedTextView)
         val textViewExpandedTaskDate: TextView = itemView.findViewById(R.id.recentDateExpandedTextView)
         val textViewExpandedTaskDuration: TextView = itemView.findViewById(R.id.recentDurationExpandedTextView)
+        val textViewExpandedCategory: TextView = itemView.findViewById(R.id.categoryExpandedTextView)
         val toggleTimerExpanded: ImageButton = itemView.findViewById(R.id.toggleTimerExpanded)
         val imageViewTaskPhoto: ImageView = itemView.findViewById(R.id.taskPhoto)
     }
@@ -75,6 +76,7 @@ class TaskAdapter(private var tasks: List<Task>, private var firebaseHelper: Fir
         holder.textViewTaskDescription.text = task.description ?: "No Description"
         holder.textViewTaskDate.text = task.date?.let { SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(it) } ?: "No Date"
         holder.textViewTaskDuration.text = formatTime(task.duration ?: 0)
+        holder.textViewExpandedCategory.text = task.category ?: "No Category"
 
         holder.textViewExpandedTaskName.text = task.name ?: "No Name"
         holder.textViewExpandedTaskDescription.text = task.description ?: "No Description"

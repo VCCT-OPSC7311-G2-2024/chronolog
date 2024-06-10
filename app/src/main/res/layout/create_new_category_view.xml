@@ -10,8 +10,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_margin="10dp">
+        android:orientation="horizontal">
 
         <!-- Button for creating a new category -->
         <Button
@@ -37,8 +36,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:orientation="vertical">
 
         <!-- AutoCompleteTextView for selecting a category -->
         <AutoCompleteTextView
@@ -71,16 +69,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Cancel"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="16dp"/>
+            android:layout_marginRight="20dp" />
 
         <!-- Button for saving the new category -->
         <Button
             android:id="@+id/buttonSaveCategory"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Save"
-            android:layout_marginTop="16dp"/>
+            android:text="Save" />
     </LinearLayout>
 
 </LinearLayout>

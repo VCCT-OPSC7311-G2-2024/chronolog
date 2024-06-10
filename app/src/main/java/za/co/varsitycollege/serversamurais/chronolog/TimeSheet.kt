@@ -106,7 +106,7 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
     private lateinit var taskNameEditText: EditText
     private lateinit var descriptionEditText: EditText
     private lateinit var durationTextView: TextView
-    private var taskCategory : String = "Default Category"
+    private var taskCategory : String = "No Category"
     private lateinit var taskDate: Date
     private lateinit var taskDateButton: Button
 
@@ -116,7 +116,7 @@ class TimeSheet : Fragment(), FirebaseHelper.FirebaseOperationListener,
     private lateinit var teamAutoCompleteTextView: AutoCompleteTextView
     private lateinit var teamsAdapter: ArrayAdapter<String>
     private lateinit var teamList: LinearLayout
-    private var taskTeam: String = "Default Team"
+    private var taskTeam: String = "No Team"
 
     // UI elements for creating new category and team views
     private lateinit var createCategoryView: LinearLayout
@@ -335,9 +335,7 @@ override fun onCreateView(
 
         view.findViewById<Button>(R.id.buttonSaveNewCategory).setOnClickListener {
             val name = view.findViewById<EditText>(R.id.editTextCategoryName).text.toString().trim()
-            val isActive = view.findViewById<CheckBox>(R.id.checkBoxIsActive).isChecked
-
-            val newCategory = Category(null, name, isActive)
+            val newCategory = Category(null, name)
 
             if (name.isNotEmpty()) {
                 firebaseHelper.addCategoryToFirebase(newCategory, userId)
@@ -416,23 +414,24 @@ override fun onCreateView(
 
         view.findViewById<Button>(R.id.buttonSaveNewTeam).setOnClickListener {
             val name = view.findViewById<EditText>(R.id.editTextTeamName).text.toString().trim()
-            val isActive = view.findViewById<CheckBox>(R.id.checkBoxTeamIsActive).isChecked
 
-            val newTeam = Team(null, name, isActive)
+            val newTeam = Team(null, name)
 
             if (name.isNotEmpty()) {
                 firebaseHelper.addTeamToFirebase(newTeam, userId)
             } else {
                 Toast.makeText(context, "Please enter a team name.", Toast.LENGTH_SHORT).show()
             }
-
             toggleAddTeam()
-
         }
 
         view.findViewById<Button>(R.id.buttonCancelNewTeam).setOnClickListener{
                 toggleAddTeam()
             }
+
+       view.findViewById<Button>(R.id.buttonCancelTeam).setOnClickListener{
+           toggleTeam()
+       }
 
         // Retrieve Categories
         teamAutoCompleteTextView = view.findViewById(R.id.autoCompleteTextViewTeam)
@@ -470,7 +469,7 @@ override fun onCreateView(
         }
 
         view.findViewById<Button>(R.id.buttonCancelCategory).setOnClickListener{
-            toggleTeam()
+            toggleCategory()
         }
 
         // Inflate the layout for this fragment

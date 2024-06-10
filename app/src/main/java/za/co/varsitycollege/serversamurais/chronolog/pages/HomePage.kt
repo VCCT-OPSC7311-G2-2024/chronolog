@@ -178,21 +178,27 @@ class HomePage : Fragment(), FirebaseHelper.FirebaseOperationListener {
 
                 val maxProgressWidthPx = dpToPx(MAX_PROGRESS_WIDTH_DP)
 
+                // Assuming min and max are in hours, convert them to seconds
+                val minInSeconds = min * 3600
+                val maxInSeconds = max * 3600
+                val actualInSeconds = actual
+
                 // Find the largest value among min, max, and actual
-                val largestValue = maxOf(min, max, actual / 60)
+                val largestValue = maxOf(minInSeconds, maxInSeconds, actualInSeconds)
 
                 // Calculate proportional widths based on the largest value
-                val minWidthPx = (min.toFloat() / largestValue) * maxProgressWidthPx
-                val actualWidthPx = (actual.toFloat() / (largestValue * 60)) * maxProgressWidthPx
-                val maxWidthPx = (max.toFloat() / largestValue) * maxProgressWidthPx
+                val minWidthPx = (minInSeconds.toFloat() / largestValue) * maxProgressWidthPx
+                val actualWidthPx = (actualInSeconds.toFloat() / largestValue) * maxProgressWidthPx
+                val maxWidthPx = (maxInSeconds.toFloat() / largestValue) * maxProgressWidthPx
 
                 updateProgressBar(line1View, minWidthPx.toInt())
                 updateProgressBar(line2View, actualWidthPx.toInt())
                 updateProgressBar(line3View, maxWidthPx.toInt())
 
-                progressBar1Txt.text = formatTime(min * 60) // Convert min to seconds
-                progressBar2Txt.text = formatTime(actual) // Actual is already in seconds
-                progressBar3Txt.text = formatTime(max * 60) // Convert max to seconds
+                // Format the times to HH:mm:ss
+                progressBar1Txt.text = formatTime(minInSeconds)
+                progressBar2Txt.text = formatTime(actualInSeconds)
+                progressBar3Txt.text = formatTime(maxInSeconds)
             }
         }
     }
